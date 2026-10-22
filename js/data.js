@@ -1,8 +1,7 @@
 /* ============================================================
    Inhalte der Website. Alles, was sich ändert, steht hier.
    Neues Projekt: einen Eintrag in "projekte" ergänzen.
-   disziplinen: "mecha" (Mechatronik), "innen" (Innenarchitektur),
-   "produkt" (Produktdesign) – ein Projekt kann mehrere haben.
+   Die Reihenfolge hier ist die Reihenfolge auf der Seite.
    ============================================================ */
 window.SITE = {
   name: "Kilian Einig",
@@ -10,13 +9,7 @@ window.SITE = {
   email: "kilianeinig@gmx.de",
   stand: "Oktober 2026",
 
-  disziplinen: {
-    mecha: { name: "Mechatronik", kurz: "M" },
-    innen: { name: "Innenarchitektur", kurz: "I" },
-    produkt: { name: "Produktdesign", kurz: "P" }
-  },
 
-  leitsatz: "Ich entwerfe Möbel, Leuchten und Räume und baue sie selbst – vom geschweißten Stahlgestell bis zur programmierten Lichtsteuerung.",
 
   projekte: [
     {
@@ -24,8 +17,7 @@ window.SITE = {
       titel: "Woven",
       art: "Möbel",
       stand: "Realisiert",
-      disziplinen: ["produkt", "innen"],
-      kurz: "Loungesessel aus recycelten Messebauplanen.",
+      kurz: "Stuhl aus alten Messebauplanen und Stahl.",
       text: [
         "Die grafische, dreidimensionale Sitzfläche entsteht durch Weben, Nähen und Spannen. Gepolsterte Textilstreifen werden in ein reduziertes, selbst geschweißtes Stahlgestell gespannt – austauschbar und nachspannbar.",
         "Die Verbindung aus Designentscheidung und konstruktiver Logik ist hier keine Ergänzung, sondern der Kern."
@@ -45,33 +37,11 @@ window.SITE = {
       ]
     },
     {
-      id: "lmp02",
-      titel: "LMP 02",
-      art: "Licht",
-      stand: "Prototyp",
-      disziplinen: ["mecha", "produkt"],
-      interaktiv: "konfigurator",
-      kurz: "Zwei Lichtschichten, vier Drehregler, eine Weboberfläche. Probier es aus.",
-      hinweis: "Prototyp: funktionierendes Modell aus MDF. Die Version in Aluminium ist geplant und existiert bisher nur als Rendering.",
-      text: "Zwei LED-Streifen leuchten in zwei Schichten. Jede Schicht hat einen Regler für Helligkeit und einen für Farbe. Über eine Weboberfläche, die direkt auf dem ESP32 läuft, lassen sich Farben exakt wählen und als Presets speichern. Entwurf, Programmierung, gelaserte Bauteile und Elektrik sind komplett selbst gemacht.",
-      fakten: [["Stand", "Prototyp aus MDF, Version in Aluminium geplant"], ["Steuerung", "ESP32, 4 Drehregler, Web-App"], ["Licht", "2 SK6812-LED-Streifen"]],
-      bild: "img/lmp02-render.webp",
-      bildAlt: "LMP 02 in gebürstetem Aluminium, die Lichtfläche leuchtet türkis mit rotem Kern",
-      uebersicht: "img/lmp02-uebersicht.webp",
-      zweitbild: "img/lmp02-gruen.webp",
-      galerie: [
-        ["img/lmp02-explosion.webp", "Aufbau: Frontrahmen, LED-Ring vorne, Bowl, Gehäuse, LED-Ring hinten, Rückwand"],
-        ["img/lmp02-tief.webp", "Entwurf in gebürstetem Aluminium, von unten"],
-        ["img/lmp02-loop.mp4", "Prototyp aus MDF in Betrieb", "img/lmp02-poster.webp"]
-      ]
-    },
-    {
       id: "hochstapler",
       titel: "Hochstapler",
       art: "Architektur",
       stand: "Geplant",
-      disziplinen: ["innen"],
-      kurz: "Leben in gestapelten, L-förmigen Schlafkammern in den Zeilenhäusern von Ernst May.",
+      kurz: "Neues Wohnkonzept mit Fokus auf Gemeinschaft.",
       text: [
         "Drei Zeilenhäuser von Ernst May im Neuen Frankfurt werden zu einem zusammenhängenden Wohnkomplex. Zwei Wohnhäuser umschließen ein Gemeinschaftshaus, das alle Bewohner*innen flexibel nutzen. Der Einzug ist eine bewusste Entscheidung für ein soziales, ökologisches und gemeinschaftliches Wohnen.",
         "In den beiden Wohnhäusern liegen je 28 gleich aufgebaute Schlafkammern, privat gemietete Kapseln mit ein bis zwei Schlafplätzen. Im Gemeinschaftshaus lösen Höhenversätze die trennenden Etagen auf: unten ankommen und sich aufhalten, eine halbe Ebene höher gemeinsam kochen und essen, immer mit Blick in den Wohnraum.",
@@ -95,9 +65,8 @@ window.SITE = {
       titel: "LMP 01",
       art: "Licht",
       stand: "Realisiert",
-      disziplinen: ["mecha", "produkt"],
       interaktiv: "lamellen",
-      kurz: "Lichtinstallation aus Acryl-Lamellen, die auf Nähe reagiert.",
+      kurz: "Leuchte, die auf Sensorik reagiert.",
       text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Sensoren registrieren Annäherung und Bewegung, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Bewegung zum Teil der Komposition.",
       fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Sensoren für Nähe und Bewegung"]],
       bild: "img/lmp-hero.webp",
@@ -110,12 +79,31 @@ window.SITE = {
       ]
     },
     {
+      id: "lmp02",
+      titel: "LMP 02",
+      art: "Licht",
+      stand: "Prototyp",
+      interaktiv: "konfigurator",
+      kurz: "Leuchte mit verschiedenen Lichtebenen.",
+      hinweis: "Prototyp: funktionierendes Modell aus MDF. Die Version in Aluminium ist geplant und existiert bisher nur als Rendering.",
+      text: "Zwei LED-Streifen leuchten in zwei Schichten. Jede Schicht hat einen Regler für Helligkeit und einen für Farbe. Über eine Weboberfläche, die direkt auf dem ESP32 läuft, lassen sich Farben exakt wählen und als Presets speichern. Entwurf, Programmierung, gelaserte Bauteile und Elektrik sind komplett selbst gemacht.",
+      fakten: [["Stand", "Prototyp aus MDF, Version in Aluminium geplant"], ["Steuerung", "ESP32, 4 Drehregler, Web-App"], ["Licht", "2 SK6812-LED-Streifen"]],
+      bild: "img/lmp02-render.webp",
+      bildAlt: "LMP 02 in gebürstetem Aluminium, die Lichtfläche leuchtet türkis mit rotem Kern",
+      uebersicht: "img/lmp02-uebersicht.webp",
+      zweitbild: "img/lmp02-gruen.webp",
+      galerie: [
+        ["img/lmp02-explosion.webp", "Aufbau: Frontrahmen, LED-Ring vorne, Bowl, Gehäuse, LED-Ring hinten, Rückwand"],
+        ["img/lmp02-tief.webp", "Entwurf in gebürstetem Aluminium, von unten"],
+        ["img/lmp02-loop.mp4", "Prototyp aus MDF in Betrieb", "img/lmp02-poster.webp"]
+      ]
+    },
+    {
       id: "regal",
       titel: "Re:gal",
       art: "Architektur",
       stand: "Geplant",
-      disziplinen: ["innen"],
-      kurz: "Repair Café mit öffentlichem Bücherregal in Mainz.",
+      kurz: "Repair Café als Stadtzentrum.",
       text: [
         "Ein Repair Café im dichten Stadtraum von Mainz, gedacht als architektonische Zurückhaltung. Ein schlankes Volumen schafft Freiraum und überlässt dem Platz die Hauptrolle.",
         "Zentrales Element ist das Regal: innen Lagerfläche für die Werkstatt, außen offenes Bücherregal für alle. Es wird zur Schnittstelle zwischen Architektur, Nutzung und öffentlichem Raum.",
@@ -132,29 +120,12 @@ window.SITE = {
       ]
     },
     {
-      id: "skelettstuhl",
-      titel: "Skelettstuhl",
-      art: "Möbel",
-      stand: "Entwurf",
-      disziplinen: ["produkt"],
-      bildLabel: "3D-Modell",
-      kurz: "Ein Stuhl, gebaut wie ein Rückgrat.",
-      hinweis: "Entwurf: eine Idee als 3D-Modell, noch nicht gebaut.",
-      text: "Eine geschwungene Wirbelsäule trägt Sitz und Lehne. Von ihr gehen gebogene Rippen ab, die zusammen die Sitzfläche und den Rücken bilden. Der Entwurf ist in Rhino modelliert.",
-      fakten: [["Stand", "3D-Entwurf in Rhino"]],
-      bild: "img/skelett-render.webp", hell: true,
-      bildAlt: "Rendering des Skelettstuhls: eine geschwungene Wirbelsäule mit gebogenen Rippen als Sitz und Lehne",
-      zweitbild: "img/skelett-skizze.webp",
-      galerie: [["img/skelett-skizze.webp", "Überarbeitung: Markierungen für Kopf, Lehne und Sitz"]]
-    },
-    {
       id: "lmp03",
       titel: "LMP 03",
       art: "Licht",
       stand: "Entwurf",
-      disziplinen: ["produkt"],
       bildLabel: "Rendering",
-      kurz: "Ein Lichtstab im Glasrohr, abgehängt an zwei Seilen.",
+      kurz: "Leuchtstab im Glasrohr.",
       hinweis: "Entwurf: bisher nur als Rendering, noch nicht gebaut.",
       text: "Ein opaler LED-Stab liegt in einem klaren Glasrohr. Zwei Kappen aus gebürstetem Aluminium schließen das Rohr ab, ein Lochraster in den Stirnseiten lässt die Wärme entweichen. Zwei Stahlseile halten die Leuchte frei im Raum.",
       fakten: [["Stand", "Gerendert in Blender"], ["Material", "Glas, Aluminium, Stahlseil"], ["Länge", "ca. 1,4 m"]],
@@ -162,6 +133,21 @@ window.SITE = {
       bildAlt: "Rendering von LMP 03: leuchtender Stab in einem Glasrohr mit Aluminiumkappen vor heller Wand",
       zweitbild: "img/lmp03-detail.webp",
       galerie: [["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"]]
+    },
+    {
+      id: "skelettstuhl",
+      titel: "Rib Chair",
+      art: "Möbel",
+      stand: "Entwurf",
+      bildLabel: "3D-Modell",
+      kurz: "Futuristischer Stuhlentwurf.",
+      hinweis: "Entwurf: eine Idee als 3D-Modell, noch nicht gebaut.",
+      text: "Eine geschwungene Wirbelsäule trägt Sitz und Lehne. Von ihr gehen gebogene Rippen ab, die zusammen die Sitzfläche und den Rücken bilden. Der Entwurf ist in Rhino modelliert.",
+      fakten: [["Stand", "3D-Entwurf in Rhino"]],
+      bild: "img/skelett-render.webp", hell: true,
+      bildAlt: "Rendering des Rib Chair: eine geschwungene Wirbelsäule mit gebogenen Rippen als Sitz und Lehne",
+      zweitbild: "img/skelett-skizze.webp",
+      galerie: [["img/skelett-skizze.webp", "Überarbeitung: Markierungen für Kopf, Lehne und Sitz"]]
     }
   ],
 
@@ -173,13 +159,7 @@ window.SITE = {
 
   ueber: [
     "Ich bin gelernter Mechatroniker und studiere Innenarchitektur. Diese Kombination prägt meine Arbeit: Ich entwerfe nicht nur am Rechner, sondern baue meine Projekte selbst in der Werkstatt.",
-    "Woven ist ein Loungesessel aus alten Messebauplanen, die Sitzfläche gewebt, das Stahlgestell selbst geschweißt. Die Leuchten der LMP-Serie reagieren auf Nähe oder lassen sich über Drehregler und eine App steuern, Elektronik und Software habe ich selbst entwickelt. In der Architektur arbeite ich an Umbauten im Bestand und kleinen öffentlichen Bauten, vom Entwurf bis in die Werkplanung."
-  ],
-  fakten: [
-    ["Ausbildung", "Mechatroniker"],
-    ["Studium", "Innenarchitektur, Hochschule Mainz"],
-    ["Zurzeit", "Ein Semester in Antwerpen"],
-    ["Werkzeuge", "Rhino, Blender, ESP32, Schweißgerät, Laser"]
+    "Zurzeit studiere ich ein Semester in Antwerpen."
   ],
   portrait: "img/portrait.webp"
 };

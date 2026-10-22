@@ -4,24 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kilian Einig</title>
-<meta name="description" content="Portfolio von Kilian Einig: Möbel, Leuchten und Räume zwischen Mechatronik, Innenarchitektur und Produktdesign. Selbst entworfen, selbst gebaut.">
+<meta name="description" content="Kilian Einig: Möbel, Leuchten und Räume. Selbst entworfen, selbst gebaut.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kilian Einig">
-<meta property="og:description" content="Möbel, Leuchten und Räume zwischen Mechatronik, Innenarchitektur und Produktdesign.">
+<meta property="og:description" content="Möbel, Leuchten und Räume. Selbst entworfen, selbst gebaut.">
 <meta property="og:image" content="img/woven-hero.webp">
 <meta property="og:locale" content="de_DE">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='10 10 90 100'%3E%3Cpath d='M10,10 H100 V40 L60,60 L100,80 V110 H10 Z'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/Geist-Medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
-<script>document.documentElement.classList.add('intro');</script>
 </head>
 <body data-page="home">
 <a class="skip" href="#main">Zum Inhalt springen</a>
 
 <header class="top" id="top">
   <div class="wrap top-in">
-    <a class="brand" href="./" aria-label="Kilian Einig, Startseite"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><span>Kilian Einig</span></a>
+    <a class="brand" href="#start" aria-label="Kilian Einig, nach oben"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><span>Kilian Einig</span></a>
     <nav class="main" aria-label="Hauptnavigation"><ul>
       <li><a href="#projekte">Projekte</a></li>
       <li><a href="#ueber">Über mich</a></li>
@@ -31,70 +30,44 @@
 </header>
 
 <main id="main">
-  <section class="hero wrap" aria-labelledby="h-start">
-    <div class="hero-meta meta">
-      <p>Portfolio</p>
-      <p id="ort">Mainz / Antwerpen</p>
-      <p id="stand">Stand Oktober 2026</p>
-    </div>
-    <div class="hero-body">
-      <div>
-        <h1 id="h-start"><strong>Kilian Einig</strong> entwirft Möbel, Leuchten und Räume – und baut sie selbst.</h1>
-        <fieldset class="mixer" id="mixer">
-          <legend class="vh">Projekte nach Disziplin filtern</legend>
-          <!-- Schalter werden aus data.js erzeugt; ohne JavaScript bleibt diese Liste stehen -->
-          <p class="mix" style="cursor:default"><span class="sq" aria-hidden="true"></span><span class="w"><span>Mechatronik</span></span><span class="n"></span></p>
-          <p class="mix" style="cursor:default"><span class="sq" aria-hidden="true"></span><span class="w"><span>Innenarchitektur</span></span><span class="n"></span></p>
-          <p class="mix" style="cursor:default"><span class="sq" aria-hidden="true"></span><span class="w"><span>Produktdesign</span></span><span class="n"></span></p>
-        </fieldset>
-        <p class="mix-hint meta muted" id="mix-hint">Tipp eine Disziplin an. Die Projekte darunter folgen.</p>
-      </div>
-      <svg class="hero-mark" viewBox="10 10 90 100" aria-hidden="true"><polygon id="kerbe" points="10,10 100,10 100,40 100,60 100,80 100,110 10,110"/></svg>
-    </div>
+  <section class="hero" id="start" aria-labelledby="h-name">
+    <svg class="hero-mark" viewBox="10 10 90 100" aria-hidden="true"><polygon id="kerbe" points="10,10 100,10 100,40 60,60 100,80 100,110 10,110"/></svg>
+    <h1 id="h-name">Kilian Einig</h1>
+    <a class="cue" href="#projekte" aria-label="Zu den Projekten">↓</a>
   </section>
 
-  <section class="leitsatz wrap" aria-label="Leitsatz">
-    <div class="grid"><p id="leitsatz">Ich entwerfe Möbel, Leuchten und Räume und baue sie selbst – vom geschweißten Stahlgestell bis zur programmierten Lichtsteuerung.<br><a href="#projekte">Zu den Projekten ↓</a></p></div>
-  </section>
-
-  <section id="projekte" class="sec wrap" aria-labelledby="h-projekte">
-    <div class="sec-head"><h2 id="h-projekte">Projekte</h2><p class="meta muted">Selbst entworfen, selbst gebaut</p></div>
-    <div class="filter" id="filter" role="group" aria-label="Disziplinen"></div>
-    <p class="vh" id="live" aria-live="polite"></p>
-    <div class="works" id="works"></div>
-  </section>
-
-  <section id="nebenbei" class="sec wrap" aria-labelledby="h-nebenbei">
-    <div class="sec-head"><h2 id="h-nebenbei">Nebenbei programmiert</h2><p class="meta muted">Läuft direkt im Browser</p></div>
-    <ul class="apps" id="apps"></ul>
+  <section id="projekte" aria-label="Projekte">
+    <div id="works"></div>
   </section>
 
   <section id="ueber" class="sec wrap" aria-labelledby="h-ueber">
-    <div class="sec-head"><h2 id="h-ueber">Über mich</h2><p class="meta muted">Technik verstehen, Räume gestalten</p></div>
-    <div class="about grid">
+    <h2 class="sec-title" id="h-ueber">Über mich</h2>
+    <div class="about">
       <figure><img id="portrait" src="img/portrait.webp" alt="Porträt von Kilian Einig in Schwarzweiß" loading="lazy" decoding="async"></figure>
-      <div class="copy"><div id="about-text"></div><dl class="facts" id="facts"></dl></div>
+      <div class="copy" id="about-text"></div>
     </div>
+  </section>
+
+  <section id="apps" class="sec wrap" aria-labelledby="h-apps">
+    <h2 class="sec-title" id="h-apps">Apps</h2>
+    <ul class="apps" id="app-list"></ul>
   </section>
 </main>
 
 <section id="kontakt" class="contact" aria-labelledby="h-kontakt">
-  <div class="wrap contact-in">
-    <div>
-      <h2 id="h-kontakt">Lass uns etwas bauen.</h2>
-      <a class="mail" id="mail" href="mailto:kilianeinig@gmx.de">kilianeinig@gmx.de</a>
-      <p>Für Projekte, Zusammenarbeit oder einfach ein Gespräch.</p>
-    </div>
-    <svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg>
+  <div class="wrap">
+    <h2 id="h-kontakt">Lass uns etwas bauen.</h2>
+    <a class="mail" id="mail" href="mailto:kilianeinig@gmx.de">kilianeinig@gmx.de</a>
   </div>
 </section>
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <p class="meta muted" id="foot">Kilian Einig · Stand Oktober 2026</p>
+    <p class="meta" id="foot">Kilian Einig</p>
     <nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav>
   </div>
 </footer>
+
 
 <script src="js/data.js"></script>
 <script src="js/dims.js"></script>
