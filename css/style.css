@@ -27,6 +27,7 @@
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:var(--header-h)}
+html.lenis{scroll-behavior:auto}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--fs-body)/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img,video{display:block;max-width:100%;height:auto}
 a{color:inherit}
@@ -37,55 +38,63 @@ button{font:inherit;color:inherit}
 .skip:focus{left:8px}
 .meta{font:400 var(--fs-meta)/1.4 var(--mono);text-transform:uppercase;letter-spacing:.04em}
 
-/* ---------- Kopfzeile ---------- */
-header.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color var(--t-ui)}
-header.top.scrolled{border-bottom-color:var(--rule)}
-.top-in{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:500;letter-spacing:-.01em;min-height:44px}
-.brand svg{height:20px;width:auto;fill:currentColor}
-.brand,.brand span{transition:opacity 250ms var(--ease)}
-body[data-page="home"] header.top:not(.past) .brand{opacity:0;pointer-events:none}
-nav.main ul{display:flex;gap:clamp(16px,2.4vw,32px);list-style:none;margin:0;padding:0}
-nav.main a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;color:var(--graphite);font-size:var(--fs-small);transition:color var(--t-ui)}
-nav.main a:hover,nav.main a[aria-current]{color:var(--ink)}
-@media (max-width:420px){.brand span{display:none}}
+/* ---------- Raster: 12 Spalten. Kopfleiste und Projekte teilen dieselben Kanten ---------- */
+.cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
 
-/* ---------- Auftakt: Kerbe und Name ---------- */
-.hero{min-height:calc(100svh - var(--header-h));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(20px,3vw,36px);padding:24px 16px 96px;position:relative;text-align:center}
-.hero-mark{width:clamp(120px,18vw,240px);height:auto}
+/* ---------- Kopfzeile ---------- */
+header.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color var(--t-ui)}
+header.top.scrolled{border-bottom-color:var(--rule)}
+.top-in{height:var(--header-h);align-items:center}
+.brand{grid-column:1 / span 6;justify-self:start;display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:500;letter-spacing:-.01em;min-height:44px}
+.brand svg{height:22px;width:auto;fill:currentColor;flex:none}
+.brand span{transition:opacity 300ms var(--ease),transform 300ms var(--ease)}
+body[data-page="home"] header.top:not(.past) .brand span{opacity:0;transform:translateX(-8px)}
+nav.main{grid-column:7 / -1}
+nav.main ul{display:flex;justify-content:space-between;list-style:none;margin:0;padding:0}
+nav.main a{position:relative;display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-weight:500;font-size:var(--fs-small);letter-spacing:-.01em;color:var(--ink)}
+nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:10px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 300ms var(--ease)}
+nav.main a:hover::after,nav.main a[aria-current]::after{transform:scaleX(1)}
+@media (max-width:760px){
+  .brand{grid-column:1 / span 3}
+  nav.main{grid-column:4 / -1}
+  nav.main ul{justify-content:flex-end;gap:20px}
+  .brand span{display:none}
+}
+
+/* ---------- Auftakt: Kerbe und Name, gleich breit ---------- */
+.hero{min-height:calc(100svh - var(--header-h));display:grid;place-items:center;padding:24px 16px 96px;position:relative}
+.lockup{display:flex;flex-direction:column;gap:clamp(16px,2.2vw,28px);width:max-content;will-change:transform,opacity}
+.hero-mark{display:block;width:0;min-width:100%;height:auto}
 .hero-mark polygon{fill:var(--ink)}
-.hero h1{margin:0;font-size:var(--fs-name);font-weight:500;letter-spacing:-.045em;line-height:1}
+.hero h1{margin:0 0 0 -.055em;font-size:clamp(44px,min(8.4vw,9.4svh),100px);font-weight:500;letter-spacing:-.05em;line-height:.8;white-space:nowrap}
 .cue{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:grid;place-items:center;width:48px;height:48px;text-decoration:none;font-size:22px;color:var(--graphite)}
 .cue:hover{color:var(--ink)}
+@media (prefers-reduced-motion:no-preference){.cue span{display:inline-block;animation:nudge 2.4s 2s ease-in-out infinite}}
+@keyframes nudge{0%,60%,100%{transform:none}30%{transform:translateY(6px)}}
 
 /* ---------- Projekte: eins pro Bildschirm ---------- */
 .work{min-height:100svh;display:flex;align-items:center;padding-block:clamp(16px,3vw,40px)}
 .work>a{display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);width:100%;max-width:var(--max);margin:0 auto;padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px));text-decoration:none}
 .work .ph{position:relative;overflow:hidden;background:var(--mist);height:calc(100svh - var(--header-h) - clamp(150px,16vw,200px));min-height:280px}
-.work .ph img{width:100%;height:100%;object-fit:cover}
+.work .ph img{width:100%;height:100%;object-fit:cover;transition:transform 900ms var(--ease)}
+.work a:hover .ph img{transform:scale(1.03)}
 .work .ph.light{background:var(--paper)}
 .work .ph.light img{object-fit:contain}
-.work .cap{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr) auto;align-items:baseline;gap:8px clamp(16px,3vw,40px)}
-.work h2{margin:0;font-size:var(--fs-project);font-weight:500;letter-spacing:-.05em;line-height:1}
-.work .kurz{margin:0;font-size:var(--fs-lead);line-height:1.3;letter-spacing:-.01em;color:var(--graphite)}
-.work .go{font-size:var(--fs-small);white-space:nowrap}
+.work .cap{align-items:baseline;row-gap:8px}
+.work h2{grid-column:1 / span 6;margin:0;font-size:var(--fs-project);font-weight:500;letter-spacing:-.05em;line-height:1;overflow:hidden;padding-bottom:.06em}
+.work h2 span{display:inline-block}
+.work .kurz{grid-column:7 / span 4;margin:0;font-size:var(--fs-lead);line-height:1.3;letter-spacing:-.01em;color:var(--graphite)}
+.work .go{grid-column:11 / span 2;justify-self:end;font-size:var(--fs-small);font-weight:500;white-space:nowrap}
 .work .go span{display:inline-block;transition:transform var(--t-ui) var(--ease)}
 .work a:hover .go span,.work a:focus-visible .go span{transform:translateX(6px)}
 .work a:focus-visible{outline-offset:-2px}
 @media (max-width:760px){
   .work{min-height:0;padding-block:var(--space-m)}
   .work .ph{height:auto;aspect-ratio:4/5;min-height:0}
-  .work .cap{grid-template-columns:1fr auto}
+  .work h2{grid-column:1 / span 8}
+  .work .go{grid-column:9 / span 4}
   .work .kurz{grid-column:1 / -1;grid-row:2}
 }
-
-/* Bild öffnet sich beim Hereinscrollen ein wenig, wo der Browser das kann */
-@supports (animation-timeline:view()){
-  @media (prefers-reduced-motion:no-preference){
-    .work .ph img{animation:settle linear both;animation-timeline:view();animation-range:entry 0% cover 45%}
-  }
-}
-@keyframes settle{from{transform:scale(1.12)}to{transform:scale(1)}}
 
 /* ---------- Über mich, Apps ---------- */
 .sec{padding-block:var(--space-l)}
@@ -108,6 +117,8 @@ nav.main a:hover,nav.main a[aria-current]{color:var(--ink)}
 
 /* ---------- Kontakt ---------- */
 .contact{background:var(--stage);color:var(--on-stage);padding-block:var(--space-l)}
+.contact h2 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.contact h2 .w>span{display:inline-block}
 .contact h2{margin:0 0 clamp(24px,3vw,40px);font-size:clamp(48px,9vw,148px);font-weight:500;letter-spacing:-.055em;line-height:.92;text-wrap:balance}
 .contact .mail{display:inline-block;font-size:clamp(26px,4.4vw,64px);font-weight:400;letter-spacing:-.03em;line-height:1.15;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.15em;overflow-wrap:anywhere;transition:text-decoration-thickness var(--t-ui)}
 .contact .mail:hover{text-decoration-thickness:4px}
@@ -211,13 +222,32 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
 .legal-body{max-width:68ch}
 .legal-body h2{font-size:20px;font-weight:500;letter-spacing:-.01em;margin:2em 0 .4em}
 
-/* ---------- Bewegung ---------- */
+/* ---------- Bewegung ----------
+   Auftakt: Kerbe schneidet sich ein, Name steigt auf.
+   Beim Scrollen: Bilder öffnen sich von unten, Titel steigen aus ihrer Zeile, Texte blenden auf.
+   Seitenwechsel: kurzes Ausblenden, neue Seite blendet ein.
+   Alles nur, wenn JavaScript läuft und keine reduzierte Bewegung gewünscht ist. */
 @media (prefers-reduced-motion:no-preference){
-  .hero h1{animation:fadeUp 700ms 500ms var(--ease) both}
-  .cue{animation:fadeIn 600ms 1000ms var(--ease) both}
-  .pp-title>span{animation:lineUp 850ms 100ms var(--ease) both}
+  .hero h1{animation:fadeUp 800ms 450ms var(--ease) both}
+  .cue{animation:fadeIn 600ms 1100ms var(--ease) both}
+  .pp-title>span{animation:lineUp 900ms 150ms var(--ease) both}
+  .pp-kurz,.pp-head .back{animation:fadeUp 700ms 400ms var(--ease) both}
+  .pp-hero,.konfig{animation:clipUp 1100ms 300ms var(--ease) both}
+  body{animation:fadeIn 450ms var(--ease) backwards}
+  html.leaving body{opacity:0;transition:opacity 280ms var(--ease)}
+
+  .anim .rv{opacity:0;transform:translateY(28px);transition:opacity 900ms var(--ease),transform 900ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .rv.in{opacity:1;transform:none}
+  .anim .rv-img{clip-path:inset(18% 0 0 0);transition:clip-path 1200ms var(--ease)}
+  .anim .rv-img img{transform:scale(1.15);transition:transform 1400ms var(--ease)}
+  .anim .rv-img.in{clip-path:inset(0 0 0 0)}
+  .anim .rv-img.in img{transform:none}
+  .anim .work a:hover .rv-img.in img{transform:scale(1.03)}
+  .anim .rv-line>span{transform:translateY(110%);transition:transform 900ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .rv-line.in>span{transform:none}
 }
 @keyframes lineUp{from{transform:translateY(105%)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}
 @keyframes fadeIn{from{opacity:0}}
+@keyframes clipUp{from{clip-path:inset(30% 0 0 0);opacity:.4}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:0s!important}}

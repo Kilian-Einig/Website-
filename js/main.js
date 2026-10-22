@@ -25,13 +25,13 @@
       var a = p.uebersicht || p.bild;
       return '<article class="work" id="p-' + esc(p.id) + '" data-i="' + i + '">' +
         '<a href="' + url(p) + '">' +
-          '<div class="ph' + (p.hell ? ' light' : '') + '">' +
+          '<div class="ph rv-img' + (p.hell ? ' light' : '') + '">' +
             '<img src="' + esc(a) + '" alt="' + esc(p.bildAlt) + '"' + dims(a) + (i ? ' loading="lazy"' : '') + ' decoding="async"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '>' +
           '</div>' +
-          '<div class="cap">' +
-            '<h2>' + esc(p.titel) + '</h2>' +
-            '<p class="kurz">' + esc(p.kurz) + '</p>' +
-            '<span class="go">Ansehen <span aria-hidden="true">→</span></span>' +
+          '<div class="cap cols">' +
+            '<h2 class="rv-line"><span>' + esc(p.titel) + '</span></h2>' +
+            '<p class="kurz rv" style="--d:150ms">' + esc(p.kurz) + '</p>' +
+            '<span class="go rv" style="--d:250ms">Ansehen <span aria-hidden="true">→</span></span>' +
           '</div>' +
         '</a></article>';
     }).join('');
@@ -74,7 +74,7 @@
       '<div class="stage-dark lamellen" id="lmp01-lamellen" role="img" aria-label="Simulation von LMP 01: Lamellen leuchten auf, wenn sich Maus oder Finger nähern"><canvas></canvas><p class="hint">Fahr mit Maus oder Finger über die Lamellen.</p></div>' : '';
 
     var steps = (p.schritte || []).length ? '<ol class="steps">' + p.schritte.map(function (s, k) {
-      return '<li><img src="' + esc(s[0]) + '" alt="' + esc(s[1]) + '"' + dims(s[0]) + ' loading="lazy" decoding="async"><h3><span>' + (k + 1) + '</span>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></li>';
+      return '<li class="rv" style="--d:' + (k * 120) + 'ms"><img src="' + esc(s[0]) + '" alt="' + esc(s[1]) + '"' + dims(s[0]) + ' loading="lazy" decoding="async"><h3><span>' + (k + 1) + '</span>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></li>';
     }).join('') + '</ol>' : '';
 
     var gal = (p.galerie || []).length ? '<div class="gal">' + p.galerie.map(function (g) {
@@ -82,7 +82,7 @@
       var media = /\.mp4$/.test(g[0]) ?
         '<video src="' + esc(g[0]) + '" poster="' + esc(g[2] || '') + '" muted loop playsinline controls preload="metadata" aria-label="' + esc(g[1]) + '"></video>' :
         '<button type="button" class="zoom" aria-label="' + esc(g[1]) + ', groß ansehen"><img src="' + esc(g[0]) + '" alt="' + esc(g[1]) + '"' + dims(g[0]) + ' loading="lazy" decoding="async"></button>';
-      return '<figure class="' + (wide ? 'wide' : '') + '">' + media + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
+      return '<figure class="rv' + (wide ? ' wide' : '') + '">' + media + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
     }).join('') + '</div>' : '';
 
     var facts = [['Art', p.art], ['Stand', p.stand]].concat(p.fakten || []).map(function (f) { return '<div><dt class="meta">' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
@@ -95,10 +95,10 @@
           '<p class="pp-kurz">' + esc(p.kurz) + '</p>' +
         '</header>' +
         heroImg +
-        '<div class="pp-body"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
+        '<div class="pp-body rv"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
           (p.hinweis ? '<p class="hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div></div>' +
         lam + steps + gal +
-        '<a class="next" href="' + url(nx) + '"><span class="meta">Nächstes Projekt</span><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
+        '<a class="next rv" href="' + url(nx) + '"><span class="meta">Nächstes Projekt</span><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
       '</div>';
 
     /* Großansicht für Galeriebilder */
@@ -112,6 +112,88 @@
         lb.showModal();
       } else if (e.target === lb || (e.target.closest && e.target.closest('.x'))) lb.close();
     });
+  }
+
+
+  /* ================= Gemeinsames Verhalten ================= */
+
+  /* Jede Seite beginnt oben, auch nach „Nächstes Projekt“ und beim Zurückgehen.
+     Nur ein Anker in der Adresse (#p-woven, #kontakt) springt gezielt dorthin. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var lenis = null;
+  function jumpToHash() {
+    var t = location.hash && document.getElementById(location.hash.slice(1));
+    if (t) { var y = t.getBoundingClientRect().top + scrollY - (t.id === 'start' ? 0 : hd.offsetHeight); window.scrollTo(0, y); if (lenis) lenis.scrollTo(y, { immediate: true }); }
+    else { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); }
+  }
+
+  /* Weiches Scrollen mit Schwung */
+  if (window.Lenis && !reduce) {
+    lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
+    lenis.on('scroll', onScroll);
+  }
+  jumpToHash(); requestAnimationFrame(jumpToHash);
+  window.addEventListener('load', jumpToHash);
+  window.addEventListener('pageshow', function (e) { document.documentElement.classList.remove('leaving'); if (e.persisted) jumpToHash(); });
+
+  /* Anker auf derselben Seite: weich hinscrollen, Kopfleiste mitdenken */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || a.target) return;
+    var h = a.getAttribute('href') || '';
+    if (h.charAt(0) === '#') {
+      var t = document.getElementById(h.slice(1)); if (!t) return;
+      e.preventDefault();
+      var off = t.id === 'start' ? -hd.offsetHeight : -hd.offsetHeight;
+      if (lenis) lenis.scrollTo(t.id === 'start' ? 0 : t, { offset: off }); else window.scrollTo({ top: t.id === 'start' ? 0 : t.getBoundingClientRect().top + scrollY + off, behavior: reduce ? 'auto' : 'smooth' });
+      return;
+    }
+    /* Seitenwechsel: kurz ausblenden, dann laden */
+    if (/^(mailto|tel|https?):/.test(h) || reduce) return;
+    e.preventDefault();
+    document.documentElement.classList.add('leaving');
+    setTimeout(function () { location.href = a.href; }, 260);
+  });
+
+  /* Auftauchen beim Scrollen. Was beim Laden schon im Bild ist, bleibt sofort sichtbar. */
+  if (!reduce && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('anim');
+    var rv = [].slice.call(document.querySelectorAll('.rv,.rv-img,.rv-line,.sec-title,.about figure,.about .copy p,.apps li,.contact h2 .w,.contact .mail'));
+    rv.forEach(function (el) {
+      if (!/rv/.test(el.className)) el.classList.add(el.matches('.contact h2 .w') ? 'rv-line' : 'rv');
+    });
+    [].forEach.call(document.querySelectorAll('.contact h2 .w'), function (w, k) { w.style.setProperty('--d', (k * 90) + 'ms'); });
+    [].forEach.call(document.querySelectorAll('.apps li,.about .copy p'), function (w, k) { w.style.setProperty('--d', (k % 3 * 100) + 'ms'); });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    rv.forEach(function (el) {
+      if (el.getBoundingClientRect().top < innerHeight * 0.95) el.classList.add('in'); else io.observe(el);
+    });
+  }
+
+  /* Auftakt bewegt sich beim Scrollen mit: wird kleiner und blasser, das Logo oben übernimmt */
+  var lock = $('lockup');
+  if (lock && !reduce) {
+    var tick = function () {
+      var y = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.8)));
+      lock.style.transform = 'translateY(' + (y * -60) + 'px) scale(' + (1 - y * 0.12) + ')';
+      lock.style.opacity = String(1 - y * 0.9);
+    };
+    window.addEventListener('scroll', tick, { passive: true }); tick();
+  }
+
+  /* Kopfleiste zeigt, in welchem Abschnitt man gerade ist */
+  var navLinks = [].slice.call(document.querySelectorAll('nav.main a[href^="#"]'));
+  if (navLinks.length && 'IntersectionObserver' in window) {
+    var secIO = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        navLinks.forEach(function (l) { if (l.getAttribute('href') === '#' + e.target.id) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current'); });
+      });
+    }, { rootMargin: '-50% 0px -50% 0px' });
+    ['start', 'projekte', 'ueber', 'apps', 'kontakt'].forEach(function (id) { if ($(id)) secIO.observe($(id)); });
   }
 
   function konfig() {
