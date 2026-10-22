@@ -157,9 +157,32 @@ window.SITE = {
     { titel: "Baugeschichte II", art: "Lern-App", text: "Lernkarten von der Aufklärung bis zum Dekonstruktivismus, mit Wiederholungsrhythmus, Stil-Lexikon und Quiz.", link: "apps/lernkarten/" }
   ],
 
+  /* Startseite: Was ich mache. link = Projekt, das man beim Klick öffnet */
+  felder: [
+    { titel: "Möbel", text: "Entwurf und Bau in der Werkstatt, vom geschweißten Stahlgestell bis zur gewebten Sitzfläche.", link: "woven" },
+    { titel: "Leuchten", text: "Licht mit eigener Elektronik und Software, gesteuert über Sensoren, Drehregler oder App.", link: "lmp01" },
+    { titel: "Räume", text: "Innenarchitektur und kleine Bauten, vom Entwurf bis in die Werkplanung.", link: "hochstapler" }
+  ],
+
+  zitat: "Ich entwerfe nicht nur am Rechner, sondern baue meine Projekte selbst in der Werkstatt.",
   ueber: [
-    "Ich bin gelernter Mechatroniker und studiere Innenarchitektur. Diese Kombination prägt meine Arbeit: Ich entwerfe nicht nur am Rechner, sondern baue meine Projekte selbst in der Werkstatt.",
-    "Zurzeit studiere ich ein Semester in Antwerpen."
+    "Ich bin gelernter Mechatroniker und studiere Innenarchitektur an der Hochschule Mainz. Zurzeit verbringe ich ein Semester in Antwerpen."
+  ],
+  werkzeuge: ["Rhino", "Blender", "ESP32", "Schweißen", "Lasercut"],
+
+  /* Zahlen-Leiste: n wird hochgezählt */
+  zahlen: [
+    { n: 7, label: "Projekte" },
+    { n: 3, label: "Leuchten" },
+    { n: 2, label: "Apps" },
+    { n: 56, label: "Schlafkammern im Hochstapler" }
+  ],
+
+  ablauf: [
+    ["Entwurf", "Skizzen, Konzepte und Pläne. Architekturprojekte entstehen im Team."],
+    ["Modell", "Am Rechner als 3D-Modell, oft auch als Arbeitsmodell aus Holz."],
+    ["Bauen", "In der Werkstatt: schweißen, lasern, nähen, verdrahten."],
+    ["Programmieren", "Die Leuchten bekommen eigene Steuerungen und Weboberflächen."]
   ],
   portrait: "img/portrait.webp"
 };

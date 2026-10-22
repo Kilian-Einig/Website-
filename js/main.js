@@ -9,40 +9,94 @@
   var dims = function (src) { return D[src] ? ' width="' + D[src][0] + '" height="' + D[src][1] + '"' : ''; };
   var url = function (p) { return 'projekt.html?id=' + encodeURIComponent(p.id); };
 
-  if ($('foot')) $('foot').textContent = S.name + ' · ' + S.stand;
+  if ($('foot')) $('foot').textContent = '© ' + new Date().getFullYear() + ' ' + S.name + ' · ' + S.ort;
 
-  /* Kopfzeile: Linie beim Scrollen; auf der Startseite erscheint der Name erst nach dem Auftakt */
-  var hd = $('top'), hero = $('start');
-  function onScroll() {
-    hd.classList.toggle('scrolled', scrollY > 8);
-    if (hero) hd.classList.toggle('past', hero.getBoundingClientRect().bottom < 80);
-  }
+  /* Kopfzeile: durchsichtig über dem Auftakt, weiß beim Scrollen */
+  var hd = $('top');
+  function onScroll() { hd.classList.toggle('scrolled', scrollY > 8); }
   if (hd) { window.addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
+
+  /* Auftauchen beim Scrollen. Was beim Laden schon im Bild ist, bleibt sofort sichtbar. */
+  var revealIO = (!reduce && 'IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -10% 0px' }) : null;
+  function reveal(list) {
+    if (!revealIO) return;
+    document.documentElement.classList.add('anim');
+    [].forEach.call(list, function (el) {
+      if (el.getBoundingClientRect().top < innerHeight * 0.95) el.classList.add('in'); else revealIO.observe(el);
+    });
+  }
 
   /* ================= Startseite ================= */
   if (PAGE === 'home') {
-    $('works').innerHTML = S.projekte.map(function (p, i) {
-      var a = p.uebersicht || p.bild;
-      return '<article class="work" id="p-' + esc(p.id) + '" data-i="' + i + '">' +
+    /* Projekte: zwei Spalten, Formate wechseln 4:3 und 3:4. Auf dem Handy eine Spalte in der richtigen Reihenfolge. */
+    var card = function (p, i) {
+      var a = p.uebersicht || p.bild, ratio = (i % 4 === 0 || i % 4 === 3) ? '4/3' : '3/4';
+      return '<article class="work rv" id="p-' + esc(p.id) + '" style="--d:' + (i % 2 * 100) + 'ms">' +
         '<a href="' + url(p) + '">' +
-          '<div class="ph rv-img' + (p.hell ? ' light' : '') + '">' +
-            '<img src="' + esc(a) + '" alt="' + esc(p.bildAlt) + '"' + dims(a) + (i ? ' loading="lazy"' : '') + ' decoding="async"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '>' +
+          '<div class="ph' + (p.hell ? ' light' : '') + '" style="aspect-ratio:' + ratio + '">' +
+            '<img src="' + esc(a) + '" alt="' + esc(p.bildAlt) + '"' + dims(a) + (i > 1 ? ' loading="lazy"' : '') + ' decoding="async"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '>' +
+            '<div class="ov" aria-hidden="true"><h3>' + esc(p.titel) + '</h3><p class="label">' + esc(p.art) + ' · ' + esc(p.stand) + '</p><p class="ov-kurz">' + esc(p.kurz) + '</p></div>' +
           '</div>' +
-          '<div class="cap cols">' +
-            '<h2 class="rv-line"><span>' + esc(p.titel) + '</span></h2>' +
-            '<p class="kurz rv" style="--d:150ms">' + esc(p.kurz) + '</p>' +
-            '<span class="go rv" style="--d:250ms">Ansehen <span aria-hidden="true">→</span></span>' +
-          '</div>' +
+          '<div class="cap"><h3>' + esc(p.titel) + '</h3><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
         '</a></article>';
+    };
+    var mq = window.matchMedia('(max-width: 760px)');
+    var grid = function () {
+      var cards = S.projekte.map(card);
+      $('works').innerHTML = mq.matches ? '<div class="col">' + cards.join('') + '</div>' :
+        '<div class="col">' + cards.filter(function (c, i) { return i % 2 === 0; }).join('') + '</div>' +
+        '<div class="col">' + cards.filter(function (c, i) { return i % 2 === 1; }).join('') + '</div>';
+      reveal(document.querySelectorAll('#works .rv'));
+    };
+    $('count').textContent = '( ' + two(S.projekte.length) + ' Projekte )';
+
+    var byId = function (id) { return S.projekte.filter(function (p) { return p.id === id; })[0]; };
+    $('felder').innerHTML = S.felder.map(function (f) {
+      return '<li class="rv"><a href="' + url(byId(f.link)) + '"><h3>' + esc(f.titel) + '</h3><p>' + esc(f.text) + '</p><span class="arr" aria-hidden="true">→</span></a></li>';
     }).join('');
 
+    $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
     $('about-text').innerHTML = S.ueber.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
-    $('app-list').innerHTML = S.apps.map(function (a) {
-      return '<li><a href="' + esc(a.link) + '"><h3>' + esc(a.titel) + '</h3><p>' + esc(a.text) + '</p><span class="go">Öffnen <span aria-hidden="true">→</span></span></a></li>';
-    }).join('');
-    $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email;
+    $('chips').innerHTML = S.werkzeuge.map(function (w) { return '<li class="label">' + esc(w) + '</li>'; }).join('');
 
-    /* Der eine große Moment: Die Kerbe schneidet sich in den Block */
+    $('stats').innerHTML = S.zahlen.map(function (z) {
+      return '<li><strong data-n="' + z.n + '">' + z.n + '</strong><span class="label">' + esc(z.label) + '</span></li>';
+    }).join('');
+
+    $('steps').innerHTML = S.ablauf.map(function (st, k) {
+      return '<li class="rv" style="--d:' + (k * 120) + 'ms"><span class="big" aria-hidden="true">' + two(k + 1) + '</span><h3>' + esc(st[0]) + '</h3><p>' + esc(st[1]) + '</p></li>';
+    }).join('');
+
+    $('app-list').innerHTML = S.apps.map(function (a) {
+      return '<li class="rv"><a href="' + esc(a.link) + '"><h3>' + esc(a.titel) + '</h3><p>' + esc(a.text) + '</p><span class="arr" aria-hidden="true">→</span></a></li>';
+    }).join('');
+    $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email + ' →';
+
+    grid();
+    if (mq.addEventListener) mq.addEventListener('change', grid); else mq.addListener(grid);
+    reveal(document.querySelectorAll('.rv:not(.work)'));
+    [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
+    reveal(document.querySelectorAll('.contact h2'));
+
+    /* Zahlen zählen hoch, wenn die Leiste ins Bild kommt */
+    var nums = [].slice.call(document.querySelectorAll('[data-n]'));
+    if (!reduce && 'IntersectionObserver' in window) {
+      var counted = false;
+      nums.forEach(function (n) { n.textContent = '0'; });
+      new IntersectionObserver(function (es, ob) {
+        if (!es[0].isIntersecting || counted) return; counted = true; ob.disconnect();
+        var t0 = performance.now();
+        (function step(t) {
+          var k = Math.min(1, Math.max(0, (t - t0) / 1400)), e = 1 - Math.pow(1 - k, 3);
+          nums.forEach(function (n) { n.textContent = Math.round(+n.dataset.n * e); });
+          if (k < 1) requestAnimationFrame(step);
+        })(t0);
+      }, { threshold: 0.5 }).observe($('stats'));
+    }
+
+    /* Die Kerbe schneidet sich in den Block */
     (function () {
       var poly = $('kerbe');
       var set = function (x) { poly.setAttribute('points', '10,10 100,10 100,40 ' + x.toFixed(2) + ',60 100,80 100,110 10,110'); };
@@ -51,7 +105,7 @@
       var t0 = null; set(100);
       requestAnimationFrame(function step(t) {
         if (t0 === null) t0 = t;
-        var p = Math.min(1, Math.max(0, (t - t0 - 300) / 850));
+        var p = Math.min(1, Math.max(0, (t - t0 - 500) / 850));
         set(100 - 40 * back(p));
         if (p < 1) requestAnimationFrame(step);
       });
@@ -67,7 +121,7 @@
     document.title = p.titel + ' · Kilian Einig';
 
     var heroImg = p.interaktiv === 'konfigurator' ? konfig() :
-      '<figure class="pp-hero' + (p.hell ? ' light' : '') + '">' + (p.bildLabel ? '<span class="blabel meta">' + esc(p.bildLabel) + '</span>' : '') +
+      '<figure class="pp-hero' + (p.hell ? ' light' : '') + '">' + (p.bildLabel ? '<span class="blabel label">' + esc(p.bildLabel) + '</span>' : '') +
       '<img src="' + esc(p.bild) + '" alt="' + esc(p.bildAlt) + '"' + dims(p.bild) + ' decoding="async" fetchpriority="high"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '></figure>';
 
     var lam = p.interaktiv === 'lamellen' ?
@@ -85,7 +139,7 @@
       return '<figure class="rv' + (wide ? ' wide' : '') + '">' + media + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
     }).join('') + '</div>' : '';
 
-    var facts = [['Art', p.art], ['Stand', p.stand]].concat(p.fakten || []).map(function (f) { return '<div><dt class="meta">' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
+    var facts = [['Art', p.art], ['Stand', p.stand]].concat(p.fakten || []).map(function (f) { return '<div><dt class="label">' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
 
     $('projekt').innerHTML =
       '<div class="wrap">' +
@@ -98,8 +152,10 @@
         '<div class="pp-body rv"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
           (p.hinweis ? '<p class="hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div></div>' +
         lam + steps + gal +
-        '<a class="next rv" href="' + url(nx) + '"><span class="meta">Nächstes Projekt</span><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
+        '<a class="next rv" href="' + url(nx) + '"><span class="label">Nächstes Projekt</span><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
       '</div>';
+
+    reveal(document.querySelectorAll('#projekt .rv'));
 
     /* Großansicht für Galeriebilder */
     var lb = $('lb');
@@ -156,36 +212,8 @@
     setTimeout(function () { location.href = a.href; }, 260);
   });
 
-  /* Auftauchen beim Scrollen. Was beim Laden schon im Bild ist, bleibt sofort sichtbar. */
-  if (!reduce && 'IntersectionObserver' in window) {
-    document.documentElement.classList.add('anim');
-    var rv = [].slice.call(document.querySelectorAll('.rv,.rv-img,.rv-line,.sec-title,.about figure,.about .copy p,.apps li,.contact h2 .w,.contact .mail'));
-    rv.forEach(function (el) {
-      if (!/rv/.test(el.className)) el.classList.add(el.matches('.contact h2 .w') ? 'rv-line' : 'rv');
-    });
-    [].forEach.call(document.querySelectorAll('.contact h2 .w'), function (w, k) { w.style.setProperty('--d', (k * 90) + 'ms'); });
-    [].forEach.call(document.querySelectorAll('.apps li,.about .copy p'), function (w, k) { w.style.setProperty('--d', (k % 3 * 100) + 'ms'); });
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -12% 0px' });
-    rv.forEach(function (el) {
-      if (el.getBoundingClientRect().top < innerHeight * 0.95) el.classList.add('in'); else io.observe(el);
-    });
-  }
-
-  /* Auftakt bewegt sich beim Scrollen mit: wird kleiner und blasser, das Logo oben übernimmt */
-  var lock = $('lockup');
-  if (lock && !reduce) {
-    var tick = function () {
-      var y = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.8)));
-      lock.style.transform = 'translateY(' + (y * -60) + 'px) scale(' + (1 - y * 0.12) + ')';
-      lock.style.opacity = String(1 - y * 0.9);
-    };
-    window.addEventListener('scroll', tick, { passive: true }); tick();
-  }
-
   /* Kopfleiste zeigt, in welchem Abschnitt man gerade ist */
-  var navLinks = [].slice.call(document.querySelectorAll('nav.main a[href^="#"]'));
+  var navLinks = [].slice.call(document.querySelectorAll('.nav .links a[href^="#"]'));
   if (navLinks.length && 'IntersectionObserver' in window) {
     var secIO = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
@@ -193,7 +221,7 @@
         navLinks.forEach(function (l) { if (l.getAttribute('href') === '#' + e.target.id) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current'); });
       });
     }, { rootMargin: '-50% 0px -50% 0px' });
-    ['start', 'projekte', 'ueber', 'apps', 'kontakt'].forEach(function (id) { if ($(id)) secIO.observe($(id)); });
+    ['start', 'projekte', 'arbeit', 'ueber', 'ablauf', 'apps', 'kontakt'].forEach(function (id) { if ($(id)) secIO.observe($(id)); });
   }
 
   function konfig() {
