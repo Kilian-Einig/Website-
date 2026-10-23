@@ -15,6 +15,11 @@
 <link rel="preload" href="fonts/SpaceGrotesk-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="img/woven-detail.webp" as="image">
 <link rel="stylesheet" href="css/style.css">
+<script>
+/* Intro nur einmal pro Sitzung und nur, wenn Bewegung erwünscht ist */
+(function(){var seen=false;try{seen=sessionStorage.getItem('ke-intro')==='1'}catch(e){}
+if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro-on')})();
+</script>
 </head>
 <body data-page="home">
 <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -35,7 +40,11 @@
 <main id="main">
   <!-- 1 · Auftakt -->
   <section class="hero" id="start" aria-labelledby="h-hero">
-    <div class="hero-img"><img src="img/woven-detail.webp" alt="Woven: gewebte Sitzfläche in Pink, Orange und Mint auf schwarzem Stahlgestell" width="1800" height="1351" fetchpriority="high"></div>
+    <div class="hero-img" id="hero-img">
+      <img class="on" src="img/woven-detail.webp" alt="Woven: gewebte Sitzfläche in Pink, Orange und Mint auf schwarzem Stahlgestell" width="1800" height="1351" fetchpriority="high">
+      <svg class="hero-logo" viewBox="10 10 90 100" aria-hidden="true"><polygon id="kerbe" points="10,10 100,10 100,40 60,60 100,80 100,110 10,110"/></svg>
+      <button type="button" class="hero-pause label" id="hero-pause" aria-pressed="false" hidden>Pause</button>
+    </div>
     <div class="wrap hero-body">
       <div class="hero-copy">
         <p class="label muted" id="hero-label">Möbel, Licht &amp; Räume — Mainz / Antwerpen</p>
@@ -45,9 +54,11 @@
           <a class="tlink" href="#ueber">Über mich</a>
         </div>
       </div>
-      <svg class="hero-mark" viewBox="10 10 90 100" aria-hidden="true"><polygon id="kerbe" points="10,10 100,10 100,40 60,60 100,80 100,110 10,110"/></svg>
     </div>
   </section>
+
+  <!-- Laufband: alle Projekte als farbige Streifen -->
+  <nav class="band" aria-label="Projekte im Überblick"><div class="band-track" id="band"></div></nav>
 
   <!-- 2 · Projekte -->
   <section class="sec wrap" id="projekte" aria-labelledby="h-projekte">
@@ -121,5 +132,6 @@
 <script src="js/data.js"></script>
 <script src="js/dims.js"></script>
 <script src="js/main.js"></script>
+<script src="js/intro.js"></script>
 </body>
 </html>

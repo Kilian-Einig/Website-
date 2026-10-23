@@ -96,8 +96,42 @@
       }, { threshold: 0.5 }).observe($('stats'));
     }
 
-    /* Die Kerbe schneidet sich in den Block */
-    (function () {
+    /* Laufband: Projektnamen in farbigen Feldern, läuft endlos, hält beim Drüberfahren */
+    var BAND = [['#1F2BFF', '#FAFAFA'], ['#CFE9DA', '#141414'], ['#FFF200', '#141414'], ['#141414', '#FAFAFA'], ['#F6B8D6', '#141414']];
+    var items = S.projekte.map(function (p, i) {
+      var c = BAND[i % BAND.length];
+      return '<a href="' + url(p) + '" style="background:' + c[0] + ';color:' + c[1] + '"><strong>' + esc(p.titel) + '</strong><span>' + esc(p.art) + '</span></a>';
+    }).join('');
+    $('band').innerHTML = items + '<span class="band-dup" aria-hidden="true">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
+
+    /* Auftaktbild: harte Schnitte durch die Projekte, wie im Reel. Pausierbar, bei reduzierter Bewegung still. */
+    var heroBox = $('hero-img'), pauseBtn = $('hero-pause');
+    var slides = ['img/woven-detail.webp', 'img/lmp-hero.webp', 'img/hs-kammern.webp', 'img/lmp02-render.webp', 'img/regal-model.webp', 'img/lmp03-hero.webp', 'img/woven-cushion.webp', 'img/lmp-tall.webp'];
+    var alts = ['Woven: gewebte Sitzfläche', 'LMP 01 leuchtet im dunklen Raum', 'Hochstapler: die Kammerwand von unten', 'LMP 02 mit türkisem Licht', 'Re:gal: Modell mit Lamellenfassade', 'LMP 03: Lichtstab im Glasrohr', 'Woven: gepolsterte Streifen', 'LMP 01: Lamellen in warmem Gelb'];
+    var cur = 0, playing = false, slideTimer = 0;
+    slides.slice(1).forEach(function (src, k) {
+      var im = new Image(); im.src = src; im.alt = alts[k + 1]; im.decoding = 'async';
+      if (D[src]) { im.width = D[src][0]; im.height = D[src][1]; }
+      heroBox.insertBefore(im, heroBox.querySelector('.hero-logo'));
+    });
+    var heroImgs = [].slice.call(heroBox.querySelectorAll('img'));
+    function show(k) { heroImgs[cur].classList.remove('on'); cur = k; heroImgs[cur].classList.add('on'); }
+    function loop() { slideTimer = setTimeout(function () { show((cur + 1) % heroImgs.length); loop(); }, cur === 0 ? 2200 : 1300); }
+    function play(on) {
+      playing = on; clearTimeout(slideTimer); if (on) loop();
+      pauseBtn.setAttribute('aria-pressed', String(!on)); pauseBtn.textContent = on ? 'Pause' : 'Abspielen';
+    }
+    if (!reduce) {
+      pauseBtn.hidden = false;
+      pauseBtn.addEventListener('click', function (e) { e.stopPropagation(); play(!playing); });
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+        if (pauseBtn.getAttribute('aria-pressed') === 'true' && !playing) return;   // vom Besucher pausiert
+        play(es[0].isIntersecting);
+      }).observe(heroBox);
+    }
+
+    /* Die Kerbe schneidet sich ins Bild, sobald das Intro vorbei ist */
+    var cutIn = function () {
       var poly = $('kerbe');
       var set = function (x) { poly.setAttribute('points', '10,10 100,10 100,40 ' + x.toFixed(2) + ',60 100,80 100,110 10,110'); };
       if (reduce) return;
@@ -105,11 +139,12 @@
       var t0 = null; set(100);
       requestAnimationFrame(function step(t) {
         if (t0 === null) t0 = t;
-        var p = Math.min(1, Math.max(0, (t - t0 - 500) / 850));
+        var p = Math.min(1, Math.max(0, (t - t0 - 250) / 850));
         set(100 - 40 * back(p));
         if (p < 1) requestAnimationFrame(step);
       });
-    })();
+    };
+    if (document.documentElement.classList.contains('intro-on')) window.addEventListener('introdone', cutIn, { once: true }); else cutIn();
   }
 
   /* ================= Projektseite ================= */
@@ -173,6 +208,23 @@
 
   /* ================= Gemeinsames Verhalten ================= */
 
+  /* Logo in Kopfleiste und Fuß: die Kerbe „beißt“ beim Drüberfahren */
+  [].forEach.call(document.querySelectorAll('.brand svg'), function (svg) {
+    svg.innerHTML = '<polygon points="10,10 100,10 100,40 60,60 100,80 100,110 10,110"/>';
+    var poly = svg.firstChild, busy = false;
+    svg.parentNode.addEventListener('mouseenter', function () {
+      if (busy || reduce) return; busy = true;
+      var t0 = performance.now(), seq = [60, 100, 60, 100, 60];
+      (function step(t) {
+        var p = Math.min(1, (t - t0) / 560), f = p * (seq.length - 1), i = Math.floor(f), r = f - i;
+        var a = seq[i], b = seq[Math.min(i + 1, seq.length - 1)], x = a + (b - a) * r * r * (3 - 2 * r);
+        poly.setAttribute('points', '10,10 100,10 100,40 ' + x.toFixed(2) + ',60 100,80 100,110 10,110');
+        if (p < 1) requestAnimationFrame(step); else busy = false;
+      })(t0);
+    });
+  });
+
+
   /* Jede Seite beginnt oben, auch nach „Nächstes Projekt“ und beim Zurückgehen.
      Nur ein Anker in der Adresse (#p-woven, #kontakt) springt gezielt dorthin. */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -185,7 +237,7 @@
 
   /* Weiches Scrollen mit Schwung */
   if (window.Lenis && !reduce) {
-    lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+    lenis = window.__lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
     (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
     lenis.on('scroll', onScroll);
   }
