@@ -49,6 +49,7 @@ window.SITE = {
       ],
       fakten: [["Team", "Teamprojekt, drei Personen"], ["Kontext", "HS Mainz, 3. und 4. Semester, 2025/26"], ["Ort", "Neues Frankfurt, Zeilenhäuser von Ernst May"], ["Umfang", "Entwurf, Werkplanung, Details, technischer Ausbau"]],
       bild: "img/hs-kammerleben.webp", hell: true,
+      uebersicht: "img/hs-kammern.webp",
       bildAlt: "Collage: drei gestapelte L-förmige Schlafkammern, in jeder liegt ein Mensch",
       zweitbild: "img/hs-kammern.webp",
       galerie: [
@@ -157,26 +158,27 @@ window.SITE = {
     { titel: "Baugeschichte II", art: "Lern-App", text: "Lernkarten von der Aufklärung bis zum Dekonstruktivismus, mit Wiederholungsrhythmus, Stil-Lexikon und Quiz.", link: "apps/lernkarten/" }
   ],
 
-  /* Startseite: Was ich mache. link = Projekt, das man beim Klick öffnet */
+  /* Startseite: Was ich mache. Kurz und konkret: ein Satz, was dazugehört, welche Projekte es zeigen. */
   felder: [
-    { titel: "Möbel", text: "Entwurf und Bau in der Werkstatt, vom geschweißten Stahlgestell bis zur gewebten Sitzfläche.", link: "woven" },
-    { titel: "Leuchten", text: "Licht mit eigener Elektronik und Software, gesteuert über Sensoren, Drehregler oder App.", link: "lmp01" },
-    { titel: "Räume", text: "Innenarchitektur und kleine Bauten, vom Entwurf bis in die Werkplanung.", link: "hochstapler" }
+    { titel: "Möbel", text: "Sitzmöbel und Objekte, vom Entwurf bis zum fertigen Stück.",
+      punkte: ["Entwurf und Prototyp", "Stahlgestelle, selbst geschweißt", "Textil: weben, nähen, polstern", "Recycelte Materialien"],
+      projekte: ["woven", "skelettstuhl"] },
+    { titel: "Leuchten", text: "Licht mit eigener Elektronik und Software.",
+      punkte: ["Sensoren und Interaktion", "ESP32 und LED-Steuerung", "Weboberflächen und Presets", "Gelaserte Gehäuse"],
+      projekte: ["lmp01", "lmp02", "lmp03"] },
+    { titel: "Räume", text: "Innenarchitektur und kleine Bauten.",
+      punkte: ["Konzept und Entwurf", "Werkplanung 1:50, Details 1:5", "Umbau im Bestand", "Modellbau"],
+      projekte: ["hochstapler", "regal"] }
   ],
 
   zitat: "Ich entwerfe nicht nur am Rechner, sondern baue meine Projekte selbst in der Werkstatt.",
+  /* ENTWURF – bitte prüfen: Herkunft und Beweggründe sind aus den Projekten abgeleitet */
   ueber: [
-    "Ich bin gelernter Mechatroniker und studiere Innenarchitektur an der Hochschule Mainz. Zurzeit verbringe ich ein Semester in Antwerpen."
+    "Meine Wurzeln liegen in der Technik. Als Mechatroniker habe ich gelernt, wie Dinge aufgebaut sind: Metall bearbeiten, Schaltungen verdrahten, Steuerungen programmieren.",
+    "Heute studiere ich Innenarchitektur an der Hochschule Mainz und verbringe gerade ein Semester in Antwerpen.",
+    "Mich fasziniert der Moment, in dem aus einer Skizze etwas wird, das man anfassen, einschalten und benutzen kann. Deshalb gebe ich keinen Schritt ab: Ich schweiße das Gestell, lasere die Bauteile und schreibe die Software selbst. Fertig ist ein Projekt für mich erst, wenn Form, Licht und Raum zusammenpassen."
   ],
   werkzeuge: ["Rhino", "Blender", "ESP32", "Schweißen", "Lasercut"],
-
-  /* Zahlen-Leiste: n wird hochgezählt */
-  zahlen: [
-    { n: 7, label: "Projekte" },
-    { n: 3, label: "Leuchten" },
-    { n: 2, label: "Apps" },
-    { n: 56, label: "Schlafkammern im Hochstapler" }
-  ],
 
   ablauf: [
     ["Entwurf", "Skizzen, Konzepte und Pläne. Architekturprojekte entstehen im Team."],

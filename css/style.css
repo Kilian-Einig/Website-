@@ -64,17 +64,24 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 /* ---------- Auftakt ----------
    Bild unter der Kopfleiste, darunter Überschrift und Kerbe auf einer Linie. Alles passt in den ersten Bildschirm. */
 .hero{min-height:100svh;display:flex;flex-direction:column;padding-top:var(--header-h)}
-.hero-img{position:relative;flex:1 1 auto;min-height:280px;max-height:70svh;background:var(--surface);overflow:hidden}
-.hero-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;opacity:0}
-.hero-img img.on{opacity:1}
+.hero-img{position:relative;flex:1 1 auto;min-height:280px;max-height:70svh;background:var(--paper);overflow:hidden}
+/* Jedes Bild hat eine eigene, deckende Fläche. Das neue schiebt sich von unten über das alte. */
+.hero-img .slide{position:absolute;inset:0;background:var(--paper);visibility:hidden;z-index:0}
+.hero-img .slide img{width:100%;height:100%;object-fit:contain}
+.hero-img .slide.prev{visibility:visible;z-index:0}
+.hero-img .slide.on{visibility:visible;z-index:1}
+@media (prefers-reduced-motion:no-preference){
+  .hero-img .slide.on{animation:wipeUp 800ms var(--ease) both}
+  .hero-img .slide.on img{animation:settleIn 1200ms var(--ease) both}
+}
+@keyframes wipeUp{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes settleIn{from{transform:translateY(6%)}}
 .hero-logo{position:absolute;z-index:2;left:50%;top:44%;height:clamp(96px,22%,200px);width:auto;transform:translate(-50%,-50%);pointer-events:none}
-.hero-logo{filter:drop-shadow(0 2px 18px rgba(0,0,0,.28))}
+.hero-logo{mix-blend-mode:difference}
 .hero-logo polygon{fill:#FAFAFA}
 .hero-pause{position:absolute;z-index:2;right:max(var(--gutter),env(safe-area-inset-right,0px));bottom:16px;min-height:44px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);cursor:pointer}
 .hero-pause:hover{background:var(--ink);color:var(--paper)}
-@media (prefers-reduced-motion:no-preference){.hero-img img.on{animation:settle 1500ms var(--ease) both}}
 @keyframes settle{from{transform:scale(1.06)}}
-.hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--paper) 0%,rgba(250,250,250,0) 40%);pointer-events:none}
 .hero-body{display:flex;align-items:stretch;justify-content:space-between;gap:24px;padding-top:clamp(16px,2vw,24px);padding-bottom:clamp(28px,4vw,56px);width:100%}
 .hero-copy{min-width:0;display:flex;flex-direction:column}
 .hero .label{margin:0}
@@ -124,8 +131,6 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .work a{display:block;text-decoration:none}
 .work .ph{position:relative;overflow:hidden;background:var(--surface)}
 .work .ph img{width:100%;height:100%;object-fit:cover;transition:transform 900ms var(--ease)}
-.work .ph.light{background:#fff}
-.work .ph.light img{object-fit:contain}
 .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:clamp(20px,2.4vw,32px);background:rgba(20,20,20,.85);color:var(--paper);opacity:0;transition:opacity 300ms ease}
 .ov h3{margin:0;font-size:clamp(36px,4vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1;transform:translateY(12px);transition:transform 400ms var(--ease)}
 .ov .label{margin:0;color:#BDBDBD}
@@ -139,6 +144,32 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .cap .label{margin:0}
 @media (max-width:760px){.grid{grid-template-columns:1fr}.col:nth-child(2){padding-top:0}.col{gap:40px}}
 @media (hover:none){.ov{display:none}}
+
+/* ---------- Was ich mache ---------- */
+.feld{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,5fr) minmax(0,3fr);gap:16px 32px;align-items:start;padding:clamp(28px,3vw,44px) 16px;margin-inline:-16px;border-bottom:1px solid var(--rule);transition:background 200ms ease,color 200ms ease}
+.felder{list-style:none;margin:0;padding:0}
+.felder .feld:first-child{border-top:1px solid var(--rule)}
+.feld h3{margin:0;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.feld-text{margin:0 0 14px;font-size:var(--fs-lead);font-weight:400;line-height:1.3}
+.punkte{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.punkte li{position:relative;padding-left:18px;font-weight:300;color:var(--graphite);transition:color 200ms ease}
+.punkte li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:1px;background:currentColor}
+.feld .punkte{grid-column:2}
+.feld-text{grid-column:2}
+.feld h3{grid-row:1 / span 2}
+.feld-proj{grid-column:3;grid-row:1 / span 2;margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.feld-proj .label{margin-bottom:6px}
+.feld-proj a{display:inline-flex;align-items:center;min-height:36px;font-weight:500;text-decoration:none;border-bottom:1px solid transparent;transition:border-color 200ms}
+.feld-proj a:hover{border-bottom-color:currentColor}
+.feld:hover{background:var(--ink);color:var(--paper)}
+.feld:hover .punkte li,.feld:hover .label{color:#C8C8C8}
+.feld a:focus-visible{outline-color:currentColor}
+@media (max-width:760px){
+  .feld{grid-template-columns:1fr;gap:12px}
+  .feld h3,.feld-text,.feld .punkte,.feld-proj{grid-column:1;grid-row:auto}
+  .feld-proj{flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 18px;margin-top:6px}
+  .feld-proj .label{margin:0;width:100%}
+}
 
 /* ---------- Zeilen: Was ich mache, Apps ---------- */
 .rows{list-style:none;margin:0;padding:0}
@@ -165,14 +196,6 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:28px 0 0;padding:0}
 .chips li{border:1px solid var(--ink);padding:9px 14px}
 @media (max-width:760px){.about{grid-template-columns:1fr}}
-
-/* ---------- Zahlen ---------- */
-.stats{background:var(--ink);color:var(--paper);margin-top:var(--space-l)}
-.stats-in{list-style:none;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding-block:clamp(28px,3vw,40px)}
-.stats li{display:flex;flex-direction:column;gap:6px;min-width:0}
-.stats strong{font-size:clamp(36px,4vw,56px);font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
-.stats .label{font-weight:300;color:var(--on-stage-dim)}
-@media (max-width:760px){.stats-in{grid-template-columns:1fr 1fr;row-gap:28px}}
 
 /* ---------- Ablauf ---------- */
 .flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
@@ -205,8 +228,8 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .pp-title{margin:clamp(12px,2vw,24px) 0 0 -.04em;font-size:clamp(56px,11vw,176px);font-weight:700;letter-spacing:-.06em;line-height:.88;overflow:hidden;padding-bottom:.04em;overflow-wrap:anywhere}
 .pp-title>span{display:inline-block}
 .pp-kurz{margin:clamp(12px,2vw,24px) 0 0;font-size:var(--fs-lead);line-height:1.3;color:var(--graphite);max-width:40ch}
-.pp-hero{margin:0;position:relative;background:var(--mist)}
-.pp-hero img{width:100%;max-height:86svh;object-fit:cover}
+.pp-hero{margin:0;position:relative;background:var(--paper)}
+.pp-hero img{width:100%;max-height:86svh;object-fit:contain}
 .pp-hero.light{background:var(--paper)}
 .pp-hero.light img{object-fit:contain}
 .blabel{position:absolute;left:12px;top:12px;background:var(--paper);padding:6px 8px;z-index:1}
@@ -310,8 +333,8 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   .anim .work.rv{transform:scale(.92);transition:opacity 450ms ease,transform 650ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .work.rv.in{transform:none}
   .anim .rv.in{opacity:1}
-  .anim .rows .rv,.anim .flow .rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
-  .anim .rows .rv.in,.anim .flow .rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
+  .anim .felder .rv,.anim .rows .rv,.anim .flow .rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .felder .rv.in,.anim .rows .rv.in,.anim .flow .rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
   .anim .contact h2 .w{clip-path:inset(0 100% 0 0);transition:clip-path 600ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .contact h2.in .w{clip-path:inset(0 0 0 0)}
 }

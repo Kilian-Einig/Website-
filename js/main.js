@@ -32,11 +32,11 @@
   if (PAGE === 'home') {
     /* Projekte: zwei Spalten, Formate wechseln 4:3 und 3:4. Auf dem Handy eine Spalte in der richtigen Reihenfolge. */
     var card = function (p, i) {
-      var a = p.uebersicht || p.bild, ratio = (i % 4 === 0 || i % 4 === 3) ? '4/3' : '3/4';
+      var a = p.uebersicht || p.bild, ratio = D[a] ? D[a][0] + '/' + D[a][1] : '4/3';   // ganzes Bild, nichts beschnitten
       return '<article class="work rv" id="p-' + esc(p.id) + '" style="--d:' + (i % 2 * 100) + 'ms">' +
         '<a href="' + url(p) + '">' +
-          '<div class="ph' + (p.hell ? ' light' : '') + '" style="aspect-ratio:' + ratio + '">' +
-            '<img src="' + esc(a) + '" alt="' + esc(p.bildAlt) + '"' + dims(a) + (i > 1 ? ' loading="lazy"' : '') + ' decoding="async"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '>' +
+          '<div class="ph" style="aspect-ratio:' + ratio + '">' +
+            '<img src="' + esc(a) + '" alt="' + esc(p.bildAlt) + '"' + dims(a) + (i > 1 ? ' loading="lazy"' : '') + ' decoding="async">' +
             '<div class="ov" aria-hidden="true"><h3>' + esc(p.titel) + '</h3><p class="label">' + esc(p.art) + ' · ' + esc(p.stand) + '</p><p class="ov-kurz">' + esc(p.kurz) + '</p></div>' +
           '</div>' +
           '<div class="cap"><h3>' + esc(p.titel) + '</h3><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
@@ -54,16 +54,14 @@
 
     var byId = function (id) { return S.projekte.filter(function (p) { return p.id === id; })[0]; };
     $('felder').innerHTML = S.felder.map(function (f) {
-      return '<li class="rv"><a href="' + url(byId(f.link)) + '"><h3>' + esc(f.titel) + '</h3><p>' + esc(f.text) + '</p><span class="arr" aria-hidden="true">→</span></a></li>';
+      return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p>' +
+        '<ul class="punkte">' + f.punkte.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+        '<p class="feld-proj"><span class="label muted">Projekte</span>' + f.projekte.map(function (id) { var p = byId(id); return '<a href="' + url(p) + '">' + esc(p.titel) + ' →</a>'; }).join('') + '</p></li>';
     }).join('');
 
     $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
     $('about-text').innerHTML = S.ueber.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
     $('chips').innerHTML = S.werkzeuge.map(function (w) { return '<li class="label">' + esc(w) + '</li>'; }).join('');
-
-    $('stats').innerHTML = S.zahlen.map(function (z) {
-      return '<li><strong data-n="' + z.n + '">' + z.n + '</strong><span class="label">' + esc(z.label) + '</span></li>';
-    }).join('');
 
     $('steps').innerHTML = S.ablauf.map(function (st, k) {
       return '<li class="rv" style="--d:' + (k * 120) + 'ms"><span class="big" aria-hidden="true">' + two(k + 1) + '</span><h3>' + esc(st[0]) + '</h3><p>' + esc(st[1]) + '</p></li>';
@@ -80,22 +78,6 @@
     [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
     reveal(document.querySelectorAll('.contact h2'));
 
-    /* Zahlen zählen hoch, wenn die Leiste ins Bild kommt */
-    var nums = [].slice.call(document.querySelectorAll('[data-n]'));
-    if (!reduce && 'IntersectionObserver' in window) {
-      var counted = false;
-      nums.forEach(function (n) { n.textContent = '0'; });
-      new IntersectionObserver(function (es, ob) {
-        if (!es[0].isIntersecting || counted) return; counted = true; ob.disconnect();
-        var t0 = performance.now();
-        (function step(t) {
-          var k = Math.min(1, Math.max(0, (t - t0) / 1400)), e = 1 - Math.pow(1 - k, 3);
-          nums.forEach(function (n) { n.textContent = Math.round(+n.dataset.n * e); });
-          if (k < 1) requestAnimationFrame(step);
-        })(t0);
-      }, { threshold: 0.5 }).observe($('stats'));
-    }
-
     /* Laufband: Projektnamen in farbigen Feldern, läuft endlos, hält beim Drüberfahren */
     var BAND = [['#1F2BFF', '#FAFAFA'], ['#CFE9DA', '#141414'], ['#FFF200', '#141414'], ['#141414', '#FAFAFA'], ['#F6B8D6', '#141414']];
     var items = S.projekte.map(function (p, i) {
@@ -104,30 +86,35 @@
     }).join('');
     $('band').innerHTML = items + '<span class="band-dup" aria-hidden="true">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
 
-    /* Auftaktbild: harte Schnitte durch die Projekte, wie im Reel. Pausierbar, bei reduzierter Bewegung still. */
+    /* Auftaktbild: ein Bild pro Projekt, jedes ganz zu sehen. Das neue Bild blendet über dem alten ein,
+       das alte bleibt stehen, bis der Übergang fertig ist – so gibt es kein Flackern und keine Dopplung. */
     var heroBox = $('hero-img'), pauseBtn = $('hero-pause');
-    var slides = ['img/woven-detail.webp', 'img/lmp-hero.webp', 'img/hs-kammern.webp', 'img/lmp02-render.webp', 'img/regal-model.webp', 'img/lmp03-hero.webp', 'img/woven-cushion.webp', 'img/lmp-tall.webp'];
-    var alts = ['Woven: gewebte Sitzfläche', 'LMP 01 leuchtet im dunklen Raum', 'Hochstapler: die Kammerwand von unten', 'LMP 02 mit türkisem Licht', 'Re:gal: Modell mit Lamellenfassade', 'LMP 03: Lichtstab im Glasrohr', 'Woven: gepolsterte Streifen', 'LMP 01: Lamellen in warmem Gelb'];
-    var cur = 0, playing = false, slideTimer = 0;
-    slides.slice(1).forEach(function (src, k) {
-      var im = new Image(); im.src = src; im.alt = alts[k + 1]; im.decoding = 'async';
-      if (D[src]) { im.width = D[src][0]; im.height = D[src][1]; }
-      heroBox.insertBefore(im, heroBox.querySelector('.hero-logo'));
+    var slides = S.projekte.map(function (p) { return { src: p.id === 'hochstapler' ? 'img/hs-kammern.webp' : (p.uebersicht || p.bild), alt: p.titel + ': ' + p.kurz }; });
+    heroBox.querySelector('img').remove();
+    slides.forEach(function (sl, k) {
+      var box = document.createElement('div'); box.className = 'slide' + (k === 0 ? ' on' : '');
+      var im = new Image(); im.src = sl.src; im.alt = sl.alt; im.decoding = 'async';
+      if (D[sl.src]) { im.width = D[sl.src][0]; im.height = D[sl.src][1]; }
+      if (k === 0) im.fetchPriority = 'high';
+      box.appendChild(im);
+      heroBox.insertBefore(box, heroBox.querySelector('.hero-logo'));
     });
-    var heroImgs = [].slice.call(heroBox.querySelectorAll('img'));
-    function show(k) { heroImgs[cur].classList.remove('on'); cur = k; heroImgs[cur].classList.add('on'); }
-    function loop() { slideTimer = setTimeout(function () { show((cur + 1) % heroImgs.length); loop(); }, cur === 0 ? 2200 : 1300); }
+    var heroImgs = [].slice.call(heroBox.querySelectorAll('.slide')), cur = 0, playing = false, slideTimer = 0;
+    function show(k) {
+      var old = heroImgs[cur], nu = heroImgs[k];
+      heroImgs.forEach(function (im) { if (im !== old && im !== nu) im.className = 'slide'; });
+      old.className = 'slide prev'; nu.className = 'slide on'; cur = k;
+    }
+    function loop() { slideTimer = setTimeout(function () { show((cur + 1) % heroImgs.length); loop(); }, 2600); }
     function play(on) {
       playing = on; clearTimeout(slideTimer); if (on) loop();
       pauseBtn.setAttribute('aria-pressed', String(!on)); pauseBtn.textContent = on ? 'Pause' : 'Abspielen';
     }
+    var userPaused = false;
     if (!reduce) {
       pauseBtn.hidden = false;
-      pauseBtn.addEventListener('click', function (e) { e.stopPropagation(); play(!playing); });
-      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
-        if (pauseBtn.getAttribute('aria-pressed') === 'true' && !playing) return;   // vom Besucher pausiert
-        play(es[0].isIntersecting);
-      }).observe(heroBox);
+      pauseBtn.addEventListener('click', function (e) { e.stopPropagation(); userPaused = playing; play(!playing); });
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!userPaused) play(es[0].isIntersecting); }).observe(heroBox);
     }
 
     /* Die Kerbe schneidet sich ins Bild, sobald das Intro vorbei ist */
