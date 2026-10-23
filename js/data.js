@@ -14,6 +14,7 @@ window.SITE = {
   projekte: [
     {
       id: "woven",
+      farbe: "#F2557A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Woven",
       art: "Möbel",
       stand: "Realisiert",
@@ -38,6 +39,7 @@ window.SITE = {
     },
     {
       id: "hochstapler",
+      farbe: "#B08A62",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Hochstapler",
       art: "Architektur",
       stand: "Geplant",
@@ -63,6 +65,7 @@ window.SITE = {
     },
     {
       id: "lmp01",
+      farbe: "#E8892A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "LMP 01",
       art: "Licht",
       stand: "Realisiert",
@@ -81,6 +84,7 @@ window.SITE = {
     },
     {
       id: "lmp02",
+      farbe: "#8FCFCB",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "LMP 02",
       art: "Licht",
       stand: "Prototyp",
@@ -101,6 +105,7 @@ window.SITE = {
     },
     {
       id: "regal",
+      farbe: "#D8C8A8",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Re:gal",
       art: "Architektur",
       stand: "Geplant",
@@ -122,6 +127,7 @@ window.SITE = {
     },
     {
       id: "lmp03",
+      farbe: "#C9C6C0",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "LMP 03",
       art: "Licht",
       stand: "Entwurf",
@@ -137,6 +143,7 @@ window.SITE = {
     },
     {
       id: "skelettstuhl",
+      farbe: "#E6E6E6",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Rib Chair",
       art: "Möbel",
       stand: "Entwurf",
@@ -172,11 +179,10 @@ window.SITE = {
   ],
 
   zitat: "Ich entwerfe nicht nur am Rechner, sondern baue meine Projekte selbst in der Werkstatt.",
-  /* ENTWURF – bitte prüfen: Herkunft und Beweggründe sind aus den Projekten abgeleitet */
   ueber: [
-    "Meine Wurzeln liegen in der Technik. Als Mechatroniker habe ich gelernt, wie Dinge aufgebaut sind: Metall bearbeiten, Schaltungen verdrahten, Steuerungen programmieren.",
-    "Heute studiere ich Innenarchitektur an der Hochschule Mainz und verbringe gerade ein Semester in Antwerpen.",
-    "Mich fasziniert der Moment, in dem aus einer Skizze etwas wird, das man anfassen, einschalten und benutzen kann. Deshalb gebe ich keinen Schritt ab: Ich schweiße das Gestell, lasere die Bauteile und schreibe die Software selbst. Fertig ist ein Projekt für mich erst, wenn Form, Licht und Raum zusammenpassen."
+    "Als gelernter Mechatroniker habe ich einen direkten Bezug zur Technik. Ich weiß, wie Dinge aufgebaut sind und wie sie funktionieren.",
+    "Das Studium der Innenarchitektur an der Hochschule Mainz hat mich zum Design gebracht. Zurzeit verbringe ich ein Semester in Antwerpen.",
+    "Aus dieser Kombination will ich Neues schaffen oder Bestehendes neu denken, im Verbund von Technik und Design."
   ],
   werkzeuge: ["Rhino", "Blender", "ESP32", "Schweißen", "Lasercut"],
 

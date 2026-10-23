@@ -16,8 +16,7 @@
   /* Streifen: eine Farbe pro Projekt, aus dem Reel übernommen */
   var COLORS = [['#1F2BFF', '#FAFAFA'], ['#CFE9DA', '#141414'], ['#FFF200', '#141414'], ['#141414', '#FAFAFA'], ['#F6B8D6', '#141414'], ['#FAFAFA', '#141414'], ['#1F2BFF', '#FAFAFA']];
   var stripes = S.projekte.map(function (p, i) {
-    var c = COLORS[i % COLORS.length];
-    return '<div class="i-stripe" style="background:' + c[0] + ';color:' + c[1] + '"><span>' + p.titel + ' / ' + p.art + ' / ' + p.kurz.replace(/\.$/, '') + ' /</span></div>';
+    return '<div class="i-stripe" style="background:' + (p.farbe || COLORS[i % COLORS.length][0]) + ';color:#141414"><span>' + p.titel + ' / ' + p.art + ' / ' + p.kurz.replace(/\.$/, '') + ' /</span></div>';
   }).join('');
   var pics = S.projekte.map(function (p) { return p.uebersicht || p.bild; }).concat(['img/woven-cushion.webp', 'img/lmp-hand.webp']);
   var SPOTS = [[6, 10, 26], [60, 6, 30], [30, 36, 32], [4, 58, 24], [66, 50, 28], [42, 4, 18], [44, 64, 22], [76, 24, 18], [16, 34, 16]];
