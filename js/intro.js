@@ -1,6 +1,6 @@
 /* Intro der Startseite, angelehnt an einen schnell geschnittenen Reel:
    1. Farbige Streifen mit den Projektnamen fahren hoch und wieder heraus.
-   2. Wortmarke erscheint, die Schrift klappt weg, die Kerbe „beißt“ zweimal.
+   2. Wortmarke erscheint, die Schrift klappt weg, die Kerbe bleibt.
    3. Projektbilder ploppen als Collage auf.
    4. Die Kerbe fliegt in die Kopfleiste, die Seite liegt frei.
    Läuft einmal pro Sitzung, nicht bei reduzierter Bewegung, jederzeit überspringbar. */
@@ -18,7 +18,7 @@
   var stripes = S.projekte.map(function (p, i) {
     return '<div class="i-stripe" style="background:' + (p.farbe || COLORS[i % COLORS.length][0]) + ';color:#141414"><span>' + p.titel + ' / ' + p.art + ' / ' + p.kurz.replace(/\.$/, '') + ' /</span></div>';
   }).join('');
-  var pics = S.projekte.map(function (p) { return p.uebersicht || p.bild; }).concat(['img/woven-cushion.webp', 'img/lmp-hand.webp']);
+  var pics = S.projekte.map(function (p) { return p.uebersicht || p.bild; });
   var SPOTS = [[6, 10, 26], [60, 6, 30], [30, 36, 32], [4, 58, 24], [66, 50, 28], [42, 4, 18], [44, 64, 22], [76, 24, 18], [16, 34, 16]];
 
   var el = document.createElement('div');
@@ -37,21 +37,6 @@
   var lock = el.querySelector('.i-lock'), name = el.querySelector('.i-name'), poly = lock.querySelector('polygon');
   var ease = 'cubic-bezier(.16,1,.3,1)', snap = 'cubic-bezier(.7,0,.2,1)';
 
-  function bite(times) {
-    var frames = [];
-    for (var k = 0; k < times; k++) frames.push(60, 96, 60);
-    var t0 = performance.now(), dur = 180 * frames.length;
-    return new Promise(function (res) {
-      (function step(t) {
-        if (done) return res();
-        var p = Math.max(0, Math.min(1, (t - t0) / dur)), f = p * (frames.length - 1), i = Math.floor(f), r = f - i;
-        var a = frames[i], b = frames[Math.min(i + 1, frames.length - 1)];
-        poly.setAttribute('points', KERBE((a + (b - a) * (r * r * (3 - 2 * r))).toFixed(2)));
-        if (p < 1) requestAnimationFrame(step); else res();
-      })(t0);
-    });
-  }
-
   async function run() {
     /* 1 · Streifen */
     st.forEach(function (s, i) { s.animate([{ transform: 'translateY(105%)' }, { transform: 'none' }], { duration: 650, delay: i * 55, easing: ease, fill: 'both' }); });
@@ -66,7 +51,7 @@
     var w = name.offsetWidth;
     name.animate([{ width: w + 'px', opacity: 1 }, { width: '0px', opacity: 0 }], { duration: 500, easing: snap, fill: 'forwards' });
     await wait(450); if (done) return;
-    await bite(2); if (done) return;
+    await wait(300); if (done) return;
 
     /* 3 · Collage */
     imgs.forEach(function (im, i) {

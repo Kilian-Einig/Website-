@@ -58,8 +58,8 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .links a::after{content:"";position:absolute;left:0;right:.15em;bottom:12px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 300ms var(--ease)}
 .links a:hover::after,.links a[aria-current]::after{transform:scaleX(1)}
 .nav-cta{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.15em;border-bottom:1px solid currentColor;line-height:1.2;padding-top:2px}
-@media (max-width:860px){.nav .links{display:none}}
-@media (max-width:420px){.brand span{display:none}}
+@media (max-width:860px){.nav .links li:not(:first-child){display:none}.nav-in{gap:20px}}
+@media (max-width:420px){.brand{letter-spacing:.14em;font-size:12px;gap:10px}.brand svg{height:20px}.nav-in{gap:16px}}
 
 /* ---------- Auftakt ----------
    Bild unter der Kopfleiste, darunter Überschrift und Kerbe auf einer Linie. Alles passt in den ersten Bildschirm. */
@@ -147,30 +147,25 @@ a.count{font-weight:400}
 @media (max-width:760px){.grid{grid-template-columns:1fr}.col:nth-child(2){padding-top:0}.col{gap:40px}}
 @media (hover:none){.ov{display:none}}
 
-/* ---------- Was ich mache ---------- */
-.feld{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,5fr) minmax(0,3fr);gap:16px 32px;align-items:start;padding:clamp(28px,3vw,44px) 16px;margin-inline:-16px;border-bottom:1px solid var(--rule);transition:background 200ms ease,color 200ms ease}
+/* ---------- Was ich mache ----------
+   Ein Abstandsmaß für alles innerhalb eines Bereichs (--g), ein Maß zwischen den Bereichen. */
 .felder{list-style:none;margin:0;padding:0}
+.feld{--g:20px;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,5fr) minmax(0,3fr);column-gap:32px;row-gap:var(--g);align-items:start;padding-block:clamp(32px,3.4vw,48px);border-bottom:1px solid var(--rule)}
 .felder .feld:first-child{border-top:1px solid var(--rule)}
-.feld h3{margin:0;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1.05}
-.feld-text{margin:0 0 14px;font-size:var(--fs-lead);font-weight:400;line-height:1.3}
-.punkte{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.punkte li{position:relative;padding-left:18px;font-weight:300;color:var(--graphite);transition:color 200ms ease}
-.punkte li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:1px;background:currentColor}
-.feld .punkte{grid-column:2}
-.feld-text{grid-column:2}
-.feld h3{grid-row:1 / span 2}
-.feld-proj{grid-column:3;grid-row:1 / span 2;margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
-.feld-proj .label{margin-bottom:6px}
-.feld-proj a{display:inline-flex;align-items:center;min-height:36px;font-weight:500;text-decoration:none;border-bottom:1px solid transparent;transition:border-color 200ms}
+.feld h3{grid-column:1;grid-row:1 / span 2;margin:0;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.feld-text{grid-column:2;margin:0;font-size:var(--fs-lead);line-height:1.3}
+.punkte{grid-column:2;list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.punkte li{position:relative;padding-left:18px;font-weight:300;color:var(--graphite);line-height:1.4}
+.punkte li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:1px;background:currentColor}
+.feld-proj{grid-column:3;grid-row:1 / span 2;margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.feld-proj .label{margin:0}
+.feld-proj a{display:inline-flex;align-items:center;min-height:32px;font-weight:500;text-decoration:none;border-bottom:1px solid transparent;transition:border-color 200ms}
 .feld-proj a:hover{border-bottom-color:currentColor}
-.feld:hover{background:var(--ink);color:var(--paper)}
-.feld:hover .punkte li,.feld:hover .label{color:#C8C8C8}
-.feld a:focus-visible{outline-color:currentColor}
 @media (max-width:760px){
-  .feld{grid-template-columns:1fr;gap:12px}
-  .feld h3,.feld-text,.feld .punkte,.feld-proj{grid-column:1;grid-row:auto}
-  .feld-proj{flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 18px;margin-top:6px}
-  .feld-proj .label{margin:0;width:100%}
+  .feld{grid-template-columns:1fr}
+  .feld h3,.feld-text,.punkte,.feld-proj{grid-column:1;grid-row:auto}
+  .feld-proj{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 24px}
+  .feld-proj .label{width:100%}
 }
 
 /* ---------- Über mich ---------- */

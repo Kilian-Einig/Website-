@@ -2,7 +2,6 @@
    Inhalte der Website. Alles, was sich ändert, steht hier.
    Neues Projekt: einen Eintrag in "projekte" ergänzen.
    Die Reihenfolge hier ist die Reihenfolge auf der Seite.
-   Leuchten stehen nie direkt nebeneinander, auch nicht in den zwei Spalten der Startseite.
    ============================================================ */
 window.SITE = {
   name: "Kilian Einig",
@@ -13,26 +12,6 @@ window.SITE = {
 
 
   projekte: [
-    {
-      id: "lmp01",
-      rahmen: { src: "img/lmp-hero.webp", pos: "50% 50%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
-      farbe: "#E8892A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
-      titel: "LMP 01",
-      art: "Licht",
-      stand: "Realisiert",
-      interaktiv: "lamellen",
-      kurz: "Leuchte, die auf Sensorik reagiert.",
-      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Sensoren registrieren Annäherung und Bewegung, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Bewegung zum Teil der Komposition.",
-      fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Sensoren für Nähe und Bewegung"]],
-      bild: "img/lmp-hero.webp",
-      bildAlt: "LMP 01 leuchtet warm im dunklen Raum, dahinter eine Person in Bewegung",
-      zweitbild: "img/lmp-hand.webp",
-      galerie: [
-        ["img/lmp-hand.webp", "Eine Hand vor den Lamellen, nur ein Teil leuchtet"],
-        ["img/lmp-tall.webp", "Seitenansicht der Lamellen in warmem Gelb"],
-        ["img/lmp-plate.webp", "Namensschild am schwarzen Träger"]
-      ]
-    },
     {
       id: "woven",
       rahmen: { src: "img/woven-hero.webp", pos: "50% 88%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
@@ -57,6 +36,26 @@ window.SITE = {
       galerie: [
         ["img/woven-detail.webp", "Gewebte Sitzfläche und schwarzes Stahlgestell"],
         ["img/woven-cushion.webp", "Gepolsterte Streifen in Pink, Orange und Mint"]
+      ]
+    },
+    {
+      id: "lmp01",
+      rahmen: { src: "img/lmp-hero.webp", pos: "50% 50%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
+      farbe: "#E8892A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
+      titel: "LMP 01",
+      art: "Licht",
+      stand: "Realisiert",
+      interaktiv: "lamellen",
+      kurz: "Lichtinstallation, die auf Sensorik reagiert.",
+      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Sensoren registrieren Annäherung und Bewegung, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Bewegung zum Teil der Komposition.",
+      fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Sensoren für Nähe und Bewegung"]],
+      bild: "img/lmp-hero.webp",
+      bildAlt: "LMP 01 leuchtet warm im dunklen Raum, dahinter eine Person in Bewegung",
+      zweitbild: "img/lmp-hand.webp",
+      galerie: [
+        ["img/lmp-hand.webp", "Eine Hand vor den Lamellen, nur ein Teil leuchtet"],
+        ["img/lmp-tall.webp", "Seitenansicht der Lamellen in warmem Gelb"],
+        ["img/lmp-plate.webp", "Namensschild am schwarzen Träger"]
       ]
     },
     {
@@ -132,23 +131,6 @@ window.SITE = {
       ]
     },
     {
-      id: "skelettstuhl",
-      rahmen: { src: "img/skelett-render.webp", fit: "contain", bg: "#FFFFFF" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
-      farbe: "#E6E6E6",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
-      titel: "Rib Chair",
-      art: "Möbel",
-      stand: "Entwurf",
-      bildLabel: "3D-Modell",
-      kurz: "Futuristischer Stuhlentwurf.",
-      hinweis: "Entwurf: eine Idee als 3D-Modell, noch nicht gebaut.",
-      text: "Eine geschwungene Wirbelsäule trägt Sitz und Lehne. Von ihr gehen gebogene Rippen ab, die zusammen die Sitzfläche und den Rücken bilden. Der Entwurf ist in Rhino modelliert.",
-      fakten: [["Stand", "3D-Entwurf in Rhino"]],
-      bild: "img/skelett-render.webp", hell: true,
-      bildAlt: "Rendering des Rib Chair: eine geschwungene Wirbelsäule mit gebogenen Rippen als Sitz und Lehne",
-      zweitbild: "img/skelett-skizze.webp",
-      galerie: [["img/skelett-skizze.webp", "Überarbeitung: Markierungen für Kopf, Lehne und Sitz"]]
-    },
-    {
       id: "lmp03",
       rahmen: { src: "img/lmp03-hero.webp", fit: "contain", bg: "#A39F99" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#C9C6C0",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
@@ -164,6 +146,23 @@ window.SITE = {
       bildAlt: "Rendering von LMP 03: leuchtender Stab in einem Glasrohr mit Aluminiumkappen vor heller Wand",
       zweitbild: "img/lmp03-detail.webp",
       galerie: [["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"]]
+    },
+    {
+      id: "skelettstuhl",
+      rahmen: { src: "img/skelett-render.webp", fit: "contain", bg: "#FFFFFF" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
+      farbe: "#E6E6E6",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
+      titel: "Rib Chair",
+      art: "Möbel",
+      stand: "Entwurf",
+      bildLabel: "3D-Modell",
+      kurz: "Futuristischer Stuhlentwurf.",
+      hinweis: "Entwurf: eine Idee als 3D-Modell, noch nicht gebaut.",
+      text: "Eine geschwungene Wirbelsäule trägt Sitz und Lehne. Von ihr gehen gebogene Rippen ab, die zusammen die Sitzfläche und den Rücken bilden. Der Entwurf ist in Rhino modelliert.",
+      fakten: [["Stand", "3D-Entwurf in Rhino"]],
+      bild: "img/skelett-render.webp", hell: true,
+      bildAlt: "Rendering des Rib Chair: eine geschwungene Wirbelsäule mit gebogenen Rippen als Sitz und Lehne",
+      zweitbild: "img/skelett-skizze.webp",
+      galerie: [["img/skelett-skizze.webp", "Überarbeitung: Markierungen für Kopf, Lehne und Sitz"]]
     }
   ],
 

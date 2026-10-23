@@ -147,21 +147,6 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!userPaused) play(es[0].isIntersecting); }).observe(heroBox);
     }
 
-    /* Die Kerbe schneidet sich ins Bild, sobald das Intro vorbei ist */
-    var cutIn = function () {
-      var poly = $('kerbe');
-      var set = function (x) { poly.setAttribute('points', '10,10 100,10 100,40 ' + x.toFixed(2) + ',60 100,80 100,110 10,110'); };
-      if (reduce) return;
-      var back = function (p) { var c = 1.6; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
-      var t0 = null; set(100);
-      requestAnimationFrame(function step(t) {
-        if (t0 === null) t0 = t;
-        var p = Math.min(1, Math.max(0, (t - t0 - 250) / 850));
-        set(100 - 40 * back(p));
-        if (p < 1) requestAnimationFrame(step);
-      });
-    };
-    if (document.documentElement.classList.contains('intro-on')) window.addEventListener('introdone', cutIn, { once: true }); else cutIn();
   }
 
   /* ================= Projektübersicht ================= */
@@ -236,23 +221,6 @@
 
 
   /* ================= Gemeinsames Verhalten ================= */
-
-  /* Logo in Kopfleiste und Fuß: die Kerbe „beißt“ beim Drüberfahren */
-  [].forEach.call(document.querySelectorAll('.brand svg'), function (svg) {
-    svg.innerHTML = '<polygon points="10,10 100,10 100,40 60,60 100,80 100,110 10,110"/>';
-    var poly = svg.firstChild, busy = false;
-    svg.parentNode.addEventListener('mouseenter', function () {
-      if (busy || reduce) return; busy = true;
-      var t0 = performance.now(), seq = [60, 100, 60, 100, 60];
-      (function step(t) {
-        var p = Math.max(0, Math.min(1, (t - t0) / 560)), f = p * (seq.length - 1), i = Math.floor(f), r = f - i;
-        var a = seq[i], b = seq[Math.min(i + 1, seq.length - 1)], x = a + (b - a) * r * r * (3 - 2 * r);
-        poly.setAttribute('points', '10,10 100,10 100,40 ' + x.toFixed(2) + ',60 100,80 100,110 10,110');
-        if (p < 1) requestAnimationFrame(step); else busy = false;
-      })(t0);
-    });
-  });
-
 
   /* Jede Seite beginnt oben, auch nach „Nächstes Projekt“ und beim Zurückgehen.
      Nur ein Anker in der Adresse (#p-woven, #kontakt) springt gezielt dorthin. */
