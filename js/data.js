@@ -2,6 +2,7 @@
    Inhalte der Website. Alles, was sich ändert, steht hier.
    Neues Projekt: einen Eintrag in "projekte" ergänzen.
    Die Reihenfolge hier ist die Reihenfolge auf der Seite.
+   Leuchten stehen nie direkt nebeneinander, auch nicht in den zwei Spalten der Startseite.
    ============================================================ */
 window.SITE = {
   name: "Kilian Einig",
@@ -13,7 +14,28 @@ window.SITE = {
 
   projekte: [
     {
+      id: "lmp01",
+      rahmen: { src: "img/lmp-hero.webp", pos: "50% 50%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
+      farbe: "#E8892A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
+      titel: "LMP 01",
+      art: "Licht",
+      stand: "Realisiert",
+      interaktiv: "lamellen",
+      kurz: "Leuchte, die auf Sensorik reagiert.",
+      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Sensoren registrieren Annäherung und Bewegung, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Bewegung zum Teil der Komposition.",
+      fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Sensoren für Nähe und Bewegung"]],
+      bild: "img/lmp-hero.webp",
+      bildAlt: "LMP 01 leuchtet warm im dunklen Raum, dahinter eine Person in Bewegung",
+      zweitbild: "img/lmp-hand.webp",
+      galerie: [
+        ["img/lmp-hand.webp", "Eine Hand vor den Lamellen, nur ein Teil leuchtet"],
+        ["img/lmp-tall.webp", "Seitenansicht der Lamellen in warmem Gelb"],
+        ["img/lmp-plate.webp", "Namensschild am schwarzen Träger"]
+      ]
+    },
+    {
       id: "woven",
+      rahmen: { src: "img/woven-hero.webp", pos: "50% 88%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#F2557A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Woven",
       art: "Möbel",
@@ -39,6 +61,7 @@ window.SITE = {
     },
     {
       id: "hochstapler",
+      rahmen: { src: "img/hs-kammern.webp", pos: "50% 50%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#B08A62",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Hochstapler",
       art: "Architektur",
@@ -64,26 +87,8 @@ window.SITE = {
       ]
     },
     {
-      id: "lmp01",
-      farbe: "#E8892A",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
-      titel: "LMP 01",
-      art: "Licht",
-      stand: "Realisiert",
-      interaktiv: "lamellen",
-      kurz: "Leuchte, die auf Sensorik reagiert.",
-      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Sensoren registrieren Annäherung und Bewegung, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Bewegung zum Teil der Komposition.",
-      fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Sensoren für Nähe und Bewegung"]],
-      bild: "img/lmp-hero.webp",
-      bildAlt: "LMP 01 leuchtet warm im dunklen Raum, dahinter eine Person in Bewegung",
-      zweitbild: "img/lmp-hand.webp",
-      galerie: [
-        ["img/lmp-hand.webp", "Eine Hand vor den Lamellen, nur ein Teil leuchtet"],
-        ["img/lmp-tall.webp", "Seitenansicht der Lamellen in warmem Gelb"],
-        ["img/lmp-plate.webp", "Namensschild am schwarzen Träger"]
-      ]
-    },
-    {
       id: "lmp02",
+      rahmen: { src: "img/lmp02-uebersicht.webp", pos: "50% 50%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#8FCFCB",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "LMP 02",
       art: "Licht",
@@ -105,6 +110,7 @@ window.SITE = {
     },
     {
       id: "regal",
+      rahmen: { src: "img/regal-model.webp", pos: "50% 75%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#D8C8A8",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Re:gal",
       art: "Architektur",
@@ -126,23 +132,8 @@ window.SITE = {
       ]
     },
     {
-      id: "lmp03",
-      farbe: "#C9C6C0",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
-      titel: "LMP 03",
-      art: "Licht",
-      stand: "Entwurf",
-      bildLabel: "Rendering",
-      kurz: "Leuchtstab im Glasrohr.",
-      hinweis: "Entwurf: bisher nur als Rendering, noch nicht gebaut.",
-      text: "Ein opaler LED-Stab liegt in einem klaren Glasrohr. Zwei Kappen aus gebürstetem Aluminium schließen das Rohr ab, ein Lochraster in den Stirnseiten lässt die Wärme entweichen. Zwei Stahlseile halten die Leuchte frei im Raum.",
-      fakten: [["Stand", "Gerendert in Blender"], ["Material", "Glas, Aluminium, Stahlseil"], ["Länge", "ca. 1,4 m"]],
-      bild: "img/lmp03-hero.webp",
-      bildAlt: "Rendering von LMP 03: leuchtender Stab in einem Glasrohr mit Aluminiumkappen vor heller Wand",
-      zweitbild: "img/lmp03-detail.webp",
-      galerie: [["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"]]
-    },
-    {
       id: "skelettstuhl",
+      rahmen: { src: "img/skelett-render.webp", fit: "contain", bg: "#FFFFFF" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#E6E6E6",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Rib Chair",
       art: "Möbel",
@@ -156,41 +147,50 @@ window.SITE = {
       bildAlt: "Rendering des Rib Chair: eine geschwungene Wirbelsäule mit gebogenen Rippen als Sitz und Lehne",
       zweitbild: "img/skelett-skizze.webp",
       galerie: [["img/skelett-skizze.webp", "Überarbeitung: Markierungen für Kopf, Lehne und Sitz"]]
+    },
+    {
+      id: "lmp03",
+      rahmen: { src: "img/lmp03-hero.webp", fit: "contain", bg: "#A39F99" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
+      farbe: "#C9C6C0",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
+      titel: "LMP 03",
+      art: "Licht",
+      stand: "Entwurf",
+      bildLabel: "Rendering",
+      kurz: "Leuchtstab im Glasrohr.",
+      hinweis: "Entwurf: bisher nur als Rendering, noch nicht gebaut.",
+      text: "Ein opaler LED-Stab liegt in einem klaren Glasrohr. Zwei Kappen aus gebürstetem Aluminium schließen das Rohr ab, ein Lochraster in den Stirnseiten lässt die Wärme entweichen. Zwei Stahlseile halten die Leuchte frei im Raum.",
+      fakten: [["Stand", "Gerendert in Blender"], ["Material", "Glas, Aluminium, Stahlseil"], ["Länge", "ca. 1,4 m"]],
+      bild: "img/lmp03-hero.webp",
+      bildAlt: "Rendering von LMP 03: leuchtender Stab in einem Glasrohr mit Aluminiumkappen vor heller Wand",
+      zweitbild: "img/lmp03-detail.webp",
+      galerie: [["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"]]
     }
   ],
 
-  /* Kleine digitale Projekte, laufen direkt im Browser */
-  apps: [
-    { titel: "HiChord", art: "Instrument", text: "Ein Akkord-Synthesizer zum Spielen: Tonart wählen, Pads drücken, Drums und Filter dazu.", link: "apps/hichord/" },
-    { titel: "Baugeschichte II", art: "Lern-App", text: "Lernkarten von der Aufklärung bis zum Dekonstruktivismus, mit Wiederholungsrhythmus, Stil-Lexikon und Quiz.", link: "apps/lernkarten/" }
-  ],
+
+  /* Reihenfolge der Bilder im Auftakt: Leuchten springen immer wieder dazwischen */
+  auftakt: ["woven", "lmp01", "hochstapler", "lmp02", "regal", "lmp03", "skelettstuhl"],
 
   /* Startseite: Was ich mache. Kurz und konkret: ein Satz, was dazugehört, welche Projekte es zeigen. */
   felder: [
-    { titel: "Möbel", text: "Sitzmöbel und Objekte, vom Entwurf bis zum fertigen Stück.",
-      punkte: ["Entwurf und Prototyp", "Stahlgestelle, selbst geschweißt", "Textil: weben, nähen, polstern", "Recycelte Materialien"],
-      projekte: ["woven", "skelettstuhl"] },
-    { titel: "Leuchten", text: "Licht mit eigener Elektronik und Software.",
-      punkte: ["Sensoren und Interaktion", "ESP32 und LED-Steuerung", "Weboberflächen und Presets", "Gelaserte Gehäuse"],
-      projekte: ["lmp01", "lmp02", "lmp03"] },
-    { titel: "Räume", text: "Innenarchitektur und kleine Bauten.",
-      punkte: ["Konzept und Entwurf", "Werkplanung 1:50, Details 1:5", "Umbau im Bestand", "Modellbau"],
+    { titel: "Möbel & Objekte", text: "Einzelstücke und Sonderanfertigungen, vom Entwurf bis zum fertigen Stück.",
+      punkte: ["Entwurf und Konstruktion", "Metallbau: schweißen, biegen, fügen", "Holz-, Textil- und Polsterarbeiten", "Prototyp und Fertigung in der eigenen Werkstatt"],
+      projekte: ["woven", "skelettstuhl", "lmp03"] },
+    { titel: "Licht & Technik", text: "Objekte, die leuchten, reagieren und sich steuern lassen.",
+      punkte: ["Elektrik und Elektronik", "Licht planen und integrieren", "Steuerung und Programmierung", "Bedienung über Regler, Sensoren oder App"],
+      projekte: ["lmp01", "lmp02"] },
+    { titel: "Architektur & Innenarchitektur", text: "Räume entwerfen und planen, vom Konzept bis zur Ausführung.",
+      punkte: ["Konzept und Entwurf", "Raum- und Nutzungsplanung", "Werk- und Detailplanung", "Visualisierung und Modellbau"],
       projekte: ["hochstapler", "regal"] }
   ],
 
-  zitat: "Ich entwerfe nicht nur am Rechner, sondern baue meine Projekte selbst in der Werkstatt.",
+  zitat: "Entwurf und Ausführung aus einer Hand, an der Schnittstelle von Technik und Design.",
   ueber: [
     "Als gelernter Mechatroniker habe ich einen direkten Bezug zur Technik. Ich weiß, wie Dinge aufgebaut sind und wie sie funktionieren.",
     "Das Studium der Innenarchitektur an der Hochschule Mainz hat mich zum Design gebracht. Zurzeit verbringe ich ein Semester in Antwerpen.",
     "Aus dieser Kombination will ich Neues schaffen oder Bestehendes neu denken, im Verbund von Technik und Design."
   ],
-  werkzeuge: ["Rhino", "Blender", "ESP32", "Schweißen", "Lasercut"],
+  programme: ["Rhino", "Fusion 360", "Blender", "Photoshop", "Illustrator", "InDesign"],
 
-  ablauf: [
-    ["Entwurf", "Skizzen, Konzepte und Pläne. Architekturprojekte entstehen im Team."],
-    ["Modell", "Am Rechner als 3D-Modell, oft auch als Arbeitsmodell aus Holz."],
-    ["Bauen", "In der Werkstatt: schweißen, lasern, nähen, verdrahten."],
-    ["Programmieren", "Die Leuchten bekommen eigene Steuerungen und Weboberflächen."]
-  ],
   portrait: "img/portrait.webp"
 };

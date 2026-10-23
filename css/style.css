@@ -65,17 +65,20 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
    Bild unter der Kopfleiste, darunter Überschrift und Kerbe auf einer Linie. Alles passt in den ersten Bildschirm. */
 .hero{min-height:100svh;display:flex;flex-direction:column;padding-top:var(--header-h)}
 .hero-img{position:relative;flex:1 1 auto;min-height:280px;max-height:70svh;background:var(--paper);overflow:hidden}
-/* Jedes Bild hat eine eigene, deckende Fläche. Das neue schiebt sich von unten über das alte. */
-.hero-img .slide{position:absolute;inset:0;background:var(--paper);visibility:hidden;z-index:0}
-.hero-img .slide img{width:100%;height:100%;object-fit:contain}
-.hero-img .slide.prev{visibility:visible;z-index:0}
-.hero-img .slide.on{visibility:visible;z-index:1}
+/* Alle Bilder im gleichen 3:2-Rahmen, jedes mit eigener deckender Fläche. Das neue schiebt sich von unten über das alte. */
+.hero-img{display:grid;place-items:center}
+.frame{position:relative;height:100%;aspect-ratio:3 / 2;max-width:100%;overflow:hidden}
+.frame .slide{position:absolute;inset:0;background:var(--surface);visibility:hidden;z-index:0;overflow:hidden}
+.frame .slide img{width:100%;height:100%}
+.frame .slide.prev{visibility:visible;z-index:0}
+.frame .slide.on{visibility:visible;z-index:1}
 @media (prefers-reduced-motion:no-preference){
-  .hero-img .slide.on{animation:wipeUp 800ms var(--ease) both}
-  .hero-img .slide.on img{animation:settleIn 1200ms var(--ease) both}
+  .frame .slide.on{animation:wipeUp 800ms var(--ease) both}
+  .frame .slide.on img{animation:settleIn 1200ms var(--ease) both}
 }
 @keyframes wipeUp{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes settleIn{from{transform:translateY(6%)}}
+@keyframes settleIn{from{transform:translateY(5%)}}
+@media (max-width:760px){.hero-img{height:auto!important;min-height:0}.frame{width:100%;height:auto}}
 .hero-logo{position:absolute;z-index:2;left:50%;top:44%;height:clamp(96px,22%,200px);width:auto;transform:translate(-50%,-50%);pointer-events:none}
 .hero-logo{mix-blend-mode:difference}
 .hero-logo polygon{fill:#FAFAFA}
@@ -110,18 +113,17 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .band span span,.band a span{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.15em}
 .band a:hover strong{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
 .band a:focus-visible{outline:3px solid var(--ink);outline-offset:-6px}
-@media (prefers-reduced-motion:no-preference){
-  .band-track{animation:marquee 32s linear infinite}
-  .band:hover .band-track,.band:focus-within .band-track{animation-play-state:paused}
-}
-@media (prefers-reduced-motion:reduce){.band-track{width:auto;flex-wrap:wrap}.band-dup{display:none}}
-@keyframes marquee{to{transform:translateX(-50%)}}
+.band{touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.band:active{cursor:grabbing}
+.band-track{will-change:transform}
+.band img,.band a{-webkit-user-drag:none}
 
 /* ---------- Abschnitte ---------- */
 .sec{padding-block:var(--space-l) 0}
 .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px;margin-bottom:var(--space-m)}
 .sec-head h2,.rule-title{margin:0;font-size:var(--fs-h2);font-weight:700;letter-spacing:-.035em;line-height:1}
 .count{margin:0;font-size:var(--fs-lead);font-weight:300}
+a.count{font-weight:400}
 .rule-title{border-top:1px solid var(--rule);padding-top:20px;margin-bottom:var(--space-m)}
 
 /* ---------- Projektraster ---------- */
@@ -171,40 +173,34 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
   .feld-proj .label{margin:0;width:100%}
 }
 
-/* ---------- Zeilen: Was ich mache, Apps ---------- */
-.rows{list-style:none;margin:0;padding:0}
-.rows li{border-bottom:1px solid var(--rule)}
-.rows li:first-child{border-top:1px solid var(--rule)}
-.rows a{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr) auto;gap:8px 32px;align-items:center;padding:clamp(24px,3vw,40px) 16px;margin-inline:-16px;text-decoration:none;transition:background 200ms ease,color 200ms ease}
-.rows h3{margin:0;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1.05}
-.rows p{margin:0;font-weight:300;font-size:var(--fs-lead);line-height:1.35;color:var(--graphite);transition:color 200ms ease}
-.rows .arr{font-size:28px;transition:transform 200ms ease}
-.rows a:hover,.rows a:focus-visible{background:var(--ink);color:var(--paper)}
-.rows a:hover p,.rows a:focus-visible p{color:#D0D0D0}
-.rows a:hover .arr{transform:translateX(6px)}
-.rows a:focus-visible{outline-color:var(--ink);outline-offset:2px}
-@media (max-width:760px){.rows a{grid-template-columns:1fr auto}.rows p{grid-column:1 / -1;grid-row:2}}
-
 /* ---------- Über mich ---------- */
 .quote{margin:0 auto var(--space-l);max-width:800px;text-align:center}
 .quote p{margin:0;font-size:clamp(28px,3vw,48px);font-weight:300;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
 .about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,80px);align-items:end}
 .about figure{margin:0;background:var(--surface)}
-.about figure img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 30%;filter:grayscale(1)}
+.about figure img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:59% 30%;filter:grayscale(1)}
 .about-copy h3{margin:0 0 16px;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1}
 .about-copy p{margin:0 0 .8em;font-weight:300;font-size:var(--fs-lead);line-height:1.4;max-width:36ch}
-.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:28px 0 0;padding:0}
+.chips-title{margin:28px 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
 .chips li{border:1px solid var(--ink);padding:9px 14px}
 @media (max-width:760px){.about{grid-template-columns:1fr}}
 
-/* ---------- Ablauf ---------- */
-.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
-.flow li{position:relative;padding-top:clamp(56px,6vw,96px);min-width:0;border-top:1px solid var(--ink)}
-.flow .big{position:absolute;top:8px;left:-.04em;font-size:clamp(96px,11vw,180px);font-weight:700;line-height:1;letter-spacing:-.05em;color:var(--ink);opacity:.06;pointer-events:none}
-.flow h3{position:relative;margin:0 0 10px;font-size:clamp(24px,2.2vw,32px);font-weight:700;letter-spacing:-.025em;line-height:1.1}
-.flow p:last-child{position:relative;margin:0;font-weight:300;color:var(--graphite);max-width:30ch}
-@media (max-width:900px){.flow{grid-template-columns:1fr 1fr;row-gap:48px}}
-@media (max-width:520px){.flow{grid-template-columns:1fr}}
+/* ---------- Projektübersicht ---------- */
+.ov-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px;padding-block:clamp(40px,6vw,88px) var(--space-m)}
+.ov-head h1{margin:0;font-size:clamp(56px,9vw,148px);font-weight:700;letter-spacing:-.05em;line-height:.9}
+.overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(32px,4vw,56px) 24px;padding-bottom:var(--space-l)}
+.tile{display:block;text-decoration:none;min-width:0}
+.tile-ph{position:relative;aspect-ratio:3 / 2;overflow:hidden;background:var(--surface)}
+.tile-ph img{width:100%;height:100%;transition:transform 700ms var(--ease)}
+.tile:hover .tile-ph img{transform:scale(1.04)}
+.tile-cap{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:14px}
+.tile-cap h2{margin:0;font-size:clamp(22px,2vw,30px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.tile-cap .label{margin:0;white-space:nowrap}
+.tile-kurz{margin:6px 0 0;font-weight:300;color:var(--graphite)}
+.tile:hover h2{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+@media (max-width:900px){.overview{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.overview{gap:28px 12px}.tile-cap{flex-direction:column;gap:4px;padding-top:10px}.tile-cap h2{font-size:19px}.tile-kurz{font-size:14px}}
 
 /* ---------- Kontakt ---------- */
 .contact{background:var(--ink);color:var(--paper);padding-block:var(--space-l);margin-top:var(--space-l)}
@@ -333,8 +329,8 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   .anim .work.rv{transform:scale(.92);transition:opacity 450ms ease,transform 650ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .work.rv.in{transform:none}
   .anim .rv.in{opacity:1}
-  .anim .felder .rv,.anim .rows .rv,.anim .flow .rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
-  .anim .felder .rv.in,.anim .rows .rv.in,.anim .flow .rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
+  .anim .felder .rv,.anim .tile.rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .felder .rv.in,.anim .tile.rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
   .anim .contact h2 .w{clip-path:inset(0 100% 0 0);transition:clip-path 600ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .contact h2.in .w{clip-path:inset(0 0 0 0)}
 }

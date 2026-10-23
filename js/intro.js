@@ -44,7 +44,7 @@
     return new Promise(function (res) {
       (function step(t) {
         if (done) return res();
-        var p = Math.min(1, (t - t0) / dur), f = p * (frames.length - 1), i = Math.floor(f), r = f - i;
+        var p = Math.max(0, Math.min(1, (t - t0) / dur)), f = p * (frames.length - 1), i = Math.floor(f), r = f - i;
         var a = frames[i], b = frames[Math.min(i + 1, frames.length - 1)];
         poly.setAttribute('points', KERBE((a + (b - a) * (r * r * (3 - 2 * r))).toFixed(2)));
         if (p < 1) requestAnimationFrame(step); else res();

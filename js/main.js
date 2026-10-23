@@ -8,6 +8,11 @@
   var two = function (n) { return (n < 10 ? '0' : '') + n; };
   var dims = function (src) { return D[src] ? ' width="' + D[src][0] + '" height="' + D[src][1] + '"' : ''; };
   var url = function (p) { return 'projekt.html?id=' + encodeURIComponent(p.id); };
+  var byId = function (id) { return S.projekte.filter(function (p) { return p.id === id; })[0]; };
+  /* Ein Bild im einheitlichen Rahmen: Ausschnitt (pos) oder ganz eingepasst (fit: contain) */
+  var frameImg = function (r, alt, eager) {
+    return '<img src="' + esc(r.src) + '" alt="' + esc(alt) + '"' + dims(r.src) + (eager ? '' : ' loading="lazy"') + ' decoding="async" style="object-fit:' + (r.fit || 'cover') + ';object-position:' + (r.pos || '50% 50%') + '">';
+  };
 
   if ($('foot')) $('foot').textContent = '© ' + new Date().getFullYear() + ' ' + S.name + ' · ' + S.ort;
 
@@ -50,9 +55,6 @@
         '<div class="col">' + cards.filter(function (c, i) { return i % 2 === 1; }).join('') + '</div>';
       reveal(document.querySelectorAll('#works .rv'));
     };
-    $('count').textContent = '( ' + two(S.projekte.length) + ' Projekte )';
-
-    var byId = function (id) { return S.projekte.filter(function (p) { return p.id === id; })[0]; };
     $('felder').innerHTML = S.felder.map(function (f) {
       return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p>' +
         '<ul class="punkte">' + f.punkte.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
@@ -61,15 +63,8 @@
 
     $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
     $('about-text').innerHTML = S.ueber.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
-    $('chips').innerHTML = S.werkzeuge.map(function (w) { return '<li class="label">' + esc(w) + '</li>'; }).join('');
+    $('chips').innerHTML = S.programme.map(function (w) { return '<li class="label">' + esc(w) + '</li>'; }).join('');
 
-    $('steps').innerHTML = S.ablauf.map(function (st, k) {
-      return '<li class="rv" style="--d:' + (k * 120) + 'ms"><span class="big" aria-hidden="true">' + two(k + 1) + '</span><h3>' + esc(st[0]) + '</h3><p>' + esc(st[1]) + '</p></li>';
-    }).join('');
-
-    $('app-list').innerHTML = S.apps.map(function (a) {
-      return '<li class="rv"><a href="' + esc(a.link) + '"><h3>' + esc(a.titel) + '</h3><p>' + esc(a.text) + '</p><span class="arr" aria-hidden="true">→</span></a></li>';
-    }).join('');
     $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email + ' →';
 
     grid();
@@ -78,30 +73,67 @@
     [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
     reveal(document.querySelectorAll('.contact h2'));
 
-    /* Laufband: Projektnamen in farbigen Feldern, läuft endlos, hält beim Drüberfahren */
+    /* Laufband: gleich große Kästen in Projektfarben. Läuft von selbst, wird beim Drüberfahren langsamer
+       und lässt sich mit Maus oder Finger in beide Richtungen ziehen. */
     var items = S.projekte.map(function (p) {
       return '<a href="' + url(p) + '" style="background:' + p.farbe + '"><strong>' + esc(p.titel) + '</strong><span>' + esc(p.art) + '</span></a>';
     }).join('');
-    $('band').innerHTML = items + '<span class="band-dup" aria-hidden="true">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
+    var band = $('band'), bandBox = band.parentNode;
+    band.innerHTML = items + '<span class="band-dup" aria-hidden="true">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
+    (function () {
+      var x = 0, speed = reduce ? 0 : 0.6, target = speed, v = speed, half = 0, drag = null, moved = 0, lastT = 0;
+      var measure = function () { half = band.scrollWidth / 2; };
+      measure(); window.addEventListener('resize', measure);
+      bandBox.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') target = speed * 0.25; });
+      bandBox.addEventListener('pointerleave', function () { target = speed; });
+      bandBox.addEventListener('pointerdown', function (e) {
+        drag = { x: e.clientX, y: e.clientY, last: e.clientX, id: e.pointerId, horiz: null }; moved = 0;
+      });
+      window.addEventListener('pointermove', function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        if (drag.horiz === null) {
+          if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
+          drag.horiz = Math.abs(e.clientX - drag.x) > Math.abs(e.clientY - drag.y);
+          if (drag.horiz) bandBox.setPointerCapture(e.pointerId);
+        }
+        if (!drag.horiz) return;
+        var dx = e.clientX - drag.last; drag.last = e.clientX; moved += Math.abs(dx);
+        x -= dx; v = -dx;
+      });
+      var end = function (e) { if (drag && e.pointerId === drag.id) drag = null; };
+      window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
+      bandBox.addEventListener('click', function (e) { if (moved > 6) { e.preventDefault(); moved = 0; } }, true);
+      bandBox.addEventListener('wheel', function (e) {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { x += e.deltaX; e.preventDefault(); }
+      }, { passive: false });
+      (function tick(t) {
+        var dt = lastT ? Math.min(3, (t - lastT) / 16.7) : 1; lastT = t;
+        if (!drag) { v += (target - v) * 0.06; x += v * dt; }
+        if (half) { x = ((x % half) + half) % half; }
+        band.style.transform = 'translate3d(' + (-x) + 'px,0,0)';
+        requestAnimationFrame(tick);
+      })(0);
+    })();
 
-    /* Auftaktbild: ein Bild pro Projekt, jedes ganz zu sehen. Das neue Bild blendet über dem alten ein,
-       das alte bleibt stehen, bis der Übergang fertig ist – so gibt es kein Flackern und keine Dopplung. */
+    /* Auftakt: alle Bilder im gleichen 3:2-Rahmen und gleichen Ausschnitt.
+       Das neue Bild schiebt sich deckend über das alte – kein Flackern, keine Dopplung. */
     var heroBox = $('hero-img'), pauseBtn = $('hero-pause');
-    var slides = S.projekte.map(function (p) { return { src: p.id === 'hochstapler' ? 'img/hs-kammern.webp' : (p.uebersicht || p.bild), alt: p.titel + ': ' + p.kurz }; });
+    var slides = S.auftakt.map(function (id) { var p = byId(id); return { r: p.rahmen, alt: p.titel + ': ' + p.kurz }; });
     heroBox.querySelector('img').remove();
+    var frame = document.createElement('div'); frame.className = 'frame';
+    heroBox.insertBefore(frame, heroBox.firstChild);
     slides.forEach(function (sl, k) {
       var box = document.createElement('div'); box.className = 'slide' + (k === 0 ? ' on' : '');
-      var im = new Image(); im.src = sl.src; im.alt = sl.alt; im.decoding = 'async';
-      if (D[sl.src]) { im.width = D[sl.src][0]; im.height = D[sl.src][1]; }
-      if (k === 0) im.fetchPriority = 'high';
-      box.appendChild(im);
-      heroBox.insertBefore(box, heroBox.querySelector('.hero-logo'));
+      if (sl.r.bg) box.style.background = sl.r.bg;
+      box.innerHTML = frameImg(sl.r, sl.alt, k === 0);
+      frame.appendChild(box);
     });
-    var heroImgs = [].slice.call(heroBox.querySelectorAll('.slide')), cur = 0, playing = false, slideTimer = 0;
+    frame.appendChild(heroBox.querySelector('.hero-logo'));
+    var heroImgs = [].slice.call(frame.querySelectorAll('.slide')), cur = 0, playing = false, slideTimer = 0;
     function show(k) {
       var old = heroImgs[cur], nu = heroImgs[k];
-      heroImgs.forEach(function (im) { if (im !== old && im !== nu) im.className = 'slide'; });
-      old.className = 'slide prev'; nu.className = 'slide on'; cur = k;
+      heroImgs.forEach(function (im) { if (im !== old && im !== nu) im.classList.remove('on', 'prev'); });
+      old.classList.remove('on'); old.classList.add('prev'); nu.classList.remove('prev'); nu.classList.add('on'); cur = k;
     }
     function loop() { slideTimer = setTimeout(function () { show((cur + 1) % heroImgs.length); loop(); }, 2600); }
     function play(on) { playing = on; clearTimeout(slideTimer); if (on) loop(); }
@@ -132,11 +164,23 @@
     if (document.documentElement.classList.contains('intro-on')) window.addEventListener('introdone', cutIn, { once: true }); else cutIn();
   }
 
+  /* ================= Projektübersicht ================= */
+  if (PAGE === 'uebersicht') {
+    $('count').textContent = '( ' + two(S.projekte.length) + ' Projekte )';
+    $('overview').innerHTML = S.projekte.map(function (p, i) {
+      return '<a class="tile rv" style="--d:' + (i % 3 * 90) + 'ms" href="' + url(p) + '">' +
+        '<div class="tile-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i < 3) + '</div>' +
+        '<div class="tile-cap"><h2>' + esc(p.titel) + '</h2><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
+        '<p class="tile-kurz">' + esc(p.kurz) + '</p></a>';
+    }).join('');
+    reveal(document.querySelectorAll('#overview .rv'));
+  }
+
   /* ================= Projektseite ================= */
   if (PAGE === 'projekt') {
     var id = new URLSearchParams(location.search).get('id');
     var i = S.projekte.findIndex(function (p) { return p.id === id; });
-    if (i < 0) { location.replace('./#projekte'); return; }
+    if (i < 0) { location.replace('projekte.html'); return; }
     var p = S.projekte[i], nx = S.projekte[(i + 1) % S.projekte.length];
     document.title = p.titel + ' · Kilian Einig';
 
@@ -164,7 +208,7 @@
     $('projekt').innerHTML =
       '<div class="wrap">' +
         '<header class="pp-head">' +
-          '<a class="back" href="./#p-' + esc(p.id) + '">← Alle Projekte</a>' +
+          '<a class="back" href="projekte.html">← Alle Projekte</a>' +
           '<h1 class="pp-title"><span>' + esc(p.titel) + '</span></h1>' +
           '<p class="pp-kurz">' + esc(p.kurz) + '</p>' +
         '</header>' +
@@ -201,7 +245,7 @@
       if (busy || reduce) return; busy = true;
       var t0 = performance.now(), seq = [60, 100, 60, 100, 60];
       (function step(t) {
-        var p = Math.min(1, (t - t0) / 560), f = p * (seq.length - 1), i = Math.floor(f), r = f - i;
+        var p = Math.max(0, Math.min(1, (t - t0) / 560)), f = p * (seq.length - 1), i = Math.floor(f), r = f - i;
         var a = seq[i], b = seq[Math.min(i + 1, seq.length - 1)], x = a + (b - a) * r * r * (3 - 2 * r);
         poly.setAttribute('points', '10,10 100,10 100,40 ' + x.toFixed(2) + ',60 100,80 100,110 10,110');
         if (p < 1) requestAnimationFrame(step); else busy = false;
@@ -258,7 +302,7 @@
         navLinks.forEach(function (l) { if (l.getAttribute('href') === '#' + e.target.id) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current'); });
       });
     }, { rootMargin: '-50% 0px -50% 0px' });
-    ['start', 'projekte', 'arbeit', 'ueber', 'ablauf', 'apps', 'kontakt'].forEach(function (id) { if ($(id)) secIO.observe($(id)); });
+    ['start', 'projekte', 'arbeit', 'ueber', 'kontakt'].forEach(function (id) { if ($(id)) secIO.observe($(id)); });
   }
 
   function konfig() {

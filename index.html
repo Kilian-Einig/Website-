@@ -28,10 +28,9 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
   <div class="wrap nav-in">
     <a class="brand" href="#start" aria-label="Kilian Einig, nach oben"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><span>Kilian Einig</span></a>
     <nav class="links" aria-label="Hauptnavigation"><ul>
-      <li><a href="#projekte">Projekte</a></li>
+      <li><a href="projekte.html">Projekte</a></li>
       <li><a href="#arbeit">Arbeit</a></li>
       <li><a href="#ueber">Über mich</a></li>
-      <li><a href="#apps">Apps</a></li>
     </ul></nav>
     <a class="nav-cta" href="#kontakt">→ Kontakt</a>
   </div>
@@ -49,7 +48,7 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
       <div class="hero-copy">
         <h1 id="h-hero"><span class="ln">Form.</span><span class="ln">Licht.</span><span class="ln">Raum.</span></h1>
         <div class="hero-cta">
-          <a class="btn" href="#projekte">Projekte ansehen →</a>
+          <a class="btn" href="projekte.html">Alle Projekte ansehen →</a>
           <a class="tlink" href="#ueber">Über mich</a>
         </div>
       </div>
@@ -63,7 +62,7 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
   <section class="sec wrap" id="projekte" aria-labelledby="h-projekte">
     <div class="sec-head">
       <h2 id="h-projekte">Ausgewählte Projekte</h2>
-      <p class="count muted" id="count"></p>
+      <a class="tlink count" href="projekte.html" id="count">Alle Projekte →</a>
     </div>
     <div class="grid" id="works"></div>
   </section>
@@ -83,23 +82,14 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
       <div class="about-copy">
         <h3>Kilian Einig</h3>
         <div id="about-text"></div>
+        <p class="label muted chips-title">Programme</p>
         <ul class="chips" id="chips"></ul>
       </div>
     </div>
   </section>
 </main>
 
-<!-- 6 · So arbeite ich -->
-<section class="sec wrap" id="ablauf" aria-labelledby="h-ablauf">
-  <h2 class="rule-title" id="h-ablauf">So arbeite ich</h2>
-  <ol class="flow" id="steps"></ol>
-</section>
 
-<!-- 7 · Apps -->
-<section class="sec wrap" id="apps" aria-labelledby="h-apps">
-  <h2 class="rule-title" id="h-apps">Apps</h2>
-  <ul class="rows" id="app-list"></ul>
-</section>
 
 <!-- 8 · Kontakt -->
 <section class="contact" id="kontakt" aria-labelledby="h-kontakt">
