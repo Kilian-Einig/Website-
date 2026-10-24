@@ -128,7 +128,7 @@ const photo = (k, fx, fy, tagArgs) => () => { cover(I[k], fx, fy, zoom()); kerbe
 const duoS = (k, col, fx, fy) => () => { duo(I[k], col, fx, fy, zoom()); kerbe(W / 2, H / 2, 300, PAPER); };
 const cont = (k, bg, tagArgs) => () => { contain(I[k], bg); kerbe(W / 2, H / 2, 300, INK, .92); if (tagArgs) tag(...tagArgs, INK); };
 const circ = () => circleCard(G);
-const B = .2;   // ein Takt = 0,2 s; passt auf 150 BPM (Achtel)
+const B = 1 / 6;   // ein Takt = 5 Videobilder (0,167 s); passt auf 180 BPM (Achtel) bzw. 90 BPM (Sechzehntel)
 const SEQ = [
   [B, t => { x.fillStyle = INK; x.fillRect(0, 0, W, H); const p = ease(t / .15); kerbe(W / 2, H / 2, 300 * (.85 + .15 * p), PAPER, p); }],
   /* Alles im selben Takt: jeder Schnitt genau ein Takt */
@@ -150,7 +150,7 @@ const SEQ = [
   [B, cont('expl', '#141414')], [B, photo('step', .5, .5)], [B, circ], [B, cont('cap', '#A39F99')],
   [B, duoS('konzept', '#D8C8A8', .5, .5)], [B, t => specCard(1, t)], [B, duoS('wovenD', '#F2557A', .4, .5)],
   [B, photo('lmp01', .45, .5)], [B, gridCard], [B, photo('hs', .5, .5)], [B, circ],
-  [14 * B, endCard]
+  [2.8, endCard]
 ];
 window.DURATION = SEQ.reduce((a, s) => a + s[0], 0);
 window.render = function (t) {
