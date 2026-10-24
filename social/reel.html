@@ -1,0 +1,155 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:SG;src:url(file:///home/user/Website-/fonts/SpaceGrotesk-300.woff2);font-weight:300}
+@font-face{font-family:SG;src:url(file:///home/user/Website-/fonts/SpaceGrotesk-500.woff2);font-weight:500}
+@font-face{font-family:SG;src:url(file:///home/user/Website-/fonts/SpaceGrotesk-700.woff2);font-weight:700}
+body{margin:0;background:#000}
+</style></head>
+<body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+/* Brand-Reel Kilian Einig, 1080x1920. render(t) zeichnet den Frame zur Zeit t (Sekunden). */
+const W = 1080, H = 1920, INK = '#141414', PAPER = '#FAFAFA';
+const c = document.getElementById('c'), x = c.getContext('2d');
+const IMG = '/home/user/Website-/img/';
+const files = {
+  woven: 'woven-hero.webp', wovenD: 'woven-detail.webp', cushion: 'woven-cushion.webp',
+  lmp01: 'lmp-hero.webp', hand: 'lmp-hand.webp', hs: 'hs-kammern.webp', schacht: 'hs-schacht.webp',
+  lmp02: 'lmp02-uebersicht.webp', regal: 'regal-model.webp', lmp03: 'lmp03-hero.webp', rib: 'skelett-render.webp'
+};
+const I = {};
+window.ready = Promise.all(Object.entries(files).map(([k, f]) => new Promise(r => { const im = new Image(); im.onload = r; im.src = 'file://' + IMG + f; I[k] = im; })))
+  .then(() => document.fonts.load('700 40px SG')).then(() => document.fonts.load('500 40px SG')).then(() => document.fonts.load('300 40px SG'));
+
+const ease = p => 1 - Math.pow(1 - Math.min(1, Math.max(0, p)), 3);
+
+function cover(im, fx = .5, fy = .5, zoom = 1) {
+  const s = Math.max(W / im.width, H / im.height) * zoom, w = im.width * s, h = im.height * s;
+  x.drawImage(im, (W - w) * fx, (H - h) * fy, w, h);
+}
+function contain(im, bg) {
+  x.fillStyle = bg; x.fillRect(0, 0, W, H);
+  const s = Math.min(W / im.width, H / im.height) * .92, w = im.width * s, h = im.height * s;
+  x.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
+}
+/* Duoton: Graustufen, Tiefen in Tinte, Lichter in einer Projektfarbe */
+function duo(im, col, fx, fy, zoom) {
+  x.save(); x.filter = 'grayscale(1) contrast(1.35)'; cover(im, fx, fy, zoom); x.restore();
+  x.save(); x.globalCompositeOperation = 'multiply'; x.fillStyle = col; x.fillRect(0, 0, W, H); x.restore();
+}
+/* Die Kerbe: viewBox 10..100 x 10..110 */
+function kerbe(cx, cy, h, col, alpha = 1) {
+  const s = h / 100, w = 90 * s, l = cx - w / 2, t = cy - h / 2;
+  const P = [[10, 10], [100, 10], [100, 40], [60, 60], [100, 80], [100, 110], [10, 110]];
+  x.save(); x.globalAlpha = alpha; x.fillStyle = col; x.beginPath();
+  P.forEach(([a, b], i) => { const px = l + (a - 10) * s, py = t + (b - 10) * s; i ? x.lineTo(px, py) : x.moveTo(px, py); });
+  x.closePath(); x.fill(); x.restore();
+}
+function txt(s, px, py, size, weight, col, align = 'left', ls = 0) {
+  x.save(); x.font = weight + ' ' + size + 'px SG'; x.fillStyle = col; x.textAlign = align; x.textBaseline = 'alphabetic';
+  if (ls) x.letterSpacing = ls + 'px';
+  x.fillText(s, px, py); x.restore();
+}
+function marks(col) {   // Schnittmarken in den Ecken
+  x.save(); x.strokeStyle = col; x.lineWidth = 2;
+  [[60, 60, 1, 1], [W - 60, 60, -1, 1], [60, H - 60, 1, -1], [W - 60, H - 60, -1, -1]].forEach(([a, b, dx, dy]) => {
+    x.beginPath(); x.moveTo(a, b + 40 * dy); x.lineTo(a, b); x.lineTo(a + 40 * dx, b); x.stroke();
+  });
+  x.restore();
+}
+function tag(n, name, art, col) {
+  txt(n + ' / 07', 72, H - 210, 30, 500, col, 'left', 4);
+  txt(name, 72, H - 140, 64, 700, col, 'left', -2);
+  txt(art.toUpperCase(), W - 72, H - 140, 26, 500, col, 'right', 5);
+}
+
+/* Karten */
+function specCard(v, t) {
+  x.fillStyle = v ? PAPER : '#E9F1EC'; x.fillRect(0, 0, W, H); marks(INK);
+  txt('KILIAN EINIG', 96, 190, 30, 700, INK, 'left', 6);
+  ['FORM. LICHT. RAUM.', 'ENTWURF + AUSFÜHRUNG'].forEach((s, i) => txt(s, 96, 240 + i * 42, 26, 500, INK, 'left', 4));
+  const rows = [['[RGB]', '20 / 20 / 20'], ['[CMYK]', '0 / 0 / 0 / 92'], ['[HEX]', '#141414']];
+  rows.forEach(([a, b], i) => { txt(a, 96, H - 330 + i * 64, 44, 500, INK); txt(b, W - 96, H - 330 + i * 64, 44, 300, INK, 'right'); });
+  kerbe(W / 2, H / 2, 380, INK);
+}
+function gridCard(t) {
+  x.fillStyle = PAPER; x.fillRect(0, 0, W, H);
+  const h = 600, s = h / 100, w = 90 * s, l = W / 2 - w / 2, top = H / 2 - h / 2;
+  x.save(); x.strokeStyle = INK; x.lineWidth = 2; x.setLineDash([10, 10]);
+  [10, 40, 60, 80, 110].forEach(v => { const py = top + (v - 10) * s; x.beginPath(); x.moveTo(40, py); x.lineTo(W - 40, py); x.stroke(); });
+  [10, 60, 100].forEach(v => { const px = l + (v - 10) * s; x.beginPath(); x.moveTo(px, 120); x.lineTo(px, H - 120); x.stroke(); });
+  x.restore();
+  kerbe(W / 2, H / 2, h, INK);
+  txt('30 %', W - 70, top + 30 * s + 14, 26, 500, INK, 'right', 3);
+  txt('70 %', W - 70, top + 70 * s + 14, 26, 500, INK, 'right', 3);
+  txt('44 %', l + 78 * s, top - 30, 26, 500, INK, 'center', 3);
+  txt('9 : 10', 72, H - 100, 30, 500, INK, 'left', 4);
+}
+function circleCard(t) {
+  x.fillStyle = INK; x.fillRect(0, 0, W, H);
+  const s = '  FORM · LICHT · RAUM · ENTWURF · AUSFÜHRUNG · 2026 ·', R = 360, n = s.length;
+  x.save(); x.translate(W / 2, H / 2); x.rotate(t * .9);
+  x.font = '500 40px SG'; x.fillStyle = PAPER; x.textAlign = 'center';
+  for (let i = 0; i < n; i++) { x.save(); x.rotate(i / n * Math.PI * 2); x.fillText(s[i], 0, -R); x.restore(); }
+  x.restore();
+  kerbe(W / 2, H / 2, 300, PAPER);
+}
+function endCard(t) {
+  /* kurzer Übergang aus dem letzten Bild: Schwarz blendet ein, die Kerbe bleibt an ihrer Stelle */
+  const io = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;   // weich rein und raus
+  x.fillStyle = '#0B0A09'; x.fillRect(0, 0, W, H);
+  const glow = io(Math.min(1, t / 1.2));
+  x.save(); x.globalAlpha = glow; x.shadowColor = '#E8892A'; x.shadowBlur = 120; x.strokeStyle = 'rgba(232,137,42,.9)'; x.lineWidth = 10;
+  x.beginPath(); x.arc(W * 1.15, -H * .05, 1100 + t * 30, Math.PI * .55, Math.PI * .98); x.stroke();
+  x.lineWidth = 3; x.strokeStyle = 'rgba(232,137,42,.5)'; x.beginPath(); x.arc(-W * .2, H * 1.1, 900 + t * 20, -Math.PI * .45, -Math.PI * .02); x.stroke();
+  x.restore();
+  const p = io(Math.min(1, Math.max(0, (t - .3) / 1.1))), kh = 230, gap = 40, fs = 112;
+  x.font = '700 ' + fs + 'px SG'; x.letterSpacing = '-4px';
+  const m = x.measureText('Kilian Einig'), nameW = m.width, capH = m.actualBoundingBoxAscent; x.letterSpacing = '0px';
+  const total = kh * .9 + gap + nameW, startX = W / 2 - total / 2;
+  const kx = W / 2 + (startX + kh * .45 - W / 2) * p;
+  kerbe(kx, H / 2, kh, PAPER);
+  /* Grundlinie so, dass die Versalhöhe genau um die Kerbenspitze (Mitte) liegt */
+  const base = H / 2 + capH / 2;
+  x.save(); x.beginPath(); x.rect(kx + kh * .45 + gap - 2, 0, (nameW + 8) * p, H); x.clip();
+  txt('Kilian Einig', kx + kh * .45 + gap + (1 - p) * -40, base, fs, 700, PAPER, 'left', -4);
+  x.restore();
+  const q = io(Math.min(1, Math.max(0, (t - 1.3) / .8)));
+  txt('FORM. LICHT. RAUM.', W / 2, H / 2 + 250 + (1 - q) * 16, 34, 500, 'rgba(250,250,250,' + q + ')', 'center', 10);
+}
+
+/* Ablauf in einem festen Takt B: Grafikkarten 1 Takt, Projekte 2 Takte. Kein Tempowechsel.
+   Die leichte Kamerafahrt läuft über die gesamte Zeit (G), damit Schnitte nicht ruckeln. */
+let G = 0;
+const zoom = () => 1.09 - .07 * Math.min(1, G / 9);
+const shade = () => { x.save(); const g = x.createLinearGradient(0, H - 460, 0, H); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.55)'); x.fillStyle = g; x.fillRect(0, H - 460, W, 460); x.restore(); };
+const photo = (k, fx, fy, tagArgs) => () => { cover(I[k], fx, fy, zoom()); kerbe(W / 2, H / 2, 300, PAPER, .95); if (tagArgs) { shade(); tag(...tagArgs, PAPER); } };
+const duoS = (k, col, fx, fy) => () => { duo(I[k], col, fx, fy, zoom()); kerbe(W / 2, H / 2, 300, PAPER); };
+const cont = (k, bg, tagArgs) => () => { contain(I[k], bg); kerbe(W / 2, H / 2, 300, INK, .92); if (tagArgs) tag(...tagArgs, INK); };
+const circ = () => circleCard(G);
+const B = .4;
+const SEQ = [
+  [2 * B, t => { x.fillStyle = INK; x.fillRect(0, 0, W, H); const p = ease(t / .6); kerbe(W / 2, H / 2, 300 * (.8 + .2 * p), PAPER, p); }],
+  [2 * B, photo('woven', .5, .85, ['01', 'Woven', 'Möbel'])],
+  [B, t => specCard(1, t)],
+  [2 * B, photo('lmp01', .45, .5, ['02', 'LMP 01', 'Licht'])],
+  [B, circ],
+  [2 * B, photo('hs', .5, .5, ['03', 'Hochstapler', 'Architektur'])],
+  [B, gridCard],
+  [2 * B, photo('lmp02', .5, .5, ['04', 'LMP 02', 'Licht'])],
+  [B, duoS('hand', '#E8892A', .5, .5)],
+  [2 * B, photo('regal', .5, .7, ['05', 'Re:gal', 'Architektur'])],
+  [B, t => specCard(0, t)],
+  [2 * B, cont('lmp03', '#A39F99', ['06', 'LMP 03', 'Licht'])],
+  [B, circ],
+  [2 * B, cont('rib', '#FFFFFF', ['07', 'Rib Chair', 'Möbel'])],
+  [B, duoS('cushion', '#F2557A', .5, .5)],
+  [B, duoS('schacht', '#B08A62', .5, .5)],
+  [8 * B, endCard]
+];
+window.DURATION = SEQ.reduce((a, s) => a + s[0], 0);
+window.render = function (t) {
+  G = t; let acc = 0;
+  for (const [d, fn] of SEQ) { if (t < acc + d || d === SEQ[SEQ.length - 1][0] && acc + d >= window.DURATION - 1e-6) { fn(t - acc, d); return; } acc += d; }
+};
+</script></body></html>
