@@ -15,7 +15,8 @@ const IMG = '/home/user/Website-/img/';
 const files = {
   woven: 'woven-hero.webp', wovenD: 'woven-detail.webp', cushion: 'woven-cushion.webp',
   lmp01: 'lmp-hero.webp', hand: 'lmp-hand.webp', hs: 'hs-kammern.webp', schacht: 'hs-schacht.webp',
-  lmp02: 'lmp02-uebersicht.webp', regal: 'regal-model.webp', lmp03: 'lmp03-hero.webp', rib: 'skelett-render.webp'
+  lmp02: 'lmp02-uebersicht.webp', regal: 'regal-model.webp', lmp03: 'lmp03-hero.webp', rib: 'skelett-render.webp',
+  tall: 'lmp-tall.webp', expl: 'lmp02-explosion.webp', cap: 'lmp03-detail.webp', skizze: 'skelett-skizze.webp', konzept: 'hs-konzept.webp', step: 'woven-step2.webp'
 };
 const I = {};
 window.ready = Promise.all(Object.entries(files).map(([k, f]) => new Promise(r => { const im = new Image(); im.onload = r; im.src = 'file://' + IMG + f; I[k] = im; })))
@@ -127,9 +128,10 @@ const photo = (k, fx, fy, tagArgs) => () => { cover(I[k], fx, fy, zoom()); kerbe
 const duoS = (k, col, fx, fy) => () => { duo(I[k], col, fx, fy, zoom()); kerbe(W / 2, H / 2, 300, PAPER); };
 const cont = (k, bg, tagArgs) => () => { contain(I[k], bg); kerbe(W / 2, H / 2, 300, INK, .92); if (tagArgs) tag(...tagArgs, INK); };
 const circ = () => circleCard(G);
-const B = .4;
+const B = .2;   // ein Takt = 0,2 s; passt auf 150 BPM (Achtel)
 const SEQ = [
-  [2 * B, t => { x.fillStyle = INK; x.fillRect(0, 0, W, H); const p = ease(t / .6); kerbe(W / 2, H / 2, 300 * (.8 + .2 * p), PAPER, p); }],
+  [2 * B, t => { x.fillStyle = INK; x.fillRect(0, 0, W, H); const p = ease(t / .3); kerbe(W / 2, H / 2, 300 * (.85 + .15 * p), PAPER, p); }],
+  /* Runde 1: Projekte mit Namen, dazwischen Grafik */
   [2 * B, photo('woven', .5, .85, ['01', 'Woven', 'Möbel'])],
   [B, t => specCard(1, t)],
   [2 * B, photo('lmp01', .45, .5, ['02', 'LMP 01', 'Licht'])],
@@ -143,9 +145,12 @@ const SEQ = [
   [2 * B, cont('lmp03', '#A39F99', ['06', 'LMP 03', 'Licht'])],
   [B, circ],
   [2 * B, cont('rib', '#FFFFFF', ['07', 'Rib Chair', 'Möbel'])],
-  [B, duoS('cushion', '#F2557A', .5, .5)],
-  [B, duoS('schacht', '#B08A62', .5, .5)],
-  [8 * B, endCard]
+  /* Runde 2: Details, jeder Schnitt ein Takt */
+  [B, duoS('cushion', '#F2557A', .5, .5)], [B, photo('tall', .5, .5)], [B, gridCard], [B, duoS('schacht', '#B08A62', .5, .5)],
+  [B, cont('expl', '#141414')], [B, photo('step', .5, .5)], [B, circ], [B, cont('cap', '#A39F99')],
+  [B, duoS('konzept', '#D8C8A8', .5, .5)], [B, t => specCard(1, t)], [B, cont('skizze', '#FFFFFF')], [B, duoS('wovenD', '#F2557A', .4, .5)],
+  [B, photo('lmp01', .45, .5)], [B, gridCard], [B, photo('hs', .5, .5)], [B, circ],
+  [14 * B, endCard]
 ];
 window.DURATION = SEQ.reduce((a, s) => a + s[0], 0);
 window.render = function (t) {
