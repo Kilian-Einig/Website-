@@ -130,25 +130,25 @@ const cont = (k, bg, tagArgs) => () => { contain(I[k], bg); kerbe(W / 2, H / 2, 
 const circ = () => circleCard(G);
 const B = .2;   // ein Takt = 0,2 s; passt auf 150 BPM (Achtel)
 const SEQ = [
-  [2 * B, t => { x.fillStyle = INK; x.fillRect(0, 0, W, H); const p = ease(t / .3); kerbe(W / 2, H / 2, 300 * (.85 + .15 * p), PAPER, p); }],
-  /* Runde 1: Projekte mit Namen, dazwischen Grafik */
-  [2 * B, photo('woven', .5, .85, ['01', 'Woven', 'Möbel'])],
+  [B, t => { x.fillStyle = INK; x.fillRect(0, 0, W, H); const p = ease(t / .15); kerbe(W / 2, H / 2, 300 * (.85 + .15 * p), PAPER, p); }],
+  /* Alles im selben Takt: jeder Schnitt genau ein Takt */
+  [B, photo('woven', .5, .85, ['01', 'Woven', 'Möbel'])],
   [B, t => specCard(1, t)],
-  [2 * B, photo('lmp01', .45, .5, ['02', 'LMP 01', 'Licht'])],
+  [B, photo('lmp01', .45, .5, ['02', 'LMP 01', 'Licht'])],
   [B, circ],
-  [2 * B, photo('hs', .5, .5, ['03', 'Hochstapler', 'Architektur'])],
+  [B, photo('hs', .5, .5, ['03', 'Hochstapler', 'Architektur'])],
   [B, gridCard],
-  [2 * B, photo('lmp02', .5, .5, ['04', 'LMP 02', 'Licht'])],
+  [B, photo('lmp02', .5, .5, ['04', 'LMP 02', 'Licht'])],
   [B, duoS('hand', '#E8892A', .5, .5)],
-  [2 * B, photo('regal', .5, .7, ['05', 'Re:gal', 'Architektur'])],
+  [B, photo('regal', .5, .7, ['05', 'Re:gal', 'Architektur'])],
   [B, t => specCard(0, t)],
-  [2 * B, cont('lmp03', '#A39F99', ['06', 'LMP 03', 'Licht'])],
+  [B, cont('lmp03', '#A39F99', ['06', 'LMP 03', 'Licht'])],
   [B, circ],
-  [2 * B, cont('rib', '#FFFFFF', ['07', 'Rib Chair', 'Möbel'])],
-  /* Runde 2: Details, jeder Schnitt ein Takt */
+  [B, cont('rib', '#FFFFFF', ['07', 'Rib Chair', 'Möbel'])],
+  
   [B, duoS('cushion', '#F2557A', .5, .5)], [B, photo('tall', .5, .5)], [B, gridCard], [B, duoS('schacht', '#B08A62', .5, .5)],
   [B, cont('expl', '#141414')], [B, photo('step', .5, .5)], [B, circ], [B, cont('cap', '#A39F99')],
-  [B, duoS('konzept', '#D8C8A8', .5, .5)], [B, t => specCard(1, t)], [B, cont('skizze', '#FFFFFF')], [B, duoS('wovenD', '#F2557A', .4, .5)],
+  [B, duoS('konzept', '#D8C8A8', .5, .5)], [B, t => specCard(1, t)], [B, duoS('wovenD', '#F2557A', .4, .5)],
   [B, photo('lmp01', .45, .5)], [B, gridCard], [B, photo('hs', .5, .5)], [B, circ],
   [14 * B, endCard]
 ];
