@@ -57,27 +57,27 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .links a{position:relative;display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.15em}
 .links a::after{content:"";position:absolute;left:0;right:.15em;bottom:12px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 300ms var(--ease)}
 .links a:hover::after,.links a[aria-current]::after{transform:scaleX(1)}
-.nav-cta{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.15em;border-bottom:1px solid currentColor;line-height:1.2;padding-top:2px}
-@media (max-width:860px){.nav .links li:not(:first-child){display:none}.nav-in{gap:20px}}
+@media (max-width:860px){.nav .links li:not(:first-child):not(:last-child){display:none}.nav-in{gap:20px}}
 @media (max-width:420px){.brand{letter-spacing:.14em;font-size:12px;gap:10px}.brand svg{height:20px}.nav-in{gap:16px}}
 
 /* ---------- Auftakt ----------
    Bild unter der Kopfleiste, darunter Überschrift und Kerbe auf einer Linie. Alles passt in den ersten Bildschirm. */
 .hero{min-height:100svh;display:flex;flex-direction:column;padding-top:var(--header-h)}
 .hero-img{position:relative;flex:1 1 auto;min-height:280px;max-height:70svh;background:var(--paper);overflow:hidden}
-/* Alle Bilder im gleichen 3:2-Rahmen, jedes mit eigener deckender Fläche. Das neue schiebt sich von unten über das alte. */
+/* Auftakt: Bilder laufen im harten Schnitt durch, am Ende steht groß das Logo (.final). */
 .hero-img{display:grid;place-items:center}
-.frame{position:relative;height:100%;aspect-ratio:3 / 2;max-width:100%;overflow:hidden}
-.frame .slide{position:absolute;inset:0;background:var(--surface);visibility:hidden;z-index:0;overflow:hidden}
+.frame{position:relative;height:100%;aspect-ratio:3 / 2;max-width:100%;overflow:hidden;container-type:size}
+.frame .slide{position:absolute;inset:0;background:var(--surface);visibility:hidden;overflow:hidden}
 .frame .slide img{width:100%;height:100%}
-.frame .slide.prev{visibility:visible;z-index:0}
 .frame .slide.on{visibility:visible;z-index:1}
-@media (prefers-reduced-motion:no-preference){
-  .frame .slide.on{animation:wipeUp 800ms var(--ease) both}
-  .frame .slide.on img{animation:settleIn 1200ms var(--ease) both}
-}
-@keyframes wipeUp{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes settleIn{from{transform:translateY(5%)}}
+.hero-logo{z-index:2;transition:opacity 200ms ease}
+.frame .final{display:grid;place-items:center;background:var(--paper);z-index:3;opacity:0;visibility:hidden;transition:opacity 500ms var(--ease),visibility 0s 500ms}
+.frame .final.on{opacity:1;visibility:visible;transition:opacity 500ms var(--ease)}
+.final-lock{display:flex;align-items:center;gap:6cqh}
+.final-lock svg{height:44cqh;width:auto;fill:var(--ink);flex:none}
+.final-lock span{font-size:17cqh;font-weight:700;letter-spacing:-.05em;line-height:1;padding-right:.05em}
+@media (prefers-reduced-motion:no-preference){.frame .final.on .final-lock{animation:lockIn 700ms var(--ease) both}}
+@keyframes lockIn{from{transform:scale(1.08);opacity:0}}
 @media (max-width:760px){.hero-img{height:auto!important;min-height:0}.frame{width:100%;height:auto}}
 .hero-logo{position:absolute;z-index:2;left:50%;top:44%;height:clamp(96px,22%,200px);width:auto;transform:translate(-50%,-50%);pointer-events:none}
 .hero-logo{mix-blend-mode:difference}
@@ -112,26 +112,27 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 a.count{font-weight:400}
 .rule-title{border-top:1px solid var(--rule);padding-top:20px;margin-bottom:var(--space-m)}
 
-/* ---------- Was ich mache ----------
-   Ein Abstandsmaß für alles innerhalb eines Bereichs (--g), ein Maß zwischen den Bereichen. */
+/* ---------- Projekte auf der Startseite: groß, eins nach dem anderen ---------- */
+.stack{display:flex;flex-direction:column;gap:clamp(72px,9vw,140px)}
+.big{display:block;text-decoration:none}
+.big-ph{position:relative;overflow:hidden;background:var(--surface);aspect-ratio:3 / 2;width:min(100%,calc(78svh * 1.5))}
+.big-ph img{width:100%;height:100%;transition:transform 900ms var(--ease)}
+.big:hover .big-ph img{transform:scale(1.03)}
+.big-cap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;column-gap:24px;row-gap:6px;padding-top:18px;width:min(100%,calc(78svh * 1.5))}
+.big-cap .label:first-child{grid-row:1 / span 2}
+.big-cap h3{margin:0;font-size:var(--fs-h2);font-weight:700;letter-spacing:-.04em;line-height:1}
+.big-kurz{grid-column:2;margin:0;font-weight:300;font-size:var(--fs-lead);color:var(--graphite)}
+.big-art{grid-column:3;grid-row:1;white-space:nowrap}
+.big:hover h3{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+@media (max-width:760px){.big-cap{grid-template-columns:auto minmax(0,1fr)}.big-art{grid-column:2;grid-row:3}}
+
+/* ---------- Was ich mache: Titel und ein starker Satz ---------- */
 .felder{list-style:none;margin:0;padding:0}
-.feld{--g:20px;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,5fr) minmax(0,3fr);column-gap:32px;row-gap:var(--g);align-items:start;padding-block:clamp(32px,3.4vw,48px);border-bottom:1px solid var(--rule)}
+.feld{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:12px 32px;align-items:baseline;padding-block:clamp(28px,3vw,44px);border-bottom:1px solid var(--rule)}
 .felder .feld:first-child{border-top:1px solid var(--rule)}
-.feld h3{grid-column:1;grid-row:1 / span 2;margin:0;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1.05}
-.feld-text{grid-column:2;margin:0;font-size:var(--fs-lead);line-height:1.3}
-.punkte{grid-column:2;list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.punkte li{position:relative;padding-left:18px;font-weight:300;color:var(--graphite);line-height:1.4}
-.punkte li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:1px;background:currentColor}
-.feld-proj{grid-column:3;grid-row:1 / span 2;margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.feld-proj .label{margin:0}
-.feld-proj a{display:inline-flex;align-items:center;min-height:32px;font-weight:500;text-decoration:none;border-bottom:1px solid transparent;transition:border-color 200ms}
-.feld-proj a:hover{border-bottom-color:currentColor}
-@media (max-width:760px){
-  .feld{grid-template-columns:1fr}
-  .feld h3,.feld-text,.punkte,.feld-proj{grid-column:1;grid-row:auto}
-  .feld-proj{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 24px}
-  .feld-proj .label{width:100%}
-}
+.feld h3{margin:0;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.feld-text{margin:0;font-size:var(--fs-lead);font-weight:300;line-height:1.3;max-width:34ch}
+@media (max-width:760px){.feld{grid-template-columns:1fr}}
 
 /* ---------- Über mich ---------- */
 .quote{margin:0 auto var(--space-l);max-width:800px;text-align:center}
@@ -293,8 +294,8 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   .anim .work.rv{transform:scale(.92);transition:opacity 450ms ease,transform 650ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .work.rv.in{transform:none}
   .anim .rv.in{opacity:1}
-  .anim .felder .rv,.anim .tile.rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
-  .anim .felder .rv.in,.anim .tile.rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
+  .anim .felder .rv,.anim .tile.rv,.anim .big.rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .felder .rv.in,.anim .tile.rv.in,.anim .big.rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
   .anim .contact h2 .w{clip-path:inset(0 100% 0 0);transition:clip-path 600ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .contact h2.in .w{clip-path:inset(0 0 0 0)}
 }
@@ -304,17 +305,3 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
 @keyframes clipUp{from{clip-path:inset(30% 0 0 0);opacity:.4}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:0s!important}}
 
-/* ---------- Intro ---------- */
-html.intro-on{overflow:hidden}
-html.intro-on body::before{content:"";position:fixed;inset:0;z-index:90;background:var(--paper)}
-#intro{position:fixed;inset:0;z-index:100;background:var(--paper);overflow:hidden;cursor:pointer}
-.i-collage{position:absolute;inset:0}
-.i-collage img{position:absolute;width:var(--w);max-width:none;height:auto;opacity:0;box-shadow:0 0 0 1px rgba(0,0,0,.04)}
-@media (max-width:760px){.i-collage img{width:calc(var(--w) * 1.7)}}
-.i-lock{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:clamp(12px,2vw,28px);translate:-50% -50%;opacity:0;transform-origin:0 0}
-.i-lock.on{opacity:1}
-.i-lock svg{height:clamp(72px,12vw,180px);width:auto;flex:none}
-.i-lock polygon{fill:var(--ink)}
-.i-name{display:block;overflow:hidden;white-space:nowrap}
-.i-name span{display:block;font-size:clamp(44px,8.6vw,132px);font-weight:700;letter-spacing:-.05em;line-height:.9;padding:0 .1em .28em 0;margin-top:.1em}
-.i-skip{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));min-height:44px;padding:0 16px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;z-index:3}

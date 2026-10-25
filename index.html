@@ -15,11 +15,6 @@
 <link rel="preload" href="fonts/SpaceGrotesk-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="img/woven-detail.webp" as="image">
 <link rel="stylesheet" href="css/style.css">
-<script>
-/* Intro nur einmal pro Sitzung und nur, wenn Bewegung erwünscht ist */
-(function(){var seen=false;try{seen=sessionStorage.getItem('ke-intro')==='1'}catch(e){}
-if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro-on')})();
-</script>
 </head>
 <body data-page="home">
 <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -31,8 +26,8 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
       <li><a href="projekte.html">Projekte</a></li>
       <li><a href="#arbeit">Arbeit</a></li>
       <li><a href="#ueber">Über mich</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
     </ul></nav>
-    <a class="nav-cta" href="#kontakt">→ Kontakt</a>
   </div>
 </header>
 
@@ -42,26 +37,18 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
     <div class="hero-img" id="hero-img">
       <img class="on" src="img/woven-detail.webp" alt="Woven: gewebte Sitzfläche in Pink, Orange und Mint auf schwarzem Stahlgestell" width="1800" height="1351" fetchpriority="high">
       <svg class="hero-logo" viewBox="10 10 90 100" aria-hidden="true"><polygon id="kerbe" points="10,10 100,10 100,40 60,60 100,80 100,110 10,110"/></svg>
-      <button type="button" class="hero-pause label" id="hero-pause" aria-pressed="false" hidden>Pause</button>
     </div>
     <div class="wrap hero-body">
       <div class="hero-copy">
         <h1 id="h-hero"><span class="ln">Form.</span><span class="ln">Licht.</span><span class="ln">Raum.</span></h1>
-        <div class="hero-cta">
-          <a class="btn" href="projekte.html">Alle Projekte ansehen →</a>
-          <a class="tlink" href="#ueber">Über mich</a>
-        </div>
       </div>
     </div>
   </section>
 
   <!-- 2 · Projekte -->
   <section class="sec wrap" id="projekte" aria-labelledby="h-projekte">
-    <div class="sec-head">
-      <h2 id="h-projekte">Ausgewählte Projekte</h2>
-      <a class="tlink count" href="projekte.html" id="count">Alle Projekte →</a>
-    </div>
-    <div class="overview" id="works"></div>
+    <h2 class="rule-title" id="h-projekte">Projekte</h2>
+    <div class="stack" id="works"></div>
   </section>
 
   <!-- 3 · Was ich mache -->
@@ -117,6 +104,5 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
 <script src="js/data.js"></script>
 <script src="js/dims.js"></script>
 <script src="js/main.js"></script>
-<script src="js/intro.js"></script>
 </body>
 </html>

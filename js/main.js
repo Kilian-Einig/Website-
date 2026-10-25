@@ -43,12 +43,14 @@
 
   /* ================= Startseite ================= */
   if (PAGE === 'home') {
-    /* Projekte: gleich große Kacheln im 3er-Raster (wie die Übersicht). So stehen die Leuchten nie untereinander. */
-    $('works').innerHTML = S.projekte.map(tile).join('');
+    /* Projekte: groß untereinander, eins nach dem anderen zum Durchscrollen. Die Übersicht hat ihr eigenes Raster. */
+    $('works').innerHTML = S.projekte.map(function (p, i) {
+      return '<a class="big rv" href="' + url(p) + '">' +
+        '<div class="big-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i === 0) + '</div>' +
+        '<div class="big-cap"><span class="label muted">' + two(i + 1) + '</span><h3>' + esc(p.titel) + '</h3><p class="big-kurz">' + esc(p.kurz) + '</p><span class="label muted big-art">' + esc(p.art) + ' · ' + esc(p.stand) + '</span></div></a>';
+    }).join('');
     $('felder').innerHTML = S.felder.map(function (f) {
-      return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p>' +
-        '<ul class="punkte">' + f.punkte.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
-        '<p class="feld-proj"><span class="label muted">Projekte</span>' + f.projekte.map(function (id) { var p = byId(id); return '<a href="' + url(p) + '">' + esc(p.titel) + ' →</a>'; }).join('') + '</p></li>';
+      return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p></li>';
     }).join('');
 
     $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
@@ -61,38 +63,35 @@
     [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
     reveal(document.querySelectorAll('.contact h2'));
 
-    /* Auftakt: alle Bilder im gleichen 3:2-Rahmen und gleichen Ausschnitt.
-       Das neue Bild schiebt sich deckend über das alte – kein Flackern, keine Dopplung. */
-    var heroBox = $('hero-img'), pauseBtn = $('hero-pause');
+    /* Auftakt: alle Projektbilder laufen einmal schnell durch (Kerbe als Negativ darüber),
+       dann steht groß das Logo. Ein Klick auf das Bild spielt den Lauf erneut ab. */
+    var heroBox = $('hero-img');
     var slides = S.auftakt.map(function (id) { var p = byId(id); return { r: p.rahmen, alt: p.titel + ': ' + p.kurz }; });
     heroBox.querySelector('img').remove();
     var frame = document.createElement('div'); frame.className = 'frame';
     heroBox.insertBefore(frame, heroBox.firstChild);
-    slides.forEach(function (sl, k) {
-      var box = document.createElement('div'); box.className = 'slide' + (k === 0 ? ' on' : '');
+    slides.forEach(function (sl) {
+      var box = document.createElement('div'); box.className = 'slide';
       if (sl.r.bg) box.style.background = sl.r.bg;
-      box.innerHTML = frameImg(sl.r, sl.alt, k === 0);
+      box.innerHTML = frameImg(sl.r, sl.alt, true);
       frame.appendChild(box);
     });
-    frame.appendChild(heroBox.querySelector('.hero-logo'));
-    var heroImgs = [].slice.call(frame.querySelectorAll('.slide')), cur = 0, playing = false, slideTimer = 0;
-    function show(k) {
-      var old = heroImgs[cur], nu = heroImgs[k];
-      heroImgs.forEach(function (im) { if (im !== old && im !== nu) im.classList.remove('on', 'prev'); });
-      old.classList.remove('on'); old.classList.add('prev'); nu.classList.remove('prev'); nu.classList.add('on'); cur = k;
+    var neg = heroBox.querySelector('.hero-logo'); frame.appendChild(neg);
+    var fin = document.createElement('div'); fin.className = 'slide final';
+    fin.innerHTML = '<div class="final-lock"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><span>Kilian Einig</span></div>';
+    frame.appendChild(fin);
+    var heroImgs = [].slice.call(frame.querySelectorAll('.slide:not(.final)')), runTimer = 0;
+    function run() {
+      clearTimeout(runTimer); fin.classList.remove('on'); neg.style.opacity = 1;
+      var k = 0;
+      (function next() {
+        heroImgs.forEach(function (im, j) { im.classList.toggle('on', j === k); });
+        if (k < heroImgs.length) { k++; runTimer = setTimeout(next, 170); }
+        else { neg.style.opacity = 0; fin.classList.add('on'); }
+      })();
     }
-    function loop() { slideTimer = setTimeout(function () { show((cur + 1) % heroImgs.length); loop(); }, 2600); }
-    function play(on) { playing = on; clearTimeout(slideTimer); if (on) loop(); }
-    var userPaused = false;
-    if (!reduce) {
-      pauseBtn.hidden = false;
-      pauseBtn.addEventListener('click', function (e) {
-        e.stopPropagation(); userPaused = !userPaused; play(!userPaused);
-        pauseBtn.setAttribute('aria-pressed', String(userPaused)); pauseBtn.textContent = userPaused ? 'Abspielen' : 'Pause';
-      });
-      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!userPaused) play(es[0].isIntersecting); }).observe(heroBox);
-    }
-
+    if (reduce) { neg.style.opacity = 0; fin.classList.add('on'); }
+    else { setTimeout(run, 300); frame.addEventListener('click', run); frame.style.cursor = 'pointer'; frame.title = 'Nochmal abspielen'; }
   }
 
   /* ================= Projektübersicht ================= */
