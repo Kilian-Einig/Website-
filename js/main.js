@@ -10,10 +10,18 @@
   var url = function (p) { return 'projekt.html?id=' + encodeURIComponent(p.id); };
   var byId = function (id) { return S.projekte.filter(function (p) { return p.id === id; })[0]; };
   /* Ein Bild im einheitlichen Rahmen: Ausschnitt (pos) oder ganz eingepasst (fit: contain) */
+  /* Projektkachel: gleicher 3:2-Ausschnitt, Name, Art, Kurzsatz. Für Startseite und Übersicht. */
+  var tile = function (p, i) {
+    return '<a class="tile rv" style="--d:' + (i % 3 * 90) + 'ms" href="' + url(p) + '">' +
+      '<div class="tile-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i < 3) + '</div>' +
+      '<div class="tile-cap"><h3>' + esc(p.titel) + '</h3><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
+      '<p class="tile-kurz">' + esc(p.kurz) + '</p></a>';
+  };
   var frameImg = function (r, alt, eager) {
     return '<img src="' + esc(r.src) + '" alt="' + esc(alt) + '"' + dims(r.src) + (eager ? '' : ' loading="lazy"') + ' decoding="async" style="object-fit:' + (r.fit || 'cover') + ';object-position:' + (r.pos || '50% 50%') + '">';
   };
 
+  [].forEach.call(document.querySelectorAll('[data-insta]'), function (a) { a.href = S.instagram.url; if (a.dataset.insta === 'name') a.textContent = S.instagram.name; });
   if ($('foot')) $('foot').textContent = '© ' + new Date().getFullYear() + ' ' + S.name + ' · ' + S.ort;
 
   /* Kopfzeile: durchsichtig über dem Auftakt, weiß beim Scrollen */
@@ -35,26 +43,8 @@
 
   /* ================= Startseite ================= */
   if (PAGE === 'home') {
-    /* Projekte: zwei Spalten, Formate wechseln 4:3 und 3:4. Auf dem Handy eine Spalte in der richtigen Reihenfolge. */
-    var card = function (p, i) {
-      var a = p.uebersicht || p.bild, ratio = D[a] ? D[a][0] + '/' + D[a][1] : '4/3';   // ganzes Bild, nichts beschnitten
-      return '<article class="work rv" id="p-' + esc(p.id) + '" style="--d:' + (i % 2 * 100) + 'ms">' +
-        '<a href="' + url(p) + '">' +
-          '<div class="ph" style="aspect-ratio:' + ratio + '">' +
-            '<img src="' + esc(a) + '" alt="' + esc(p.bildAlt) + '"' + dims(a) + (i > 1 ? ' loading="lazy"' : '') + ' decoding="async">' +
-            '<div class="ov" aria-hidden="true"><h3>' + esc(p.titel) + '</h3><p class="label">' + esc(p.art) + ' · ' + esc(p.stand) + '</p><p class="ov-kurz">' + esc(p.kurz) + '</p></div>' +
-          '</div>' +
-          '<div class="cap"><h3>' + esc(p.titel) + '</h3><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
-        '</a></article>';
-    };
-    var mq = window.matchMedia('(max-width: 760px)');
-    var grid = function () {
-      var cards = S.projekte.map(card);
-      $('works').innerHTML = mq.matches ? '<div class="col">' + cards.join('') + '</div>' :
-        '<div class="col">' + cards.filter(function (c, i) { return i % 2 === 0; }).join('') + '</div>' +
-        '<div class="col">' + cards.filter(function (c, i) { return i % 2 === 1; }).join('') + '</div>';
-      reveal(document.querySelectorAll('#works .rv'));
-    };
+    /* Projekte: gleich große Kacheln im 3er-Raster (wie die Übersicht). So stehen die Leuchten nie untereinander. */
+    $('works').innerHTML = S.projekte.map(tile).join('');
     $('felder').innerHTML = S.felder.map(function (f) {
       return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p>' +
         '<ul class="punkte">' + f.punkte.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
@@ -67,53 +57,9 @@
 
     $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email + ' →';
 
-    grid();
-    if (mq.addEventListener) mq.addEventListener('change', grid); else mq.addListener(grid);
-    reveal(document.querySelectorAll('.rv:not(.work)'));
+    reveal(document.querySelectorAll('.rv'));
     [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
     reveal(document.querySelectorAll('.contact h2'));
-
-    /* Laufband: gleich große Kästen in Projektfarben. Läuft von selbst, wird beim Drüberfahren langsamer
-       und lässt sich mit Maus oder Finger in beide Richtungen ziehen. */
-    var items = S.projekte.map(function (p) {
-      return '<a href="' + url(p) + '" style="background:' + p.farbe + '"><strong>' + esc(p.titel) + '</strong><span>' + esc(p.art) + '</span></a>';
-    }).join('');
-    var band = $('band'), bandBox = band.parentNode;
-    band.innerHTML = items + '<span class="band-dup" aria-hidden="true">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
-    (function () {
-      var x = 0, speed = reduce ? 0 : 0.6, target = speed, v = speed, half = 0, drag = null, moved = 0, lastT = 0;
-      var measure = function () { half = band.scrollWidth / 2; };
-      measure(); window.addEventListener('resize', measure);
-      bandBox.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') target = speed * 0.25; });
-      bandBox.addEventListener('pointerleave', function () { target = speed; });
-      bandBox.addEventListener('pointerdown', function (e) {
-        drag = { x: e.clientX, y: e.clientY, last: e.clientX, id: e.pointerId, horiz: null }; moved = 0;
-      });
-      window.addEventListener('pointermove', function (e) {
-        if (!drag || e.pointerId !== drag.id) return;
-        if (drag.horiz === null) {
-          if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
-          drag.horiz = Math.abs(e.clientX - drag.x) > Math.abs(e.clientY - drag.y);
-          if (drag.horiz) bandBox.setPointerCapture(e.pointerId);
-        }
-        if (!drag.horiz) return;
-        var dx = e.clientX - drag.last; drag.last = e.clientX; moved += Math.abs(dx);
-        x -= dx; v = -dx;
-      });
-      var end = function (e) { if (drag && e.pointerId === drag.id) drag = null; };
-      window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
-      bandBox.addEventListener('click', function (e) { if (moved > 6) { e.preventDefault(); moved = 0; } }, true);
-      bandBox.addEventListener('wheel', function (e) {
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { x += e.deltaX; e.preventDefault(); }
-      }, { passive: false });
-      (function tick(t) {
-        var dt = lastT ? Math.min(3, (t - lastT) / 16.7) : 1; lastT = t;
-        if (!drag) { v += (target - v) * 0.06; x += v * dt; }
-        if (half) { x = ((x % half) + half) % half; }
-        band.style.transform = 'translate3d(' + (-x) + 'px,0,0)';
-        requestAnimationFrame(tick);
-      })(0);
-    })();
 
     /* Auftakt: alle Bilder im gleichen 3:2-Rahmen und gleichen Ausschnitt.
        Das neue Bild schiebt sich deckend über das alte – kein Flackern, keine Dopplung. */
@@ -152,12 +98,7 @@
   /* ================= Projektübersicht ================= */
   if (PAGE === 'uebersicht') {
     $('count').textContent = '( ' + two(S.projekte.length) + ' Projekte )';
-    $('overview').innerHTML = S.projekte.map(function (p, i) {
-      return '<a class="tile rv" style="--d:' + (i % 3 * 90) + 'ms" href="' + url(p) + '">' +
-        '<div class="tile-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i < 3) + '</div>' +
-        '<div class="tile-cap"><h2>' + esc(p.titel) + '</h2><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
-        '<p class="tile-kurz">' + esc(p.kurz) + '</p></a>';
-    }).join('');
+    $('overview').innerHTML = S.projekte.map(tile).join('');
     reveal(document.querySelectorAll('#overview .rv'));
   }
 

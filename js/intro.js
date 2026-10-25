@@ -1,5 +1,4 @@
 /* Intro der Startseite, angelehnt an einen schnell geschnittenen Reel:
-   1. Farbige Streifen mit den Projektnamen fahren hoch und wieder heraus.
    2. Wortmarke erscheint, die Schrift klappt weg, die Kerbe bleibt.
    3. Projektbilder ploppen als Collage auf.
    4. Die Kerbe fliegt in die Kopfleiste, die Seite liegt frei.
@@ -13,18 +12,12 @@
   var wait = function (ms) { return new Promise(function (r) { timers.push(setTimeout(r, ms)); }); };
   var lenis = window.__lenis; if (lenis) lenis.stop();
 
-  /* Streifen: eine Farbe pro Projekt, aus dem Reel übernommen */
-  var COLORS = [['#1F2BFF', '#FAFAFA'], ['#CFE9DA', '#141414'], ['#FFF200', '#141414'], ['#141414', '#FAFAFA'], ['#F6B8D6', '#141414'], ['#FAFAFA', '#141414'], ['#1F2BFF', '#FAFAFA']];
-  var stripes = S.projekte.map(function (p, i) {
-    return '<div class="i-stripe" style="background:' + (p.farbe || COLORS[i % COLORS.length][0]) + ';color:#141414"><span>' + p.titel + ' / ' + p.art + ' / ' + p.kurz.replace(/\.$/, '') + ' /</span></div>';
-  }).join('');
   var pics = S.projekte.map(function (p) { return p.uebersicht || p.bild; });
   var SPOTS = [[6, 10, 26], [60, 6, 30], [30, 36, 32], [4, 58, 24], [66, 50, 28], [42, 4, 18], [44, 64, 22], [76, 24, 18], [16, 34, 16]];
 
   var el = document.createElement('div');
   el.id = 'intro'; el.setAttribute('aria-hidden', 'true');
   el.innerHTML =
-    '<div class="i-stripes">' + stripes + '</div>' +
     '<div class="i-collage">' + pics.map(function (src, i) {
       var s = SPOTS[i % SPOTS.length];
       return '<img src="' + src + '" alt="" style="left:' + s[0] + '%;top:' + s[1] + '%;--w:' + s[2] + 'vw">';
@@ -33,17 +26,11 @@
     '<button type="button" class="i-skip label">Überspringen</button>';
   document.body.appendChild(el);
 
-  var st = [].slice.call(el.querySelectorAll('.i-stripe')), imgs = [].slice.call(el.querySelectorAll('.i-collage img'));
+  var imgs = [].slice.call(el.querySelectorAll('.i-collage img'));
   var lock = el.querySelector('.i-lock'), name = el.querySelector('.i-name'), poly = lock.querySelector('polygon');
   var ease = 'cubic-bezier(.16,1,.3,1)', snap = 'cubic-bezier(.7,0,.2,1)';
 
   async function run() {
-    /* 1 · Streifen */
-    st.forEach(function (s, i) { s.animate([{ transform: 'translateY(105%)' }, { transform: 'none' }], { duration: 650, delay: i * 55, easing: ease, fill: 'both' }); });
-    await wait(1250); if (done) return;
-    st.forEach(function (s, i) { s.animate([{ transform: 'none' }, { transform: 'translateY(-105%)' }], { duration: 500, delay: i * 45, easing: snap, fill: 'forwards' }); });
-    await wait(350); if (done) return;
-
     /* 2 · Wortmarke, Schrift klappt weg, Kerbe beißt */
     lock.classList.add('on');
     lock.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 600, easing: ease, fill: 'both' });

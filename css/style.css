@@ -104,20 +104,6 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .tlink{display:inline-flex;align-items:center;min-height:44px;font-size:15px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
 .tlink:hover{text-decoration-thickness:2px}
 
-/* ---------- Laufband ---------- */
-.band{overflow:hidden;border-block:1px solid var(--ink);background:var(--ink)}
-.band-track{display:flex;width:max-content}
-.band-track a,.band-dup a{flex:none;display:flex;flex-direction:column;justify-content:space-between;gap:10px;width:clamp(220px,22vw,340px);height:clamp(108px,9vw,140px);padding:18px clamp(20px,2vw,28px);color:var(--ink);text-decoration:none;white-space:nowrap;border-right:1px solid var(--ink)}
-.band-dup{display:flex}
-.band strong{font-size:clamp(26px,2.8vw,44px);font-weight:700;letter-spacing:-.04em;line-height:1}
-.band span span,.band a span{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.15em}
-.band a:hover strong{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
-.band a:focus-visible{outline:3px solid var(--ink);outline-offset:-6px}
-.band{touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
-.band:active{cursor:grabbing}
-.band-track{will-change:transform}
-.band img,.band a{-webkit-user-drag:none}
-
 /* ---------- Abschnitte ---------- */
 .sec{padding-block:var(--space-l) 0}
 .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px;margin-bottom:var(--space-m)}
@@ -125,27 +111,6 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .count{margin:0;font-size:var(--fs-lead);font-weight:300}
 a.count{font-weight:400}
 .rule-title{border-top:1px solid var(--rule);padding-top:20px;margin-bottom:var(--space-m)}
-
-/* ---------- Projektraster ---------- */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-.col{display:flex;flex-direction:column;gap:24px;min-width:0}
-.col:nth-child(2){padding-top:clamp(48px,8vw,140px)}
-.work a{display:block;text-decoration:none}
-.work .ph{position:relative;overflow:hidden;background:var(--surface)}
-.work .ph img{width:100%;height:100%;object-fit:cover;transition:transform 900ms var(--ease)}
-.ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:clamp(20px,2.4vw,32px);background:rgba(20,20,20,.85);color:var(--paper);opacity:0;transition:opacity 300ms ease}
-.ov h3{margin:0;font-size:clamp(36px,4vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1;transform:translateY(12px);transition:transform 400ms var(--ease)}
-.ov .label{margin:0;color:#BDBDBD}
-.ov-kurz{margin:0;font-weight:300;font-size:var(--fs-lead);max-width:28ch}
-.work a:hover .ov,.work a:focus-visible .ov{opacity:1}
-.work a:hover .ov h3,.work a:focus-visible .ov h3{transform:none}
-.work a:hover .ph img{transform:scale(1.04)}
-.work a:focus-visible{outline-offset:4px}
-.cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-top:12px}
-.cap h3{margin:0;font-size:20px;font-weight:500;letter-spacing:-.01em}
-.cap .label{margin:0}
-@media (max-width:760px){.grid{grid-template-columns:1fr}.col:nth-child(2){padding-top:0}.col{gap:40px}}
-@media (hover:none){.ov{display:none}}
 
 /* ---------- Was ich mache ----------
    Ein Abstandsmaß für alles innerhalb eines Bereichs (--g), ein Maß zwischen den Bereichen. */
@@ -190,18 +155,22 @@ a.count{font-weight:400}
 .tile-ph img{width:100%;height:100%;transition:transform 700ms var(--ease)}
 .tile:hover .tile-ph img{transform:scale(1.04)}
 .tile-cap{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:14px}
-.tile-cap h2{margin:0;font-size:clamp(22px,2vw,30px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.tile-cap h2,.tile-cap h3{margin:0;font-size:clamp(22px,2vw,30px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
 .tile-cap .label{margin:0;white-space:nowrap}
 .tile-kurz{margin:6px 0 0;font-weight:300;color:var(--graphite)}
-.tile:hover h2{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.tile:hover h2,.tile:hover h3{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 @media (max-width:900px){.overview{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:520px){.overview{gap:28px 12px}.tile-cap{flex-direction:column;gap:4px;padding-top:10px}.tile-cap h2{font-size:19px}.tile-kurz{font-size:14px}}
+@media (max-width:520px){#works.overview{grid-template-columns:1fr;gap:40px}#works .tile-cap{flex-direction:row;align-items:baseline}#works .tile-cap h3{font-size:22px}#works .tile-kurz{font-size:16px}
+.overview{gap:28px 12px}.tile-cap{flex-direction:column;gap:4px;padding-top:10px}.tile-cap h2,.tile-cap h3{font-size:19px}.tile-kurz{font-size:14px}}
 
 /* ---------- Kontakt ---------- */
 .contact{background:var(--ink);color:var(--paper);padding-block:var(--space-l);margin-top:var(--space-l)}
 .contact h2{margin:0;font-size:clamp(48px,6vw,96px);font-weight:700;letter-spacing:-.045em;line-height:.95}
 .contact h2 .w{display:inline-block}
 .contact-sub{margin:28px 0 36px;font-weight:300;font-size:var(--fs-lead);color:var(--on-stage-dim)}
+.contact-links{display:flex;flex-wrap:wrap;gap:12px}
+.btn-ghost{background:transparent;color:var(--paper);border:1px solid var(--paper);min-height:64px;padding:0 28px;font-size:clamp(18px,2vw,26px)}
+.btn-ghost:hover{background:var(--paper);color:var(--ink)}
 .contact .mail{min-height:64px;padding:0 28px;font-size:clamp(18px,2vw,26px);overflow-wrap:anywhere}
 .contact :focus-visible{outline-color:var(--paper)}
 
@@ -339,9 +308,6 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
 html.intro-on{overflow:hidden}
 html.intro-on body::before{content:"";position:fixed;inset:0;z-index:90;background:var(--paper)}
 #intro{position:fixed;inset:0;z-index:100;background:var(--paper);overflow:hidden;cursor:pointer}
-.i-stripes{position:absolute;inset:0;display:flex}
-.i-stripe{flex:1;min-width:0;display:flex;justify-content:center;overflow:hidden;transform:translateY(105%)}
-.i-stripe span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:clamp(28px,4.4vw,64px);font-weight:700;letter-spacing:-.03em;line-height:1;white-space:nowrap;padding:24px 0}
 .i-collage{position:absolute;inset:0}
 .i-collage img{position:absolute;width:var(--w);max-width:none;height:auto;opacity:0;box-shadow:0 0 0 1px rgba(0,0,0,.04)}
 @media (max-width:760px){.i-collage img{width:calc(var(--w) * 1.7)}}
@@ -350,5 +316,5 @@ html.intro-on body::before{content:"";position:fixed;inset:0;z-index:90;backgrou
 .i-lock svg{height:clamp(72px,12vw,180px);width:auto;flex:none}
 .i-lock polygon{fill:var(--ink)}
 .i-name{display:block;overflow:hidden;white-space:nowrap}
-.i-name span{display:block;font-size:clamp(44px,8.6vw,132px);font-weight:700;letter-spacing:-.05em;line-height:.9;padding-bottom:.16em;margin-top:.16em}
+.i-name span{display:block;font-size:clamp(44px,8.6vw,132px);font-weight:700;letter-spacing:-.05em;line-height:.9;padding:0 .1em .28em 0;margin-top:.1em}
 .i-skip{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));min-height:44px;padding:0 16px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;z-index:3}

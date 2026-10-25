@@ -7,6 +7,7 @@ window.SITE = {
   name: "Kilian Einig",
   ort: "Mainz / Antwerpen",
   email: "kilianeinig@gmx.de",
+  instagram: { name: "@kilian.einig", url: "https://www.instagram.com/kilian.einig/" },
   stand: "Oktober 2026",
 
 

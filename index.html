@@ -55,16 +55,13 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
     </div>
   </section>
 
-  <!-- Laufband: alle Projekte als farbige Streifen -->
-  <nav class="band" aria-label="Projekte im Überblick"><div class="band-track" id="band"></div></nav>
-
   <!-- 2 · Projekte -->
   <section class="sec wrap" id="projekte" aria-labelledby="h-projekte">
     <div class="sec-head">
       <h2 id="h-projekte">Ausgewählte Projekte</h2>
       <a class="tlink count" href="projekte.html" id="count">Alle Projekte →</a>
     </div>
-    <div class="grid" id="works"></div>
+    <div class="overview" id="works"></div>
   </section>
 
   <!-- 3 · Was ich mache -->
@@ -96,7 +93,10 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
   <div class="wrap">
     <h2 id="h-kontakt"><span class="w">Lass</span> <span class="w">uns</span><br><span class="w">etwas</span><br><span class="w">bauen.</span></h2>
     <p class="contact-sub">Für Projekte, Zusammenarbeit oder einfach ein Gespräch.</p>
-    <a class="btn btn-light mail" id="mail" href="mailto:kilianeinig@gmx.de">kilianeinig@gmx.de →</a>
+    <div class="contact-links">
+      <a class="btn btn-light mail" id="mail" href="mailto:kilianeinig@gmx.de">kilianeinig@gmx.de →</a>
+      <a class="btn btn-ghost" data-insta="name" href="https://www.instagram.com/kilian.einig/" target="_blank" rel="noopener">@kilian.einig</a>
+    </div>
   </div>
 </section>
 
@@ -107,6 +107,7 @@ if(!seen&&!location.hash&&!matchMedia('(prefers-reduced-motion: reduce)').matche
     <nav class="links legal" aria-label="Rechtliches"><ul>
       <li><a href="impressum.html">Impressum</a></li>
       <li><a href="datenschutz.html">Datenschutz</a></li>
+      <li><a data-insta href="https://www.instagram.com/kilian.einig/" target="_blank" rel="noopener">Instagram</a></li>
     </ul></nav>
   </div>
   <p class="wrap foot-line label muted" id="foot"></p>
