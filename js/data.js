@@ -36,7 +36,8 @@ window.SITE = {
       ],
       galerie: [
         ["img/woven-detail.webp", "Gewebte Sitzfläche und schwarzes Stahlgestell"],
-        ["img/woven-cushion.webp", "Gepolsterte Streifen in Pink, Orange und Mint"]
+        ["img/woven-cushion.webp", "Gepolsterte Streifen in Pink, Orange und Mint"],
+        ["img/k-woven-sitzen.webp", "Woven im Gebrauch"]
       ]
     },
     {
@@ -56,7 +57,8 @@ window.SITE = {
       galerie: [
         ["img/lmp-hand.webp", "Eine Hand vor den Lamellen, nur ein Teil leuchtet"],
         ["img/lmp-tall.webp", "Seitenansicht der Lamellen in warmem Gelb"],
-        ["img/lmp-plate.webp", "Namensschild am schwarzen Träger"]
+        ["img/lmp-plate.webp", "Namensschild am schwarzen Träger"],
+        ["img/k-lmp01-licht.webp", "Die Lamellen von unten, warm leuchtend"]
       ]
     },
     {
@@ -73,14 +75,16 @@ window.SITE = {
         "Im 4. Semester haben wir den Entwurf bis in die Werkplanung durchgearbeitet. Um den Bestand zu schonen, erschließt ein eigenes System die Kammern: Die Kammerwand steht als eigenständiges Volumen im Raum, rundum von einem Schacht umgeben, über Einzeltreppen betritt man jede Kapsel. Roher Beton und Stahlgitter markieren Bewegung und Begegnung, Holz steht für Wärme und Rückzug, Rot, Gelb, Lila und Grün setzen Akzente."
       ],
       fakten: [["Team", "Teamprojekt, drei Personen"], ["Kontext", "HS Mainz, 3. und 4. Semester, 2025/26"], ["Ort", "Neues Frankfurt, Zeilenhäuser von Ernst May"], ["Umfang", "Entwurf, Werkplanung, Details, technischer Ausbau"]],
-      bild: "img/hs-kammerleben.webp", hell: true,
+      bild: "img/k-hs-schacht.webp",
       uebersicht: "img/hs-kammern.webp",
-      bildAlt: "Collage: drei gestapelte L-förmige Schlafkammern, in jeder liegt ein Mensch",
+      bildAlt: "Rendering: Schacht mit Stahltreppen zwischen Kammerwand und Holzfassade",
       zweitbild: "img/hs-kammern.webp",
       galerie: [
         ["img/hs-konzept.webp", "Konzept: L-förmige Kammern, gestapelt im Hausvolumen"],
         ["img/hs-kammern.webp", "Die Kammerwand von unten"],
-        ["img/hs-schacht.webp", "Schacht und Einzeltreppen entlang der Kammerwand"],
+        ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
+        ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
+        ["img/hs-kammerleben.webp", "Collage: Leben in den gestapelten Kammern"],
         ["img/hs-p13.webp", "Gemeinschaftshaus"],
         ["img/hs-p22.webp", "Schnitt A-A durch die gestapelten Kammern"],
         ["img/hs-model.webp", "Arbeitsmodell aus Holz"]
@@ -105,6 +109,7 @@ window.SITE = {
       galerie: [
         ["img/lmp02-explosion.webp", "Aufbau: Frontrahmen, LED-Ring vorne, Bowl, Gehäuse, LED-Ring hinten, Rückwand"],
         ["img/lmp02-tief.webp", "Entwurf in gebürstetem Aluminium, von unten"],
+        ["img/k-lmp02-regler.webp", "Drehregler für die Lichtebenen"],
         ["img/lmp02-loop.mp4", "Prototyp aus MDF in Betrieb", "img/lmp02-poster.webp"]
       ]
     },
@@ -133,7 +138,7 @@ window.SITE = {
     },
     {
       id: "lmp03",
-      rahmen: { src: "img/lmp03-hero.webp", fit: "contain", bg: "#A39F99" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
+      rahmen: { src: "img/k-lmp03.webp", pos: "50% 58%" },   // einheitlicher 3:2-Ausschnitt für Auftakt und Projektübersicht
       farbe: "#C9C6C0",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "LMP 03",
       art: "Licht",
@@ -143,10 +148,14 @@ window.SITE = {
       hinweis: "Entwurf: bisher nur als Rendering, noch nicht gebaut.",
       text: "Ein opaler LED-Stab liegt in einem klaren Glasrohr. Zwei Kappen aus gebürstetem Aluminium schließen das Rohr ab, ein Lochraster in den Stirnseiten lässt die Wärme entweichen. Zwei Stahlseile halten die Leuchte frei im Raum.",
       fakten: [["Stand", "Gerendert in Blender"], ["Material", "Glas, Aluminium, Stahlseil"], ["Länge", "ca. 1,4 m"]],
-      bild: "img/lmp03-hero.webp",
-      bildAlt: "Rendering von LMP 03: leuchtender Stab in einem Glasrohr mit Aluminiumkappen vor heller Wand",
+      bild: "img/k-lmp03.webp",
+      bildAlt: "Rendering von LMP 03: leuchtender Stab im Glasrohr über einem Esstisch",
       zweitbild: "img/lmp03-detail.webp",
-      galerie: [["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"]]
+      galerie: [
+        ["img/lmp03-hero.webp", "Glasrohr mit Aluminiumkappen vor heller Wand"],
+        ["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"],
+        ["img/k-lmp03-explosion.webp", "Aufbau: Glasrohr, LED-Stab und Kappe"]
+      ]
     },
     {
       id: "skelettstuhl",

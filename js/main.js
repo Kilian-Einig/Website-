@@ -21,6 +21,16 @@
     return '<img src="' + esc(r.src) + '" alt="' + esc(alt) + '"' + dims(r.src) + (eager ? '' : ' loading="lazy"') + ' decoding="async" style="object-fit:' + (r.fit || 'cover') + ';object-position:' + (r.pos || '50% 50%') + '">';
   };
 
+  /* Bilder blenden erst ein, wenn sie geladen sind, statt mitten in einer Bewegung aufzuploppen */
+  function softImgs(root) {
+    [].forEach.call((root || document).querySelectorAll('img'), function (im) {
+      if (im.complete && im.naturalWidth) return;
+      im.classList.add('ld');
+      var done = function () { im.classList.remove('ld'); };
+      im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true });
+    });
+  }
+
   [].forEach.call(document.querySelectorAll('[data-insta]'), function (a) { a.href = S.instagram.url; if (a.dataset.insta === 'name') a.textContent = S.instagram.name; });
   if ($('foot')) $('foot').textContent = '© ' + new Date().getFullYear() + ' ' + S.name + ' · ' + S.ort;
 
@@ -63,35 +73,6 @@
     [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
     reveal(document.querySelectorAll('.contact h2'));
 
-    /* Auftakt: alle Projektbilder laufen einmal schnell durch (Kerbe als Negativ darüber),
-       dann steht groß das Logo. Ein Klick auf das Bild spielt den Lauf erneut ab. */
-    var heroBox = $('hero-img');
-    var slides = S.auftakt.map(function (id) { var p = byId(id); return { r: p.rahmen, alt: p.titel + ': ' + p.kurz }; });
-    heroBox.querySelector('img').remove();
-    var frame = document.createElement('div'); frame.className = 'frame';
-    heroBox.insertBefore(frame, heroBox.firstChild);
-    slides.forEach(function (sl) {
-      var box = document.createElement('div'); box.className = 'slide';
-      if (sl.r.bg) box.style.background = sl.r.bg;
-      box.innerHTML = frameImg(sl.r, sl.alt, true);
-      frame.appendChild(box);
-    });
-    var neg = heroBox.querySelector('.hero-logo'); frame.appendChild(neg);
-    var fin = document.createElement('div'); fin.className = 'slide final';
-    fin.innerHTML = '<div class="final-lock"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><span>Kilian Einig</span></div>';
-    frame.appendChild(fin);
-    var heroImgs = [].slice.call(frame.querySelectorAll('.slide:not(.final)')), runTimer = 0;
-    function run() {
-      clearTimeout(runTimer); fin.classList.remove('on'); neg.style.opacity = 1;
-      var k = 0;
-      (function next() {
-        heroImgs.forEach(function (im, j) { im.classList.toggle('on', j === k); });
-        if (k < heroImgs.length) { k++; runTimer = setTimeout(next, 170); }
-        else { neg.style.opacity = 0; fin.classList.add('on'); }
-      })();
-    }
-    if (reduce) { neg.style.opacity = 0; fin.classList.add('on'); }
-    else { setTimeout(run, 300); frame.addEventListener('click', run); frame.style.cursor = 'pointer'; frame.title = 'Nochmal abspielen'; }
   }
 
   /* ================= Projektübersicht ================= */
@@ -173,6 +154,8 @@
   }
 
   /* Weiches Scrollen mit Schwung */
+  if (!reduce) softImgs();
+
   if (window.Lenis && !reduce) {
     lenis = window.__lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
     (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);

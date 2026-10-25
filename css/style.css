@@ -64,24 +64,9 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
    Bild unter der Kopfleiste, darunter Überschrift und Kerbe auf einer Linie. Alles passt in den ersten Bildschirm. */
 .hero{min-height:100svh;display:flex;flex-direction:column;padding-top:var(--header-h)}
 .hero-img{position:relative;flex:1 1 auto;min-height:280px;max-height:70svh;background:var(--paper);overflow:hidden}
-/* Auftakt: Bilder laufen im harten Schnitt durch, am Ende steht groß das Logo (.final). */
+/* Auftakt: groß nur das Logo, das sich von der Mitte aus öffnet. Der Name steht schon in der Kopfzeile. */
 .hero-img{display:grid;place-items:center}
-.frame{position:relative;height:100%;aspect-ratio:3 / 2;max-width:100%;overflow:hidden;container-type:size}
-.frame .slide{position:absolute;inset:0;background:var(--surface);visibility:hidden;overflow:hidden}
-.frame .slide img{width:100%;height:100%}
-.frame .slide.on{visibility:visible;z-index:1}
-.hero-logo{z-index:2;transition:opacity 200ms ease}
-.frame .final{display:grid;place-items:center;background:var(--paper);z-index:3;opacity:0;visibility:hidden;transition:opacity 500ms var(--ease),visibility 0s 500ms}
-.frame .final.on{opacity:1;visibility:visible;transition:opacity 500ms var(--ease)}
-.final-lock{display:flex;align-items:center;gap:6cqh}
-.final-lock svg{height:44cqh;width:auto;fill:var(--ink);flex:none}
-.final-lock span{font-size:17cqh;font-weight:700;letter-spacing:-.05em;line-height:1;padding-right:.05em}
-@media (prefers-reduced-motion:no-preference){.frame .final.on .final-lock{animation:lockIn 700ms var(--ease) both}}
-@keyframes lockIn{from{transform:scale(1.08);opacity:0}}
-@media (max-width:760px){.hero-img{height:auto!important;min-height:0}.frame{width:100%;height:auto}}
-.hero-logo{position:absolute;z-index:2;left:50%;top:44%;height:clamp(96px,22%,200px);width:auto;transform:translate(-50%,-50%);pointer-events:none}
-.hero-logo{mix-blend-mode:difference}
-.hero-logo polygon{fill:#FAFAFA}
+.hero-mark{height:clamp(150px,46svh,440px);width:auto;fill:var(--ink)}
 .hero-pause{position:absolute;z-index:2;right:max(var(--gutter),env(safe-area-inset-right,0px));bottom:16px;min-height:44px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);cursor:pointer}
 .hero-pause:hover{background:var(--ink);color:var(--paper)}
 @keyframes settle{from{transform:scale(1.06)}}
@@ -94,6 +79,7 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 @media (max-width:760px){
   .hero{min-height:0}
   .hero-img{flex:none;height:46svh;max-height:none}
+  .hero-mark{height:min(30svh,64vw)}
   .hero h1 .ln{display:block}
 }
 
@@ -189,7 +175,7 @@ a.count{font-weight:400}
 .pp-title{margin:clamp(12px,2vw,24px) 0 0 -.04em;font-size:clamp(56px,11vw,176px);font-weight:700;letter-spacing:-.06em;line-height:.88;overflow:hidden;padding-bottom:.04em;overflow-wrap:anywhere}
 .pp-title>span{display:inline-block}
 .pp-kurz{margin:clamp(12px,2vw,24px) 0 0;font-size:var(--fs-lead);line-height:1.3;color:var(--graphite);max-width:40ch}
-.pp-hero{margin:0;position:relative;background:var(--paper)}
+.pp-hero{margin:0;position:relative;background:var(--paper);overflow:hidden}
 .pp-hero img{width:100%;max-height:86svh;object-fit:contain}
 .pp-hero.light{background:var(--paper)}
 .pp-hero.light img{object-fit:contain}
@@ -278,15 +264,18 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
    Projekte blenden versetzt ein (nur Deckkraft), Kontakt-Überschrift wird Wort für Wort aufgedeckt.
    Seitenwechsel blendet über. Nichts davon bei reduzierter Bewegung. */
 @media (prefers-reduced-motion:no-preference){
-  .hero .label,.hero .ln,.hero-cta{animation:riseIn 900ms var(--ease) both}
-  .hero .label{animation-delay:150ms}
-  .hero .ln:nth-child(1){animation-delay:250ms}
-  .hero .ln:nth-child(2){animation-delay:370ms}
-  .hero .ln:nth-child(3){animation-delay:490ms}
-  .hero-cta{animation-delay:700ms}
+  .hero-mark{animation:markOpen 1500ms 200ms cubic-bezier(.76,0,.24,1) both}
+  .hero .ln{animation:riseIn 1100ms var(--ease) both}
+  .hero .ln:nth-child(1){animation-delay:1100ms}
+  .hero .ln:nth-child(2){animation-delay:1220ms}
+  .hero .ln:nth-child(3){animation-delay:1340ms}
   .pp-title>span{animation:lineUp 900ms 150ms var(--ease) both}
   .pp-kurz,.pp-head .back{animation:riseIn 700ms 400ms var(--ease) both}
-  .pp-hero,.konfig{animation:clipUp 1100ms 300ms var(--ease) both}
+  .konfig{animation:clipUp 1100ms 300ms var(--ease) both}
+  .pp-hero{animation:fadeIn 900ms 250ms ease both}
+  .pp-hero img{animation:settle 1600ms 250ms var(--ease) both}
+  img{transition:opacity 600ms ease}
+  img.ld{opacity:0}
   body{animation:fadeIn 400ms var(--ease) backwards}
   html.leaving body{opacity:0;transition:opacity 260ms var(--ease)}
 
@@ -299,6 +288,8 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   .anim .contact h2 .w{clip-path:inset(0 100% 0 0);transition:clip-path 600ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .contact h2.in .w{clip-path:inset(0 0 0 0)}
 }
+@keyframes markOpen{from{clip-path:inset(50% 0 50% 0);transform:scale(1.06)}to{clip-path:inset(0 0 0 0);transform:none}}
+@keyframes settle{from{transform:scale(1.04)}}
 @keyframes riseIn{from{opacity:0;transform:translateY(24px)}}
 @keyframes lineUp{from{transform:translateY(105%)}}
 @keyframes fadeIn{from{opacity:0}}
