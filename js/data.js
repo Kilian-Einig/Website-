@@ -75,14 +75,15 @@ window.SITE = {
         "Im 4. Semester haben wir den Entwurf bis in die Werkplanung durchgearbeitet. Um den Bestand zu schonen, erschließt ein eigenes System die Kammern: Die Kammerwand steht als eigenständiges Volumen im Raum, rundum von einem Schacht umgeben, über Einzeltreppen betritt man jede Kapsel. Roher Beton und Stahlgitter markieren Bewegung und Begegnung, Holz steht für Wärme und Rückzug, Rot, Gelb, Lila und Grün setzen Akzente."
       ],
       fakten: [["Team", "Teamprojekt, drei Personen"], ["Kontext", "HS Mainz, 3. und 4. Semester, 2025/26"], ["Ort", "Neues Frankfurt, Zeilenhäuser von Ernst May"], ["Umfang", "Entwurf, Werkplanung, Details, technischer Ausbau"]],
-      bild: "img/k-hs-schacht.webp",
+      bild: "img/k-hs-lounge.webp",
       uebersicht: "img/hs-kammern.webp",
-      bildAlt: "Rendering: Schacht mit Stahltreppen zwischen Kammerwand und Holzfassade",
+      bildAlt: "Rendering: Aufenthaltsbereich im Gemeinschaftshaus mit Sitzkissen und Bücherwand",
       zweitbild: "img/hs-kammern.webp",
       galerie: [
         ["img/hs-konzept.webp", "Konzept: L-förmige Kammern, gestapelt im Hausvolumen"],
+        ["img/k-hs-prinzip.webp", "Prinzip: die L-Kammern greifen ineinander"],
         ["img/hs-kammern.webp", "Die Kammerwand von unten"],
-        ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
+        ["img/hs-schacht.webp", "Schacht und Einzeltreppen entlang der Kammerwand"],
         ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
         ["img/hs-kammerleben.webp", "Collage: Leben in den gestapelten Kammern"],
         ["img/hs-p13.webp", "Gemeinschaftshaus"],
@@ -109,7 +110,10 @@ window.SITE = {
       galerie: [
         ["img/lmp02-explosion.webp", "Aufbau: Frontrahmen, LED-Ring vorne, Bowl, Gehäuse, LED-Ring hinten, Rückwand"],
         ["img/lmp02-tief.webp", "Entwurf in gebürstetem Aluminium, von unten"],
+        ["img/k-lmp02.webp", "Rendering in gebürstetem Aluminium, ausgeschaltet"],
         ["img/k-lmp02-regler.webp", "Drehregler für die Lichtebenen"],
+        ["img/lmp02-aus.webp", "Prototyp aus MDF, ausgeschaltet"],
+        ["img/lmp02-rot.webp", "Prototyp aus MDF, Licht per Drehregler auf Rot gestellt"],
         ["img/lmp02-loop.mp4", "Prototyp aus MDF in Betrieb", "img/lmp02-poster.webp"]
       ]
     },

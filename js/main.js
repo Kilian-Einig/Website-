@@ -24,7 +24,7 @@
   /* Bilder blenden erst ein, wenn sie geladen sind, statt mitten in einer Bewegung aufzuploppen */
   function softImgs(root) {
     [].forEach.call((root || document).querySelectorAll('img'), function (im) {
-      if (im.complete && im.naturalWidth) return;
+      if (!im.getAttribute('src') || (im.complete && im.naturalWidth)) return;
       im.classList.add('ld');
       var done = function () { im.classList.remove('ld'); };
       im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true });
