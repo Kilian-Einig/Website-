@@ -14,7 +14,7 @@
   var tile = function (p, i) {
     return '<a class="tile rv" style="--d:' + (i % 3 * 90) + 'ms" href="' + url(p) + '">' +
       '<div class="tile-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i < 3) + '</div>' +
-      '<div class="tile-cap"><h3>' + esc(p.titel) + '</h3><p class="label muted">' + esc(p.art) + ' · ' + esc(p.stand) + '</p></div>' +
+      '<div class="tile-cap"><h3>' + esc(p.titel) + '</h3></div>' +
       '<p class="tile-kurz">' + esc(p.kurz) + '</p></a>';
   };
   var frameImg = function (r, alt, eager) {
@@ -57,7 +57,7 @@
     $('works').innerHTML = S.projekte.map(function (p, i) {
       return '<a class="big rv" href="' + url(p) + '">' +
         '<div class="big-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i === 0) + '</div>' +
-        '<div class="big-cap"><span class="label muted">' + two(i + 1) + '</span><h3>' + esc(p.titel) + '</h3><p class="big-kurz">' + esc(p.kurz) + '</p><span class="label muted big-art">' + esc(p.art) + ' · ' + esc(p.stand) + '</span></div></a>';
+        '<div class="big-cap"><h3>' + esc(p.titel) + '</h3><p class="big-kurz">' + esc(p.kurz) + '</p></div></a>';
     }).join('');
     $('felder').innerHTML = S.felder.map(function (f) {
       return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p></li>';
@@ -65,7 +65,6 @@
 
     $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
     $('about-text').innerHTML = S.ueber.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
-    $('chips').innerHTML = S.programme.map(function (w) { return '<li class="label">' + esc(w) + '</li>'; }).join('');
 
     $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email + ' →';
 
@@ -122,7 +121,7 @@
         '<div class="pp-body rv"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
           (p.hinweis ? '<p class="hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div></div>' +
         lam + steps + gal +
-        '<a class="next rv" href="' + url(nx) + '"><span class="label">Nächstes Projekt</span><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
+        '<a class="next rv" href="' + url(nx) + '"><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
       '</div>';
 
     reveal(document.querySelectorAll('#projekt .rv'));

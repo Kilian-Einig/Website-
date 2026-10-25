@@ -36,8 +36,7 @@ window.SITE = {
       ],
       galerie: [
         ["img/woven-detail.webp", "Gewebte Sitzfläche und schwarzes Stahlgestell"],
-        ["img/woven-cushion.webp", "Gepolsterte Streifen in Pink, Orange und Mint"],
-        ["img/k-woven-sitzen.webp", "Woven im Gebrauch"]
+        ["img/woven-cushion.webp", "Gepolsterte Streifen in Pink, Orange und Mint"]
       ]
     },
     {
@@ -75,14 +74,14 @@ window.SITE = {
         "Im 4. Semester haben wir den Entwurf bis in die Werkplanung durchgearbeitet. Um den Bestand zu schonen, erschließt ein eigenes System die Kammern: Die Kammerwand steht als eigenständiges Volumen im Raum, rundum von einem Schacht umgeben, über Einzeltreppen betritt man jede Kapsel. Roher Beton und Stahlgitter markieren Bewegung und Begegnung, Holz steht für Wärme und Rückzug, Rot, Gelb, Lila und Grün setzen Akzente."
       ],
       fakten: [["Team", "Teamprojekt, drei Personen"], ["Kontext", "HS Mainz, 3. und 4. Semester, 2025/26"], ["Ort", "Neues Frankfurt, Zeilenhäuser von Ernst May"], ["Umfang", "Entwurf, Werkplanung, Details, technischer Ausbau"]],
-      bild: "img/k-hs-lounge.webp",
+      bild: "img/hs-kammern.webp",
       uebersicht: "img/hs-kammern.webp",
-      bildAlt: "Rendering: Aufenthaltsbereich im Gemeinschaftshaus mit Sitzkissen und Bücherwand",
+      bildAlt: "Rendering: die Kammerwand von unten, gestapelte Betonkammern unter der Holzdecke",
       zweitbild: "img/hs-kammern.webp",
       galerie: [
         ["img/hs-konzept.webp", "Konzept: L-förmige Kammern, gestapelt im Hausvolumen"],
         ["img/k-hs-prinzip.webp", "Prinzip: die L-Kammern greifen ineinander"],
-        ["img/hs-kammern.webp", "Die Kammerwand von unten"],
+        ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
         ["img/hs-schacht.webp", "Schacht und Einzeltreppen entlang der Kammerwand"],
         ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
         ["img/hs-kammerleben.webp", "Collage: Leben in den gestapelten Kammern"],

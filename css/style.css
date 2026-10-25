@@ -104,13 +104,10 @@ a.count{font-weight:400}
 .big-ph{position:relative;overflow:hidden;background:var(--surface);aspect-ratio:3 / 2;width:min(100%,calc(78svh * 1.5))}
 .big-ph img{width:100%;height:100%;transition:transform 900ms var(--ease)}
 .big:hover .big-ph img{transform:scale(1.03)}
-.big-cap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;column-gap:24px;row-gap:6px;padding-top:18px;width:min(100%,calc(78svh * 1.5))}
-.big-cap .label:first-child{grid-row:1 / span 2}
+.big-cap{display:grid;row-gap:6px;padding-top:18px;width:min(100%,calc(78svh * 1.5))}
 .big-cap h3{margin:0;font-size:var(--fs-h2);font-weight:700;letter-spacing:-.04em;line-height:1}
-.big-kurz{grid-column:2;margin:0;font-weight:300;font-size:var(--fs-lead);color:var(--graphite)}
-.big-art{grid-column:3;grid-row:1;white-space:nowrap}
+.big-kurz{margin:0;font-weight:300;font-size:var(--fs-lead);color:var(--graphite)}
 .big:hover h3{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
-@media (max-width:760px){.big-cap{grid-template-columns:auto minmax(0,1fr)}.big-art{grid-column:2;grid-row:3}}
 
 /* ---------- Was ich mache: Titel und ein starker Satz ---------- */
 .felder{list-style:none;margin:0;padding:0}
@@ -246,7 +243,7 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
 .konfig .note{margin:14px 0 0;font-size:13px;color:var(--on-stage-dim)}
 @media (max-width:900px){.konfig{grid-template-columns:1fr}.konfig .view{width:100%}.knobs{gap:16px 6px}}
 
-.next{display:block;border-top:1px solid var(--ink);padding:16px 0 var(--space-l);text-decoration:none}
+.next{display:block;border-top:1px solid var(--ink);padding:8px 0 var(--space-l);text-decoration:none}
 .next span.meta{display:block;color:var(--stone)}
 .next strong{display:inline-block;margin-top:12px;font-size:clamp(48px,9vw,148px);font-weight:700;letter-spacing:-.06em;line-height:.9}
 .next strong span{display:inline-block;transition:transform 250ms var(--ease)}
