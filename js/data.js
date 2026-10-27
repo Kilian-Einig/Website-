@@ -196,16 +196,17 @@ window.SITE = {
     { titel: "Licht & Technik", text: "Objekte, die leuchten, reagieren und sich steuern lassen.",
       punkte: ["Elektrik und Elektronik", "Licht planen und integrieren", "Steuerung und Programmierung", "Bedienung über Regler, Sensoren oder App"],
       projekte: ["lmp01", "lmp02"] },
-    { titel: "Architektur & Innenarchitektur", text: "Räume entwerfen und planen, vom Konzept bis zur Ausführung.",
+    { titel: "Architektur & Innenarchitektur", text: "Räume konzipieren und planen, vom ersten Konzept bis zur Werkplanung.",
       punkte: ["Konzept und Entwurf", "Raum- und Nutzungsplanung", "Werk- und Detailplanung", "Visualisierung und Modellbau"],
       projekte: ["hochstapler", "regal"] }
   ],
 
   zitat: "Entwurf und Ausführung aus einer Hand, an der Schnittstelle von Technik und Design.",
   ueber: [
-    "Als gelernter Mechatroniker habe ich einen direkten Bezug zur Technik. Ich weiß, wie Dinge aufgebaut sind und wie sie funktionieren.",
-    "Das Studium der Innenarchitektur an der Hochschule Mainz hat mich zum Design gebracht. Zurzeit verbringe ich ein Semester in Antwerpen.",
-    "Aus dieser Kombination will ich Neues schaffen oder Bestehendes neu denken, im Verbund von Technik und Design."
+    "Angefangen habe ich als Mechatroniker. In der Ausbildung habe ich gelernt, Mechanik, Elektronik und Steuerung als ein System zu sehen und so lange an etwas zu arbeiten, bis es wirklich funktioniert.",
+    "Heute studiere ich Innenarchitektur an der Hochschule Mainz, zurzeit mit einem Auslandssemester in Antwerpen. Im Studium geht es um Raum, Proportion, Material und um die Menschen, die einen Ort nutzen. Projekte wie den Hochstapler habe ich im Team vom Konzept bis in die Werkplanung durchgearbeitet.",
+    "Beides zusammen prägt, wie ich entwerfe. Mich interessiert nicht nur die Form, sondern auch, was in ihr steckt: Bei LMP 01 reagiert das Licht auf Menschen, die sich nähern. Bei LMP 02 lassen sich die Lichtebenen über Drehregler mischen. Das Gestell von Woven habe ich selbst geschweißt.",
+    "Ich denke in Prototypen: entwerfen, bauen, testen, verbessern. Aus dieser Verbindung von Technik und Gestaltung will ich Neues schaffen oder Bestehendes neu denken."
   ],
   programme: ["Rhino", "Fusion 360", "Blender", "Photoshop", "Illustrator", "InDesign"],
 
