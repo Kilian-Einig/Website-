@@ -66,7 +66,12 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .hero-img{position:relative;flex:1 1 auto;min-height:280px;max-height:70svh;background:var(--paper);overflow:hidden}
 /* Auftakt: groß nur das Logo, das sich von der Mitte aus öffnet. Der Name steht schon in der Kopfzeile. */
 .hero-img{display:grid;place-items:center}
-.hero-mark{height:clamp(150px,46svh,440px);width:auto;fill:var(--ink)}
+.hero-mark{display:block;height:clamp(150px,46svh,440px);width:auto;fill:var(--ink)}
+/* Zwei Blenden in Papierfarbe geben das Logo von der Mitte aus frei (nur transform, läuft flüssig) */
+.mark-wrap{position:relative;display:block}
+.mark-wrap::before,.mark-wrap::after{content:"";position:absolute;z-index:1;left:-8%;right:-8%;height:calc(58% + 2px);background:var(--paper);transform:scaleY(0);will-change:transform}
+.mark-wrap::before{top:-8%;transform-origin:50% 0}
+.mark-wrap::after{bottom:-8%;transform-origin:50% 100%}
 .hero-pause{position:absolute;z-index:2;right:max(var(--gutter),env(safe-area-inset-right,0px));bottom:16px;min-height:44px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);cursor:pointer}
 .hero-pause:hover{background:var(--ink);color:var(--paper)}
 @keyframes settle{from{transform:scale(1.06)}}
@@ -198,7 +203,7 @@ a.count{font-weight:400}
 .gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;padding-bottom:var(--space-l)}
 .gal figure{margin:0;min-width:0}
 .gal figure.wide{grid-column:1 / -1}
-.gal button{display:block;width:100%;padding:0;border:0;background:var(--mist);cursor:zoom-in}
+.gal button{display:block;width:100%;padding:0;border:0;background:var(--mist);cursor:zoom-in;overflow:hidden}
 .gal img,.gal video{width:100%}
 .gal figcaption{margin-top:10px;font-size:var(--fs-small);color:var(--stone)}
 @media (max-width:760px){.gal{grid-template-columns:1fr}}
@@ -261,32 +266,39 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
    Projekte blenden versetzt ein (nur Deckkraft), Kontakt-Überschrift wird Wort für Wort aufgedeckt.
    Seitenwechsel blendet über. Nichts davon bei reduzierter Bewegung. */
 @media (prefers-reduced-motion:no-preference){
-  .hero-mark{animation:markOpen 1500ms 200ms cubic-bezier(.76,0,.24,1) both}
-  .hero .ln{animation:riseIn 1100ms var(--ease) both}
-  .hero .ln:nth-child(1){animation-delay:1100ms}
-  .hero .ln:nth-child(2){animation-delay:1220ms}
-  .hero .ln:nth-child(3){animation-delay:1340ms}
+  /* Auftakt startet erst, wenn Schrift und Seite bereit sind (html.ready), damit kein Bild ruckelt */
+  .mark-wrap::before,.mark-wrap::after{animation:blendOpen 1700ms 150ms cubic-bezier(.65,0,.35,1) both;animation-play-state:paused}
+  .hero-mark{animation:markSettle 2200ms 150ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
+  .hero .ln{animation:riseIn 1300ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
+  .hero .ln:nth-child(1){animation-delay:1150ms}
+  .hero .ln:nth-child(2){animation-delay:1280ms}
+  .hero .ln:nth-child(3){animation-delay:1410ms}
+  .ready .mark-wrap::before,.ready .mark-wrap::after,.ready .hero-mark,.ready .hero .ln{animation-play-state:running}
   .pp-title>span{animation:lineUp 900ms 150ms var(--ease) both}
   .pp-kurz,.pp-head .back{animation:riseIn 700ms 400ms var(--ease) both}
   .konfig{animation:clipUp 1100ms 300ms var(--ease) both}
-  .pp-hero{animation:fadeIn 900ms 250ms ease both}
-  .pp-hero img{animation:settle 1600ms 250ms var(--ease) both}
-  img{transition:opacity 600ms ease}
+  /* Bilder: weich einblenden und dabei langsam auf Normalgröße zurückgleiten */
+  img{transition:opacity 900ms ease}
   img.ld{opacity:0}
-  body{animation:fadeIn 400ms var(--ease) backwards}
-  html.leaving body{opacity:0;transition:opacity 260ms var(--ease)}
+  .pp-hero img{transition:opacity 1100ms ease,scale 2000ms cubic-bezier(.22,1,.36,1)}
+  .pp-hero img.ld{opacity:0;scale:1.06}
+  body{animation:fadeIn 700ms ease backwards}
+  html.leaving body{opacity:0;transition:opacity 380ms ease}
 
   .anim .rv{opacity:0;transition:opacity 700ms ease;transition-delay:var(--d,0ms)}
   .anim .work.rv{transform:scale(.92);transition:opacity 450ms ease,transform 650ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .work.rv.in{transform:none}
   .anim .rv.in{opacity:1}
-  .anim .felder .rv,.anim .tile.rv,.anim .big.rv,.anim .pp-body.rv,.anim .gal .rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .felder .rv,.anim .pp-body.rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .tile.rv,.anim .big.rv,.anim .gal .rv{transform:translateY(40px);transition:opacity 1100ms ease,transform 1500ms cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0ms)}
+  .anim .big.rv img,.anim .tile.rv img,.anim .gal .rv img{scale:1.08;transition:opacity 900ms ease,scale 2000ms cubic-bezier(.22,1,.36,1),transform 900ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .big.rv.in img,.anim .tile.rv.in img,.anim .gal .rv.in img{scale:1}
   .anim .felder .rv.in,.anim .tile.rv.in,.anim .big.rv.in,.anim .pp-body.rv.in,.anim .gal .rv.in,.anim .next.rv.in{transform:none}
   .anim .contact h2 .w{clip-path:inset(0 100% 0 0);transition:clip-path 600ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .contact h2.in .w{clip-path:inset(0 0 0 0)}
 }
-@keyframes markOpen{from{clip-path:inset(50% 0 50% 0);transform:scale(1.06)}to{clip-path:inset(0 0 0 0);transform:none}}
-@keyframes settle{from{transform:scale(1.04)}}
+@keyframes blendOpen{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+@keyframes markSettle{from{transform:scale(1.05)}}
 @keyframes riseIn{from{opacity:0;transform:translateY(24px)}}
 @keyframes lineUp{from{transform:translateY(105%)}}
 @keyframes fadeIn{from{opacity:0}}

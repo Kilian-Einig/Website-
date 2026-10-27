@@ -24,9 +24,12 @@
   /* Bilder blenden erst ein, wenn sie geladen sind, statt mitten in einer Bewegung aufzuploppen */
   function softImgs(root) {
     [].forEach.call((root || document).querySelectorAll('img'), function (im) {
-      if (!im.getAttribute('src') || (im.complete && im.naturalWidth)) return;
+      if (!im.getAttribute('src')) return;
+      var hero = im.closest('.pp-hero'), loaded = im.complete && im.naturalWidth;
+      if (loaded && !hero) return;
       im.classList.add('ld');
-      var done = function () { im.classList.remove('ld'); };
+      var done = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { im.classList.remove('ld'); }); }); };
+      if (loaded) { done(); return; }
       im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true });
     });
   }
@@ -155,6 +158,11 @@
   /* Weiches Scrollen mit Schwung */
   if (!reduce) softImgs();
 
+  /* Auftakt erst starten, wenn Schrift geladen und die ersten Frames gezeichnet sind */
+  var ready = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { document.documentElement.classList.add('ready'); }); }); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ready);
+  setTimeout(ready, 1200);
+
   if (window.Lenis && !reduce) {
     lenis = window.__lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
     (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
@@ -180,7 +188,7 @@
     if (/^(mailto|tel|https?):/.test(h) || reduce) return;
     e.preventDefault();
     document.documentElement.classList.add('leaving');
-    setTimeout(function () { location.href = a.href; }, 260);
+    setTimeout(function () { location.href = a.href; }, 380);
   });
 
   /* Kopfleiste zeigt, in welchem Abschnitt man gerade ist */
