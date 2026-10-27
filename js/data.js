@@ -203,10 +203,10 @@ window.SITE = {
 
   zitat: "Entwurf und Ausführung aus einer Hand, an der Schnittstelle von Technik und Design.",
   ueber: [
-    "Angefangen habe ich als Mechatroniker. In der Ausbildung habe ich gelernt, Mechanik, Elektronik und Steuerung als ein System zu sehen und so lange an etwas zu arbeiten, bis es wirklich funktioniert.",
-    "Heute studiere ich Innenarchitektur an der Hochschule Mainz, zurzeit mit einem Auslandssemester in Antwerpen. Im Studium geht es um Raum, Proportion, Material und um die Menschen, die einen Ort nutzen. Projekte wie den Hochstapler habe ich im Team vom Konzept bis in die Werkplanung durchgearbeitet.",
+    "Angefangen habe ich mit einer Ausbildung zum Mechatroniker in der Industrie. Dort habe ich gelernt, Mechanik, Elektronik und Steuerung als ein System zu verstehen: wie die einzelnen Teile zusammenspielen und wie man so lange an etwas arbeitet, bis es zuverlässig funktioniert.",
+    "Heute studiere ich Innenarchitektur an der Hochschule Mainz, zurzeit mit einem Auslandssemester in Antwerpen. Das Studium reicht vom Möbel und Objekt bis zum Neubau und zum Umgang mit Bestandsbauten. Es geht um Raum, Proportion und Material, vor allem aber um die Menschen, die einen Ort nutzen. Projekte wie den Hochstapler habe ich im Team vom Konzept bis in die Werkplanung durchgearbeitet.",
     "Beides zusammen prägt, wie ich entwerfe. Mich interessiert nicht nur die Form, sondern auch, was in ihr steckt: Bei LMP 01 reagiert das Licht auf Menschen, die sich nähern. Bei LMP 02 lassen sich die Lichtebenen über Drehregler mischen. Das Gestell von Woven habe ich selbst geschweißt.",
-    "Ich denke in Prototypen: entwerfen, bauen, testen, verbessern. Aus dieser Verbindung von Technik und Gestaltung will ich Neues schaffen oder Bestehendes neu denken."
+    "Für mich gehören Technik und Gestaltung zusammen. Ein Entwurf ist erst dann gut, wenn er auch im Detail aufgeht: in der Konstruktion, im Material und in der Bedienung. Aus dieser Verbindung will ich Neues schaffen oder Bestehendes neu denken."
   ],
   programme: ["Rhino", "Fusion 360", "Blender", "Photoshop", "Illustrator", "InDesign"],
 
