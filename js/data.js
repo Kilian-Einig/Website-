@@ -78,12 +78,14 @@ window.SITE = {
       uebersicht: "img/hs-kammern.webp",
       bildAlt: "Rendering: die Kammerwand von unten, gestapelte Betonkammern unter der Holzdecke",
       zweitbild: "img/hs-kammern.webp",
+      schritte: [
+        ["img/k-hs-prinzip.webp", "Die Kammer", "Jede Schlafkammer ist ein L-förmiges Volumen, eine privat gemietete Kapsel mit ein bis zwei Schlafplätzen. Die L-Formen greifen ineinander."],
+        ["img/hs-kammergang.webp", "Gestapelt", "Übereinander und nebeneinander gestapelt bilden die Kammern eine Wand: 28 gleich aufgebaute Kammern in jedem Wohnhaus."],
+        ["img/hs-schacht.webp", "Erschlossen", "Die Kammerwand steht als eigenes Volumen im Raum, rundum von einem Schacht umgeben. Über Einzeltreppen betritt man jede Kapsel."]
+      ],
       galerie: [
-        ["img/k-hs-prinzip.webp", "Prinzip: die L-Kammern greifen ineinander"],
-        ["img/hs-kammergang.webp", "Kammergang: links und rechts die gestapelten Schlafkammern"],
         ["img/hs-ebenen.webp", "Gemeinschaftshaus: Höhenversätze statt trennender Etagen"],
         ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
-        ["img/hs-schacht.webp", "Schacht und Einzeltreppen entlang der Kammerwand"],
         ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
         ["img/hs-kammerleben.webp", "Collage: Leben in den gestapelten Kammern"],
         ["img/hs-p13.webp", "Gemeinschaftshaus"],
