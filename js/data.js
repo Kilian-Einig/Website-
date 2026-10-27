@@ -166,16 +166,15 @@ window.SITE = {
       farbe: "#E6E6E6",   // Kastenfarbe im Laufband und im Intro, aus dem Projektfoto
       titel: "Rib Chair",
       art: "Möbel",
-      stand: "Entwurf",
+      stand: "Entwurfsphase",
       bildLabel: "3D-Modell",
       kurz: "Futuristischer Stuhlentwurf.",
-      hinweis: "Entwurf: eine Idee als 3D-Modell, noch nicht gebaut.",
+      hinweis: "Entwurfsphase: Der Stuhl existiert bisher als 3D-Modell und wird weiterentwickelt.",
       text: "Eine geschwungene Wirbelsäule trägt Sitz und Lehne. Von ihr gehen gebogene Rippen ab, die zusammen die Sitzfläche und den Rücken bilden. Der Entwurf ist in Rhino modelliert.",
-      fakten: [["Stand", "3D-Entwurf in Rhino"]],
+      fakten: [["Stand", "Entwurfsphase, 3D-Modell in Rhino"]],
       bild: "img/skelett-render.webp", hell: true,
       bildAlt: "Rendering des Rib Chair: eine geschwungene Wirbelsäule mit gebogenen Rippen als Sitz und Lehne",
-      zweitbild: "img/skelett-skizze.webp",
-      galerie: [["img/skelett-skizze.webp", "Überarbeitung: Markierungen für Kopf, Lehne und Sitz"]]
+      galerie: []
     }
   ],
 
