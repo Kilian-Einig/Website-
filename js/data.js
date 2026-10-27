@@ -47,9 +47,9 @@ window.SITE = {
       art: "Licht",
       stand: "Realisiert",
       interaktiv: "lamellen",
-      kurz: "Lichtinstallation, die auf Sensorik reagiert.",
-      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Sensoren registrieren Annäherung und Bewegung, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Bewegung zum Teil der Komposition.",
-      fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Sensoren für Nähe und Bewegung"]],
+      kurz: "Lichtinstallation mit eigener Steuerung.",
+      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Die Leuchte reagiert auf Klang, lässt sich per App steuern und in verschiedenen Modi betreiben, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Klang zum Teil der Komposition.",
+      fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Klang, App, verschiedene Modi"]],
       bild: "img/lmp-hero.webp",
       bildAlt: "LMP 01 leuchtet warm im dunklen Raum, dahinter eine Person in Bewegung",
       zweitbild: "img/lmp-hand.webp",
@@ -204,8 +204,8 @@ window.SITE = {
   zitat: "Entwurf und Ausführung aus einer Hand, an der Schnittstelle von Technik und Design.",
   ueber: [
     "Angefangen habe ich mit einer Ausbildung zum Mechatroniker in der Industrie. Dort habe ich gelernt, Mechanik, Elektronik und Steuerung als ein System zu verstehen: wie die einzelnen Teile zusammenspielen und wie man so lange an etwas arbeitet, bis es zuverlässig funktioniert.",
-    "Heute studiere ich Innenarchitektur an der Hochschule Mainz, zurzeit mit einem Auslandssemester in Antwerpen. Das Studium reicht vom Möbel und Objekt bis zum Neubau und zum Umgang mit Bestandsbauten. Es geht um Raum, Proportion und Material, vor allem aber um die Menschen, die einen Ort nutzen. Projekte wie den Hochstapler habe ich im Team vom Konzept bis in die Werkplanung durchgearbeitet.",
-    "Beides zusammen prägt, wie ich entwerfe. Mich interessiert nicht nur die Form, sondern auch, was in ihr steckt: Bei LMP 01 reagiert das Licht auf Menschen, die sich nähern. Bei LMP 02 lassen sich die Lichtebenen über Drehregler mischen. Das Gestell von Woven habe ich selbst geschweißt.",
+    "Heute studiere ich im 5. Semester Innenarchitektur an der Hochschule Mainz, zurzeit mit einem Auslandssemester in Antwerpen. Das Studium reicht vom Möbel und Objekt bis zum Neubau und zum Umgang mit Bestandsbauten. Es geht um Raum, Proportion und Material, vor allem aber um die Menschen, die einen Ort nutzen. Projekte wie den Hochstapler habe ich im Team vom Konzept bis in die Werkplanung durchgearbeitet.",
+    "Beides zusammen prägt, wie ich entwerfe. Mich interessiert nicht nur die Form, sondern auch, was in ihr steckt. Bei LMP 01 habe ich Gestaltung und Technik von Anfang an zusammen entwickelt: Acryl-Lamellen an einem Stahlträger, dazu eine eigene Steuerung. Die Leuchte reagiert auf Klang, lässt sich per App bedienen und in verschiedenen Modi betreiben. Die Lichtquelle bleibt dabei unsichtbar, sichtbar wird das Licht erst im Material. Bei Woven haben wir in der Gruppe aus alten Messebauplanen, einem Abfallprodukt, gewebte Sitzflächen gemacht, getragen von einem selbst geschweißten Stahlgestell.",
     "Für mich gehören Technik und Gestaltung zusammen. Ein Entwurf ist erst dann gut, wenn er auch im Detail aufgeht: in der Konstruktion, im Material und in der Bedienung. Aus dieser Verbindung will ich Neues schaffen oder Bestehendes neu denken."
   ],
   programme: ["Rhino", "Fusion 360", "Blender", "Photoshop", "Illustrator", "InDesign"],
