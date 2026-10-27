@@ -79,8 +79,9 @@ window.SITE = {
       bildAlt: "Rendering: die Kammerwand von unten, gestapelte Betonkammern unter der Holzdecke",
       zweitbild: "img/hs-kammern.webp",
       galerie: [
-        ["img/hs-konzept.webp", "Konzept: L-förmige Kammern, gestapelt im Hausvolumen"],
         ["img/k-hs-prinzip.webp", "Prinzip: die L-Kammern greifen ineinander"],
+        ["img/hs-kammergang.webp", "Kammergang: links und rechts die gestapelten Schlafkammern"],
+        ["img/hs-ebenen.webp", "Gemeinschaftshaus: Höhenversätze statt trennender Etagen"],
         ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
         ["img/hs-schacht.webp", "Schacht und Einzeltreppen entlang der Kammerwand"],
         ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
