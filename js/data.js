@@ -158,6 +158,9 @@ window.SITE = {
       bildAlt: "Rendering von LMP 03: leuchtender Stab im Glasrohr über einem Esstisch",
       zweitbild: "img/lmp03-detail.webp",
       galerie: [
+        ["img/lmp03-tag.webp", "Bei Tag über dem Esstisch, mit Blick in den Garten"],
+        ["img/lmp03-untersicht.webp", "Von unten gesehen: der Stab schwebt an zwei Stahlseilen"],
+        ["img/lmp03-nacht.webp", "Nachts aus der Nähe: warmes Licht im Glasrohr"],
         ["img/lmp03-hero.webp", "Glasrohr mit Aluminiumkappen vor heller Wand"],
         ["img/lmp03-detail.webp", "Kappe aus gebürstetem Aluminium mit Lochraster"],
         ["img/k-lmp03-explosion.webp", "Aufbau: Glasrohr, LED-Stab und Kappe"]
