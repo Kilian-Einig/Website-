@@ -125,7 +125,9 @@ a.count{font-weight:400}
 /* ---------- Über mich ---------- */
 .quote{margin:0 auto var(--space-l);max-width:800px;text-align:center}
 .quote p{margin:0;font-size:clamp(28px,3vw,48px);font-weight:300;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
-.about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,80px);align-items:end}
+.about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,80px);align-items:start}
+/* Bild steht oben bündig mit dem Namen und bleibt beim Lesen des Textes stehen */
+.about figure{position:sticky;top:calc(var(--header-h) + 24px)}
 .about figure{margin:0;background:var(--surface)}
 .about figure img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:59% 30%;filter:grayscale(1)}
 .about-copy h3{margin:0 0 16px;font-size:var(--fs-row);font-weight:700;letter-spacing:-.03em;line-height:1}
@@ -133,7 +135,7 @@ a.count{font-weight:400}
 .chips-title{margin:28px 0 10px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
 .chips li{border:1px solid var(--ink);padding:9px 14px}
-@media (max-width:760px){.about{grid-template-columns:1fr}}
+@media (max-width:760px){.about{grid-template-columns:1fr}.about figure{position:static}}
 
 /* ---------- Projektübersicht ---------- */
 .ov-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px;padding-block:clamp(40px,6vw,88px) var(--space-m)}
