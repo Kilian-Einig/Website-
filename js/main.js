@@ -129,112 +129,122 @@
 
     reveal(document.querySelectorAll('#projekt .rv'));
 
-    /* Katalogansicht (nur am Rechner): alle Projekte als ein durchgehendes Heft aus Doppelseiten.
-       Umschlag und Inhalt, je Projekt eine Eröffnung (Bild links, Text rechts), Schritte,
-       dann die Bilder im festen Raster: Wechsel aus randabfallender Seite und Bildpaar.
-       Zeichnungen und Pläne werden nie beschnitten, kein Bild kommt doppelt. */
-    var kat = null, kpages = [], kstart = {}, first = 0;
+    /* Katalog: alle Projekte als ein durchgehendes Heft, Doppelseite unter Doppelseite zum Scrollen.
+       Heller, ruhiger Hintergrund, weiche Einblendung. Bilder frei im Raster, keins doppelt,
+       Zeichnungen und Pläne nie beschnitten. Nur am Rechner. */
+    var kat = null, kspreads = [], kindex = {};
     var DRAW = /(plan|schnitt|ansicht|explosion|prinzip|p22|kammerleben|skelett-render)/;
     function katBuild() {
       var two = function (n) { return (n < 10 ? '0' : '') + n; };
-      var kfig = function (src, alt, cls, cap) {
-        return '<figure class="kf' + (DRAW.test(src) ? ' draw' : '') + (cls ? ' ' + cls : '') + '"><div class="kf-img"><img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' decoding="async"></div>' +
-          (cap !== false && alt ? '<figcaption>' + esc(alt) + '</figcaption>' : '') + '</figure>';
+      var fig = function (src, alt, cap) {
+        return '<figure class="kf' + (DRAW.test(src) ? ' draw' : '') + '"><div class="kf-img"><img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' loading="lazy" decoding="async"></div>' +
+          (cap && alt ? '<figcaption>' + esc(alt) + '</figcaption>' : '') + '</figure>';
       };
-      var port = function (src) { var d = D[src]; return d && d[1] > d[0] * 1.05; };
-      var add = function (cls, html, proj) { kpages.push({ cls: cls, html: html, proj: proj }); };
-
-      add('kp-cover dark', '<svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><div><p class="kc-name">Kilian Einig</p><p class="label">Projekte</p></div>');
-      add('kp-toc', '', null);   // Inhalt, wird gefüllt, sobald die Seitenzahlen feststehen
+      /* Galeriebilder frei auf Seiten verteilen: wechselnde Vorlagen, mehr Bilder pro Seite */
+      function mosaik(imgs) {
+        var out = [], r = 0;
+        while (imgs.length) {
+          if (DRAW.test(imgs[0][0])) { out.push({ cls: 'kp-plan', html: fig(imgs.shift()[0], '', false), cap: imgs.length ? '' : '' }); r++; continue; }
+          var n = imgs.length, c = r % 6, t, k;
+          if (n === 1) { t = 'kp-solo'; k = 1; }
+          else if (c === 0) { t = 'kp-bleed'; k = 1; }
+          else if (c === 1 && n >= 3) { t = 'kp-mos t-bigtwo'; k = 3; }
+          else if (c === 2 && n >= 4) { t = 'kp-mos t-quad'; k = 4; }
+          else if (c === 3 && n >= 3) { t = 'kp-mos t-lrow'; k = 3; }
+          else if (c === 4 && n >= 3) { t = 'kp-mos t-twobig'; k = 3; }
+          else { t = 'kp-mos t-duo'; k = 2; }
+          var part = imgs.splice(0, k), dense = part.length > 1;
+          out.push({ cls: t, html: part.map(function (g) { return fig(g[0], g[1], !dense); }).join('') });
+          r++;
+        }
+        return out;
+      }
+      var cover = { cls: 'kp-cover dark', html: '<svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><div><p class="kc-name">Kilian Einig</p><p class="label">Projekte · Katalog</p></div>' };
+      var toc = { cls: 'kp-toc', html: '' };
+      var spreads = [{ proj: null, l: cover, r: toc }];
       S.projekte.forEach(function (q, n) {
-        if (kpages.length % 2) add('kp-teaser', '', q);
-        kstart[q.id] = kpages.length;
-        var used = {}; used[q.bild] = 1;
-        add('kp-bleed', kfig(q.bild, q.bildAlt, '', false), q);
+        kindex[q.id] = spreads.length;
+        var pages = [], used = {};
+        used[q.bild] = 1;
         var hasStand = (q.fakten || []).some(function (x) { return x[0] === 'Stand'; });
         var f = [['Art', q.art]].concat(hasStand ? [] : [['Stand', q.stand]], q.fakten || []);
-        add('kp-open', '<div class="ko-top"><span class="ko-n">' + two(n + 1) + '</span><h2>' + esc(q.titel) + '</h2><p class="ko-kurz">' + esc(q.kurz) + '</p></div>' +
+        pages.push({ cls: 'kp-bleed', html: fig(q.bild, q.bildAlt, false) });
+        pages.push({ cls: 'kp-open', html:
+          '<div class="ko-top"><span class="ko-n">' + two(n + 1) + '</span><h2>' + esc(q.titel) + '</h2><p class="ko-kurz">' + esc(q.kurz) + '</p></div>' +
           '<div class="ko-txt">' + [].concat(q.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + (q.hinweis ? '<p class="ko-hint">' + esc(q.hinweis) + '</p>' : '') + '</div>' +
-          '<dl>' + f.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('') + '</dl>', q);
+          '<dl>' + f.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('') + '</dl>' });
         if ((q.schritte || []).length) {
-          var st = q.schritte.map(function (x, k) { used[x[0]] = 1; return '<div class="ks">' + kfig(x[0], x[1], '', false) + '<h3><span>' + (k + 1) + '</span>' + esc(x[1]) + '</h3><p>' + esc(x[2]) + '</p></div>'; });
-          add('kp-steps one', st[0], q);
-          add('kp-steps', st.slice(1).join(''), q);
+          var st = q.schritte.map(function (x, k) { used[x[0]] = 1; return '<div class="ks">' + fig(x[0], x[1], false) + '<h3><span>' + (k + 1) + '</span>' + esc(x[1]) + '</h3><p>' + esc(x[2]) + '</p></div>'; });
+          pages.push({ cls: 'kp-steps one', html: st[0] });
+          pages.push({ cls: 'kp-steps', html: st.slice(1).join('') });
         }
         var imgs = (q.galerie || []).map(function (g) { return /\.mp4$/.test(g[0]) ? (g[2] ? [g[2], g[1]] : null) : g; })
           .filter(function (g) { if (!g || used[g[0]]) return false; used[g[0]] = 1; return true; });
-        var spread = 0;
-        while (imgs.length) {
-          var left = kpages.length % 2 === 0, bleedSlot = (spread % 2 === 0) === left;
-          var a = imgs.shift();
-          if (bleedSlot || !imgs.length) add(DRAW.test(a[0]) ? 'kp-plan' : (bleedSlot ? 'kp-bleed cap' : 'kp-solo'), kfig(a[0], a[1]), q);
-          else {
-            var b = imgs.shift(), side = port(a[0]) && port(b[0]);
-            add('kp-duo' + (side ? ' side' : ''), kfig(a[0], a[1]) + kfig(b[0], b[1]), q);
-          }
-          if (kpages.length % 2 === 0) spread++;
-        }
+        pages = pages.concat(mosaik(imgs));
+        var nx = S.projekte[n + 1];
+        if (pages.length % 2) pages.push(nx
+          ? { cls: 'kp-teaser', html: '<p class="label">Weiter mit</p><button type="button" class="kt-go" data-go="' + (spreads.length + Math.ceil((pages.length + 1) / 2)) + '"><span class="ko-n">' + two(n + 2) + '</span><strong>' + esc(nx.titel) + ' →</strong><span>' + esc(nx.kurz) + '</span></button>' }
+          : { cls: 'kp-blank', html: '' });
+        for (var i = 0; i < pages.length; i += 2) spreads.push({ proj: q, l: pages[i], r: pages[i + 1] || { cls: 'kp-blank', html: '' } });
       });
-      add('kp-contact', '', null);
-      add('kp-cover dark back', '<svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><p class="label">kilianeinig.de</p>', null);
-
-      kpages.forEach(function (pg, k) {
-        if (pg.cls === 'kp-teaser') {
-          var nq = pg.proj;
-          pg.html = '<p class="label">Weiter mit</p><button type="button" class="kt-go" data-go="' + (k + 1) + '"><span class="ko-n">' + two(S.projekte.indexOf(nq) + 1) + '</span><strong>' + esc(nq.titel) + ' →</strong><span>' + esc(nq.kurz) + '</span></button>';
-          pg.proj = null;
-        }
-      });
-      kpages[1].html = '<p class="label kt-head">Inhalt</p><ol class="kt-list">' + S.projekte.map(function (q, n) {
-        return '<li><button type="button" data-go="' + kstart[q.id] + '"><span class="ko-n">' + two(n + 1) + '</span><strong>' + esc(q.titel) + '</strong><em>' + esc(q.art) + '</em><span class="kt-page">' + (kstart[q.id] + 1) + '</span></button></li>';
+      spreads.push({ proj: null, l: { cls: 'kp-contact', html:
+        '<p class="label kt-head">Kontakt</p><p class="kc-big">Kilian Einig</p><p><a href="mailto:' + esc(S.email) + '">' + esc(S.email) + '</a></p><p><a href="' + esc(S.instagram.url) + '" target="_blank" rel="noopener">Instagram ' + esc(S.instagram.name) + '</a></p><p>kilianeinig.de</p>' },
+        r: { cls: 'kp-cover dark back', html: '<svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><p class="label">kilianeinig.de</p>' } });
+      toc.html = '<p class="label kt-head">Inhalt</p><ol class="kt-list">' + S.projekte.map(function (q, n) {
+        return '<li><button type="button" data-go="' + kindex[q.id] + '"><span class="ko-n">' + two(n + 1) + '</span><strong>' + esc(q.titel) + '</strong><em>' + esc(q.art) + '</em></button></li>';
       }).join('') + '</ol>';
-      kpages.forEach(function (pg) {
-        if (pg.cls === 'kp-contact') pg.html = '<p class="label kt-head">Kontakt</p><p class="kc-big">Kilian Einig</p><p><a href="mailto:' + esc(S.email) + '">' + esc(S.email) + '</a></p><p><a href="' + esc(S.instagram.url) + '" target="_blank" rel="noopener">Instagram ' + esc(S.instagram.name) + '</a></p><p>kilianeinig.de</p>';
-      });
+      kspreads = spreads;
 
-      kat = document.createElement('dialog');
-      kat.className = 'kat'; kat.setAttribute('aria-label', 'Katalog');
-      kat.innerHTML = '<div class="kat-bar"><span class="kat-count label" aria-live="polite"></span><button type="button" class="kat-x">Schließen</button></div>' +
-        '<div class="kat-stage"><button type="button" class="kat-nav kat-prev" aria-label="Zurückblättern">←</button><div class="kat-spread"></div><button type="button" class="kat-nav kat-next" aria-label="Weiterblättern">→</button></div>';
+      var page = function (pg, side) {
+        var full = /kp-bleed|kp-cover|kp-blank/.test(pg.cls);
+        var proj = this && this.proj;
+        return '<div class="kp ' + pg.cls + ' ' + side + '">' +
+          (full ? '' : (proj ? '<div class="kp-head"><span>' + esc(proj.titel) + '</span><span>' + esc(proj.art) + '</span></div>' : '')) +
+          '<div class="kp-in">' + pg.html + '</div></div>';
+      };
+      kat = document.createElement('div');
+      kat.className = 'kat'; kat.setAttribute('role', 'dialog'); kat.setAttribute('aria-label', 'Katalog');
+      kat.innerHTML = '<div class="kat-top"><span class="kat-count label" aria-live="polite"></span><button type="button" class="kat-x">Schließen</button></div>' +
+        '<div class="kat-scroll">' + spreads.map(function (sp, i) {
+          return '<section class="kat-spread" data-i="' + i + '"' + (sp.proj ? ' data-p="' + esc(sp.proj.titel) + '"' : '') + '>' + page.call(sp, sp.l, 'l') + page.call(sp, sp.r, 'r') + '</section>';
+        }).join('') + '</div>';
       document.body.appendChild(kat);
-      kat.addEventListener('close', function () { if (lenis) lenis.start(); });
-      kat.querySelector('.kat-x').addEventListener('click', function () { kat.close(); });
-      kat.querySelector('.kat-prev').addEventListener('click', function () { katShow(first - 2); });
-      kat.querySelector('.kat-next').addEventListener('click', function () { katShow(first + 2); });
-      kat.addEventListener('click', function (e) { var g = e.target.closest && e.target.closest('[data-go]'); if (g) katShow(+g.dataset.go); });
-      kat.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowRight') { e.preventDefault(); katShow(first + 2); }
-        if (e.key === 'ArrowLeft') { e.preventDefault(); katShow(first - 2); }
-      });
+      var scroll = kat.querySelector('.kat-scroll'), count = kat.querySelector('.kat-count');
+      kat.querySelector('.kat-x').addEventListener('click', katClose);
+      kat.addEventListener('click', function (e) { var g = e.target.closest && e.target.closest('[data-go]'); if (g) katGo(+g.dataset.go); });
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting) e.target.classList.add('in');
+          if (e.intersectionRatio > 0.55) { var sp = kspreads[+e.target.dataset.i]; count.textContent = (sp.proj ? sp.proj.titel + ' · ' : 'Kilian Einig · ') + (+e.target.dataset.i + 1) + ' / ' + kspreads.length; }
+        });
+      }, { root: scroll, threshold: [0, 0.55] });
+      [].forEach.call(kat.querySelectorAll('.kat-spread'), function (el) { io.observe(el); });
+      addEventListener('keydown', function (e) { if (kat.classList.contains('on') && e.key === 'Escape') katClose(); });
     }
-    function katPage(k) {
-      var pg = kpages[k];
-      if (!pg) return '<div class="kp kp-none"></div>';
-      var q = pg.proj, full = /kp-bleed|kp-cover|kp-blank/.test(pg.cls), right = k % 2 === 1;
-      var furn = full ? '' : (q ? '<div class="kp-head"><span>' + esc(q.titel) + '</span><span>' + esc(q.art) + '</span></div>' : '') + '<div class="kp-folio">' + (k + 1) + '</div>';
-      return '<div class="kp ' + pg.cls + (right ? ' r' : ' l') + '">' + furn + '<div class="kp-in">' + pg.html + '</div></div>';
+    function katGo(i) {
+      var el = kat.querySelector('.kat-spread[data-i="' + i + '"]');
+      if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     }
-    function katShow(n) {
-      first = Math.max(0, Math.min(Math.floor(n / 2) * 2, kpages.length - 1 - ((kpages.length - 1) % 2)));
-      var sp = kat.querySelector('.kat-spread');
-      sp.innerHTML = katPage(first) + katPage(first + 1);
-      sp.classList.remove('turn'); void sp.offsetWidth; sp.classList.add('turn');
-      /* Langer Projekttext: Schrift schrittweise verkleinern, bis er in die zwei Spalten passt */
-      [].forEach.call(sp.querySelectorAll('.ko-txt'), function (t) {
-        for (var z = 1; z > .74 && t.scrollHeight > t.clientHeight + 1; z -= .04) t.style.fontSize = 'calc(var(--f) * ' + (1.02 * z).toFixed(3) + ')';
-      });
-      var q = (kpages[first] || {}).proj || (kpages[first + 1] || {}).proj;
-      kat.querySelector('.kat-count').textContent = (q ? q.titel + ' · ' : '') + 'Seiten ' + (first + 1) + (kpages[first + 1] ? '–' + (first + 2) : '') + ' von ' + kpages.length;
-      kat.querySelector('.kat-prev').disabled = first === 0;
-      kat.querySelector('.kat-next').disabled = first + 2 >= kpages.length;
-      [first + 2, first + 3].forEach(function (k) { var pg = kpages[k]; if (pg) (pg.html.match(/src="[^"]+"/g) || []).forEach(function (m) { new Image().src = m.slice(5, -1); }); });
-    }
-    $('kat-open').addEventListener('click', function () {
+    function katOpen() {
       if (!kat) katBuild();
       if (lenis) lenis.stop();
-      katShow(kstart[p.id]); kat.showModal();
-    });
-    addEventListener('resize', function () { if (kat && kat.open && innerWidth <= 900) kat.close(); });
+      document.documentElement.classList.add('kat-lock');
+      kat.classList.add('on');
+      /* Langen Eröffnungstext einmal auf die zwei Spalten einpassen */
+      [].forEach.call(kat.querySelectorAll('.ko-txt'), function (t) {
+        if (t.dataset.fit) return; t.dataset.fit = 1;
+        for (var z = 1; z > .72 && t.scrollHeight > t.clientHeight + 1; z -= .035) t.style.fontSize = 'calc(var(--f) * ' + (1.02 * z).toFixed(3) + ')';
+      });
+      kat.querySelector('.kat-scroll').scrollTop = 0;
+      katGo(kindex[p.id]);
+    }
+    function katClose() {
+      kat.classList.remove('on');
+      document.documentElement.classList.remove('kat-lock');
+      if (lenis) lenis.start();
+    }
+    $('kat-open').addEventListener('click', katOpen);
+    addEventListener('resize', function () { if (kat && kat.classList.contains('on') && innerWidth <= 900) katClose(); });
 
     /* Großansicht für Galeriebilder */
     var lb = $('lb');
