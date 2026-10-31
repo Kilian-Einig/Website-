@@ -129,52 +129,112 @@
 
     reveal(document.querySelectorAll('#projekt .rv'));
 
-    /* Katalogansicht: das ganze Projekt als Doppelseiten zum Durchblättern.
-       Links Hauptbild mit Name und Kurzsatz, dann Text, Schritte und Bilder.
-       Auf schmalen Bildschirmen wird Seite für Seite geblättert. */
-    var kat = document.createElement('dialog');
-    kat.className = 'kat'; kat.setAttribute('aria-label', 'Katalogansicht ' + p.titel);
-    var img = function (src, alt) { return '<img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' decoding="async">'; };
-    var pages = [];
-    pages.push('<div class="kp kp-cover"><figure>' + img(p.bild, p.bildAlt) + '</figure><div class="kp-cap"><h2>' + esc(p.titel) + '</h2><p>' + esc(p.kurz) + '</p></div></div>');
-    pages.push('<div class="kp kp-text"><p class="kp-label label">' + esc(p.titel) + '</p><div class="kp-txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
-      (p.hinweis ? '<p class="kp-hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div><dl>' + facts + '</dl></div>');
-    if ((p.schritte || []).length) pages.push('<div class="kp kp-steps">' + p.schritte.map(function (st, k) {
-      return '<div><figure>' + img(st[0], st[1]) + '</figure><h3><span>' + (k + 1) + '</span>' + esc(st[1]) + '</h3><p>' + esc(st[2]) + '</p></div>';
-    }).join('') + '</div>');
-    var bilder = (p.galerie || []).map(function (g) { return /\.mp4$/.test(g[0]) ? (g[2] ? [g[2], g[1]] : null) : g; }).filter(Boolean);
-    for (var b = 0; b < bilder.length; b += 2) pages.push('<div class="kp kp-gal">' + bilder.slice(b, b + 2).map(function (g) {
-      return '<figure>' + img(g[0], g[1]) + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
-    }).join('') + '</div>');
-    if (pages.length % 2) pages.push('<div class="kp kp-end"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><p>Kilian Einig</p><p class="label">kilianeinig.de</p></div>');
-    kat.innerHTML = '<div class="kat-bar"><span class="kat-count label" aria-live="polite"></span><button type="button" class="kat-x">Schließen</button></div>' +
-      '<div class="kat-stage"><button type="button" class="kat-nav kat-prev" aria-label="Zurückblättern">←</button><div class="kat-spread"></div><button type="button" class="kat-nav kat-next" aria-label="Weiterblättern">→</button></div>';
-    document.body.appendChild(kat);
-    var spread = kat.querySelector('.kat-spread'), first = 0, step = 2;
-    var single = function () { return matchMedia('(max-width: 820px), (orientation: portrait)').matches; };
-    /* n = Index der ersten sichtbaren Seite */
-    function show(n) {
-      step = single() ? 1 : 2;
-      first = Math.max(0, Math.min(Math.floor(n / step) * step, pages.length - step));
-      spread.innerHTML = pages.slice(first, first + step).join('');
-      spread.classList.remove('turn'); void spread.offsetWidth; spread.classList.add('turn');
-      kat.querySelector('.kat-count').textContent = p.titel + ' · ' + (step === 1 ? 'Seite ' + (first + 1) : 'Seiten ' + (first + 1) + '–' + (first + 2)) + ' von ' + pages.length;
-      kat.querySelector('.kat-prev').disabled = first === 0;
-      kat.querySelector('.kat-next').disabled = first + step >= pages.length;
+    /* Katalogansicht (nur am Rechner): alle Projekte als ein durchgehendes Heft aus Doppelseiten.
+       Umschlag und Inhalt, je Projekt eine Eröffnung (Bild links, Text rechts), Schritte,
+       dann die Bilder im festen Raster: Wechsel aus randabfallender Seite und Bildpaar.
+       Zeichnungen und Pläne werden nie beschnitten, kein Bild kommt doppelt. */
+    var kat = null, kpages = [], kstart = {}, first = 0;
+    var DRAW = /(plan|schnitt|ansicht|explosion|prinzip|p22|kammerleben|skelett-render)/;
+    function katBuild() {
+      var two = function (n) { return (n < 10 ? '0' : '') + n; };
+      var kfig = function (src, alt, cls, cap) {
+        return '<figure class="kf' + (DRAW.test(src) ? ' draw' : '') + (cls ? ' ' + cls : '') + '"><div class="kf-img"><img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' decoding="async"></div>' +
+          (cap !== false && alt ? '<figcaption>' + esc(alt) + '</figcaption>' : '') + '</figure>';
+      };
+      var port = function (src) { var d = D[src]; return d && d[1] > d[0] * 1.05; };
+      var add = function (cls, html, proj) { kpages.push({ cls: cls, html: html, proj: proj }); };
+
+      add('kp-cover dark', '<svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><div><p class="kc-name">Kilian Einig</p><p class="label">Projekte</p></div>');
+      add('kp-toc', '', null);   // Inhalt, wird gefüllt, sobald die Seitenzahlen feststehen
+      S.projekte.forEach(function (q, n) {
+        if (kpages.length % 2) add('kp-teaser', '', q);
+        kstart[q.id] = kpages.length;
+        var used = {}; used[q.bild] = 1;
+        add('kp-bleed', kfig(q.bild, q.bildAlt, '', false), q);
+        var hasStand = (q.fakten || []).some(function (x) { return x[0] === 'Stand'; });
+        var f = [['Art', q.art]].concat(hasStand ? [] : [['Stand', q.stand]], q.fakten || []);
+        add('kp-open', '<div class="ko-top"><span class="ko-n">' + two(n + 1) + '</span><h2>' + esc(q.titel) + '</h2><p class="ko-kurz">' + esc(q.kurz) + '</p></div>' +
+          '<div class="ko-txt">' + [].concat(q.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + (q.hinweis ? '<p class="ko-hint">' + esc(q.hinweis) + '</p>' : '') + '</div>' +
+          '<dl>' + f.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('') + '</dl>', q);
+        if ((q.schritte || []).length) {
+          var st = q.schritte.map(function (x, k) { used[x[0]] = 1; return '<div class="ks">' + kfig(x[0], x[1], '', false) + '<h3><span>' + (k + 1) + '</span>' + esc(x[1]) + '</h3><p>' + esc(x[2]) + '</p></div>'; });
+          add('kp-steps one', st[0], q);
+          add('kp-steps', st.slice(1).join(''), q);
+        }
+        var imgs = (q.galerie || []).map(function (g) { return /\.mp4$/.test(g[0]) ? (g[2] ? [g[2], g[1]] : null) : g; })
+          .filter(function (g) { if (!g || used[g[0]]) return false; used[g[0]] = 1; return true; });
+        var spread = 0;
+        while (imgs.length) {
+          var left = kpages.length % 2 === 0, bleedSlot = (spread % 2 === 0) === left;
+          var a = imgs.shift();
+          if (bleedSlot || !imgs.length) add(DRAW.test(a[0]) ? 'kp-plan' : (bleedSlot ? 'kp-bleed cap' : 'kp-solo'), kfig(a[0], a[1]), q);
+          else {
+            var b = imgs.shift(), side = port(a[0]) && port(b[0]);
+            add('kp-duo' + (side ? ' side' : ''), kfig(a[0], a[1]) + kfig(b[0], b[1]), q);
+          }
+          if (kpages.length % 2 === 0) spread++;
+        }
+      });
+      add('kp-contact', '', null);
+      add('kp-cover dark back', '<svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><p class="label">kilianeinig.de</p>', null);
+
+      kpages.forEach(function (pg, k) {
+        if (pg.cls === 'kp-teaser') {
+          var nq = pg.proj;
+          pg.html = '<p class="label">Weiter mit</p><button type="button" class="kt-go" data-go="' + (k + 1) + '"><span class="ko-n">' + two(S.projekte.indexOf(nq) + 1) + '</span><strong>' + esc(nq.titel) + ' →</strong><span>' + esc(nq.kurz) + '</span></button>';
+          pg.proj = null;
+        }
+      });
+      kpages[1].html = '<p class="label kt-head">Inhalt</p><ol class="kt-list">' + S.projekte.map(function (q, n) {
+        return '<li><button type="button" data-go="' + kstart[q.id] + '"><span class="ko-n">' + two(n + 1) + '</span><strong>' + esc(q.titel) + '</strong><em>' + esc(q.art) + '</em><span class="kt-page">' + (kstart[q.id] + 1) + '</span></button></li>';
+      }).join('') + '</ol>';
+      kpages.forEach(function (pg) {
+        if (pg.cls === 'kp-contact') pg.html = '<p class="label kt-head">Kontakt</p><p class="kc-big">Kilian Einig</p><p><a href="mailto:' + esc(S.email) + '">' + esc(S.email) + '</a></p><p><a href="' + esc(S.instagram.url) + '" target="_blank" rel="noopener">Instagram ' + esc(S.instagram.name) + '</a></p><p>kilianeinig.de</p>';
+      });
+
+      kat = document.createElement('dialog');
+      kat.className = 'kat'; kat.setAttribute('aria-label', 'Katalog');
+      kat.innerHTML = '<div class="kat-bar"><span class="kat-count label" aria-live="polite"></span><button type="button" class="kat-x">Schließen</button></div>' +
+        '<div class="kat-stage"><button type="button" class="kat-nav kat-prev" aria-label="Zurückblättern">←</button><div class="kat-spread"></div><button type="button" class="kat-nav kat-next" aria-label="Weiterblättern">→</button></div>';
+      document.body.appendChild(kat);
+      kat.addEventListener('close', function () { if (lenis) lenis.start(); });
+      kat.querySelector('.kat-x').addEventListener('click', function () { kat.close(); });
+      kat.querySelector('.kat-prev').addEventListener('click', function () { katShow(first - 2); });
+      kat.querySelector('.kat-next').addEventListener('click', function () { katShow(first + 2); });
+      kat.addEventListener('click', function (e) { var g = e.target.closest && e.target.closest('[data-go]'); if (g) katShow(+g.dataset.go); });
+      kat.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); katShow(first + 2); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); katShow(first - 2); }
+      });
     }
-    $('kat-open').addEventListener('click', function () { if (lenis) lenis.stop(); show(0); kat.showModal(); });
-    kat.addEventListener('close', function () { if (lenis) lenis.start(); });
-    kat.querySelector('.kat-x').addEventListener('click', function () { kat.close(); });
-    kat.querySelector('.kat-prev').addEventListener('click', function () { show(first - step); });
-    kat.querySelector('.kat-next').addEventListener('click', function () { show(first + step); });
-    kat.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowRight') { e.preventDefault(); show(first + step); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); show(first - step); }
+    function katPage(k) {
+      var pg = kpages[k];
+      if (!pg) return '<div class="kp kp-none"></div>';
+      var q = pg.proj, full = /kp-bleed|kp-cover|kp-blank/.test(pg.cls), right = k % 2 === 1;
+      var furn = full ? '' : (q ? '<div class="kp-head"><span>' + esc(q.titel) + '</span><span>' + esc(q.art) + '</span></div>' : '') + '<div class="kp-folio">' + (k + 1) + '</div>';
+      return '<div class="kp ' + pg.cls + (right ? ' r' : ' l') + '">' + furn + '<div class="kp-in">' + pg.html + '</div></div>';
+    }
+    function katShow(n) {
+      first = Math.max(0, Math.min(Math.floor(n / 2) * 2, kpages.length - 1 - ((kpages.length - 1) % 2)));
+      var sp = kat.querySelector('.kat-spread');
+      sp.innerHTML = katPage(first) + katPage(first + 1);
+      sp.classList.remove('turn'); void sp.offsetWidth; sp.classList.add('turn');
+      /* Langer Projekttext: Schrift schrittweise verkleinern, bis er in die zwei Spalten passt */
+      [].forEach.call(sp.querySelectorAll('.ko-txt'), function (t) {
+        for (var z = 1; z > .74 && t.scrollHeight > t.clientHeight + 1; z -= .04) t.style.fontSize = 'calc(var(--f) * ' + (1.02 * z).toFixed(3) + ')';
+      });
+      var q = (kpages[first] || {}).proj || (kpages[first + 1] || {}).proj;
+      kat.querySelector('.kat-count').textContent = (q ? q.titel + ' · ' : '') + 'Seiten ' + (first + 1) + (kpages[first + 1] ? '–' + (first + 2) : '') + ' von ' + kpages.length;
+      kat.querySelector('.kat-prev').disabled = first === 0;
+      kat.querySelector('.kat-next').disabled = first + 2 >= kpages.length;
+      [first + 2, first + 3].forEach(function (k) { var pg = kpages[k]; if (pg) (pg.html.match(/src="[^"]+"/g) || []).forEach(function (m) { new Image().src = m.slice(5, -1); }); });
+    }
+    $('kat-open').addEventListener('click', function () {
+      if (!kat) katBuild();
+      if (lenis) lenis.stop();
+      katShow(kstart[p.id]); kat.showModal();
     });
-    var sx = null;
-    spread.addEventListener('pointerdown', function (e) { sx = e.clientX; });
-    spread.addEventListener('pointerup', function (e) { if (sx !== null && Math.abs(e.clientX - sx) > 50) show(first + (e.clientX < sx ? step : -step)); sx = null; });
-    addEventListener('resize', function () { if (kat.open) show(first); });
+    addEventListener('resize', function () { if (kat && kat.open && innerWidth <= 900) kat.close(); });
 
     /* Großansicht für Galeriebilder */
     var lb = $('lb');
