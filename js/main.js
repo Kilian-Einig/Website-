@@ -116,7 +116,7 @@
     $('projekt').innerHTML =
       '<div class="wrap">' +
         '<header class="pp-head">' +
-          '<a class="back" href="projekte.html">← Alle Projekte</a>' +
+          '<div class="pp-tools"><a class="back" href="projekte.html">← Alle Projekte</a><button type="button" class="kat-open" id="kat-open">Katalogansicht</button></div>' +
           '<h1 class="pp-title"><span>' + esc(p.titel) + '</span></h1>' +
           '<p class="pp-kurz">' + esc(p.kurz) + '</p>' +
         '</header>' +
@@ -128,6 +128,53 @@
       '</div>';
 
     reveal(document.querySelectorAll('#projekt .rv'));
+
+    /* Katalogansicht: das ganze Projekt als Doppelseiten zum Durchblättern.
+       Links Hauptbild mit Name und Kurzsatz, dann Text, Schritte und Bilder.
+       Auf schmalen Bildschirmen wird Seite für Seite geblättert. */
+    var kat = document.createElement('dialog');
+    kat.className = 'kat'; kat.setAttribute('aria-label', 'Katalogansicht ' + p.titel);
+    var img = function (src, alt) { return '<img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' decoding="async">'; };
+    var pages = [];
+    pages.push('<div class="kp kp-cover"><figure>' + img(p.bild, p.bildAlt) + '</figure><div class="kp-cap"><h2>' + esc(p.titel) + '</h2><p>' + esc(p.kurz) + '</p></div></div>');
+    pages.push('<div class="kp kp-text"><p class="kp-label label">' + esc(p.titel) + '</p><div class="kp-txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
+      (p.hinweis ? '<p class="kp-hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div><dl>' + facts + '</dl></div>');
+    if ((p.schritte || []).length) pages.push('<div class="kp kp-steps">' + p.schritte.map(function (st, k) {
+      return '<div><figure>' + img(st[0], st[1]) + '</figure><h3><span>' + (k + 1) + '</span>' + esc(st[1]) + '</h3><p>' + esc(st[2]) + '</p></div>';
+    }).join('') + '</div>');
+    var bilder = (p.galerie || []).map(function (g) { return /\.mp4$/.test(g[0]) ? (g[2] ? [g[2], g[1]] : null) : g; }).filter(Boolean);
+    for (var b = 0; b < bilder.length; b += 2) pages.push('<div class="kp kp-gal">' + bilder.slice(b, b + 2).map(function (g) {
+      return '<figure>' + img(g[0], g[1]) + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
+    }).join('') + '</div>');
+    if (pages.length % 2) pages.push('<div class="kp kp-end"><svg viewBox="10 10 90 100" aria-hidden="true"><path d="M10,10 H100 V40 L60,60 L100,80 V110 H10 Z"/></svg><p>Kilian Einig</p><p class="label">kilianeinig.de</p></div>');
+    kat.innerHTML = '<div class="kat-bar"><span class="kat-count label" aria-live="polite"></span><button type="button" class="kat-x">Schließen</button></div>' +
+      '<div class="kat-stage"><button type="button" class="kat-nav kat-prev" aria-label="Zurückblättern">←</button><div class="kat-spread"></div><button type="button" class="kat-nav kat-next" aria-label="Weiterblättern">→</button></div>';
+    document.body.appendChild(kat);
+    var spread = kat.querySelector('.kat-spread'), first = 0, step = 2;
+    var single = function () { return matchMedia('(max-width: 820px), (orientation: portrait)').matches; };
+    /* n = Index der ersten sichtbaren Seite */
+    function show(n) {
+      step = single() ? 1 : 2;
+      first = Math.max(0, Math.min(Math.floor(n / step) * step, pages.length - step));
+      spread.innerHTML = pages.slice(first, first + step).join('');
+      spread.classList.remove('turn'); void spread.offsetWidth; spread.classList.add('turn');
+      kat.querySelector('.kat-count').textContent = p.titel + ' · ' + (step === 1 ? 'Seite ' + (first + 1) : 'Seiten ' + (first + 1) + '–' + (first + 2)) + ' von ' + pages.length;
+      kat.querySelector('.kat-prev').disabled = first === 0;
+      kat.querySelector('.kat-next').disabled = first + step >= pages.length;
+    }
+    $('kat-open').addEventListener('click', function () { if (lenis) lenis.stop(); show(0); kat.showModal(); });
+    kat.addEventListener('close', function () { if (lenis) lenis.start(); });
+    kat.querySelector('.kat-x').addEventListener('click', function () { kat.close(); });
+    kat.querySelector('.kat-prev').addEventListener('click', function () { show(first - step); });
+    kat.querySelector('.kat-next').addEventListener('click', function () { show(first + step); });
+    kat.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(first + step); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(first - step); }
+    });
+    var sx = null;
+    spread.addEventListener('pointerdown', function (e) { sx = e.clientX; });
+    spread.addEventListener('pointerup', function (e) { if (sx !== null && Math.abs(e.clientX - sx) > 50) show(first + (e.clientX < sx ? step : -step)); sx = null; });
+    addEventListener('resize', function () { if (kat.open) show(first); });
 
     /* Großansicht für Galeriebilder */
     var lb = $('lb');
