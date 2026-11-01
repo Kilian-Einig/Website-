@@ -376,11 +376,12 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   /* Auftakt startet erst, wenn Schrift und Seite bereit sind (html.ready), damit kein Bild ruckelt */
   .mark-wrap::before,.mark-wrap::after{animation:blendOpen 1700ms 150ms cubic-bezier(.65,0,.35,1) both;animation-play-state:paused}
   .hero-mark{animation:markSettle 2200ms 150ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
-  .hero .ln{animation:riseIn 1300ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
-  .hero .ln:nth-child(1){animation-delay:1150ms}
-  .hero .ln:nth-child(2){animation-delay:1280ms}
-  .hero .ln:nth-child(3){animation-delay:1410ms}
-  .ready .mark-wrap::before,.ready .mark-wrap::after,.ready .hero-mark,.ready .hero .ln{animation-play-state:running}
+  .hero .ln{animation:riseIn 1100ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
+  .hero .ln:nth-child(2){animation-delay:1150ms}
+  .hero .ln:nth-child(3){animation-delay:1240ms}
+  .hero .ln:nth-child(4){animation-delay:1330ms}
+  .hero-sub{animation:riseIn 900ms 1450ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
+  .ready .mark-wrap::before,.ready .mark-wrap::after,.ready .hero-mark,.ready .hero .ln,.ready .hero-sub{animation-play-state:running}
   .pp-title>span{animation:lineUp 900ms 150ms var(--ease) both}
   .pp-kurz,.pp-head .back{animation:riseIn 700ms 400ms var(--ease) both}
   .konfig{animation:clipUp 1100ms 300ms var(--ease) both}
