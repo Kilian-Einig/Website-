@@ -55,84 +55,8 @@
   }
 
   /* ================= Startseite ================= */
-  if (PAGE === 'home') {
-    /* Projekte: groß untereinander, eins nach dem anderen zum Durchscrollen. Die Übersicht hat ihr eigenes Raster. */
-    /* Auf der Startseite nur die ersten vier Projekte groß; der Rest steht in der Übersicht. */
-    var HOME = 4;
-    $('works').innerHTML = S.projekte.slice(0, HOME).map(function (p, i) {
-      return '<a class="big rv" href="' + url(p) + '">' +
-        '<div class="big-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i === 0) + '</div>' +
-        '<div class="big-cap"><h3>' + esc(p.titel) + '</h3><p class="big-kurz">' + esc(p.kurz) + '</p></div></a>';
-    }).join('') + (S.projekte.length > HOME
-      ? '<a class="big-more rv" href="projekte.html"><span>Weitere Projekte entdecken</span><span aria-hidden="true">→</span></a>'
-      : '');
-    $('felder').innerHTML = S.felder.map(function (f) {
-      return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p></li>';
-    }).join('');
-
-    $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
-    $('about-text').innerHTML = S.ueber.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
-
-    $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email + ' →';
-
-    reveal(document.querySelectorAll('.rv'));
-    [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
-    reveal(document.querySelectorAll('.contact h2'));
-
-  }
-
-  /* ================= Projektübersicht ================= */
-  if (PAGE === 'uebersicht') {
-    $('count').textContent = '( ' + two(S.projekte.length) + ' Projekte )';
-    $('overview').innerHTML = S.projekte.map(tile).join('');
-    reveal(document.querySelectorAll('#overview .rv'));
-  }
-
-  /* ================= Projektseite ================= */
-  if (PAGE === 'projekt') {
-    var id = new URLSearchParams(location.search).get('id');
-    var i = S.projekte.findIndex(function (p) { return p.id === id; });
-    if (i < 0) { location.replace('projekte.html'); return; }
-    var p = S.projekte[i], nx = S.projekte[(i + 1) % S.projekte.length];
-    document.title = p.titel + ' · Kilian Einig';
-
-    var heroImg = p.interaktiv === 'konfigurator' ? konfig() :
-      '<figure class="pp-hero' + (p.hell ? ' light' : '') + '">' + (p.bildLabel ? '<span class="blabel label">' + esc(p.bildLabel) + '</span>' : '') +
-      '<img src="' + esc(p.bild) + '" alt="' + esc(p.bildAlt) + '"' + dims(p.bild) + ' decoding="async" fetchpriority="high"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '></figure>';
-
-    var lam = p.interaktiv === 'lamellen' ?
-      '<div class="stage-dark lamellen" id="lmp01-lamellen" role="img" aria-label="Simulation von LMP 01: Lamellen leuchten auf, wenn sich Maus oder Finger nähern"><canvas></canvas><p class="hint">Fahr mit Maus oder Finger über die Lamellen.</p></div>' : '';
-
-    var steps = (p.schritte || []).length ? '<ol class="steps">' + p.schritte.map(function (s, k) {
-      return '<li class="rv" style="--d:' + (k * 120) + 'ms"><img src="' + esc(s[0]) + '" alt="' + esc(s[1]) + '"' + dims(s[0]) + ' loading="lazy" decoding="async"><h3><span>' + (k + 1) + '</span>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></li>';
-    }).join('') + '</ol>' : '';
-
-    var gal = (p.galerie || []).length ? '<div class="gal">' + p.galerie.map(function (g) {
-      var d = D[g[0]], wide = d && d[0] > d[1] * 1.6;
-      var media = /\.mp4$/.test(g[0]) ?
-        '<video src="' + esc(g[0]) + '" poster="' + esc(g[2] || '') + '" muted loop playsinline controls preload="metadata" aria-label="' + esc(g[1]) + '"></video>' :
-        '<button type="button" class="zoom" aria-label="' + esc(g[1]) + ', groß ansehen"><img src="' + esc(g[0]) + '" alt="' + esc(g[1]) + '"' + dims(g[0]) + ' loading="lazy" decoding="async"></button>';
-      return '<figure class="rv' + (wide ? ' wide' : '') + '">' + media + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
-    }).join('') + '</div>' : '';
-
-    var facts = [['Art', p.art], ['Stand', p.stand]].concat(p.fakten || []).map(function (f) { return '<div><dt class="label">' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
-
-    $('projekt').innerHTML =
-      '<div class="wrap">' +
-        '<header class="pp-head">' +
-          '<div class="pp-tools"><a class="back" href="projekte.html">← Alle Projekte</a><button type="button" class="kat-open" id="kat-open">Katalogansicht</button></div>' +
-          '<h1 class="pp-title"><span>' + esc(p.titel) + '</span></h1>' +
-          '<p class="pp-kurz">' + esc(p.kurz) + '</p>' +
-        '</header>' +
-        heroImg +
-        '<div class="pp-body rv"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
-          (p.hinweis ? '<p class="hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div></div>' +
-        lam + steps + gal +
-        '<a class="next rv" href="' + url(nx) + '"><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
-      '</div>';
-
-    reveal(document.querySelectorAll('#projekt .rv'));
-
+  /* Katalog als eigene Ansicht, auf Projektseite und Übersicht nutzbar */
+  function setupCatalog() {
     /* Katalog: alle Projekte als ein durchgehendes Heft, Doppelseite unter Doppelseite zum Scrollen.
        Heller, ruhiger Hintergrund, weiche Einblendung. Bilder frei im Raster, keins doppelt,
        Zeichnungen und Pläne nie beschnitten. Nur am Rechner. */
@@ -300,8 +224,90 @@
       document.documentElement.classList.remove('kat-lock');
       if (lenis) lenis.start();
     }
-    $('kat-open').addEventListener('click', katOpen);
+    var kbtn = $('kat-open'); if (kbtn) kbtn.addEventListener('click', katOpen);
     addEventListener('resize', function () { if (kat && kat.classList.contains('on') && innerWidth <= 900) katClose(); });
+  }
+
+  if (PAGE === 'home') {
+    /* Projekte: groß untereinander, eins nach dem anderen zum Durchscrollen. Die Übersicht hat ihr eigenes Raster. */
+    /* Auf der Startseite nur die ersten vier Projekte groß; der Rest steht in der Übersicht. */
+    var HOME = 4;
+    $('works').innerHTML = S.projekte.slice(0, HOME).map(function (p, i) {
+      return '<a class="big rv" href="' + url(p) + '">' +
+        '<div class="big-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i === 0) + '</div>' +
+        '<div class="big-cap"><h3>' + esc(p.titel) + '</h3><p class="big-kurz">' + esc(p.kurz) + '</p></div></a>';
+    }).join('') + (S.projekte.length > HOME
+      ? '<a class="big-more rv" href="projekte.html"><span>Weitere Projekte entdecken</span><span aria-hidden="true">→</span></a>'
+      : '');
+    $('felder').innerHTML = S.felder.map(function (f) {
+      return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p></li>';
+    }).join('');
+
+    $('zitat').innerHTML = '<p>' + esc(S.zitat) + '</p>';
+    $('about-text').innerHTML = S.ueber.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+
+    $('mail').href = 'mailto:' + S.email; $('mail').textContent = S.email + ' →';
+
+    reveal(document.querySelectorAll('.rv'));
+    [].forEach.call(document.querySelectorAll('.contact .w'), function (w, k) { w.style.setProperty('--d', (k * 150) + 'ms'); });
+    reveal(document.querySelectorAll('.contact h2'));
+
+  }
+
+  /* ================= Projektübersicht ================= */
+  if (PAGE === 'uebersicht') {
+    $('count').textContent = '( ' + two(S.projekte.length) + ' Projekte )';
+    $('overview').innerHTML = S.projekte.map(tile).join('');
+    reveal(document.querySelectorAll('#overview .rv'));
+    setupCatalog();
+  }
+
+  /* ================= Projektseite ================= */
+  if (PAGE === 'projekt') {
+    var id = new URLSearchParams(location.search).get('id');
+    var i = S.projekte.findIndex(function (p) { return p.id === id; });
+    if (i < 0) { location.replace('projekte.html'); return; }
+    var p = S.projekte[i], nx = S.projekte[(i + 1) % S.projekte.length];
+    document.title = p.titel + ' · Kilian Einig';
+
+    var heroImg = p.interaktiv === 'konfigurator' ? konfig() :
+      '<figure class="pp-hero' + (p.hell ? ' light' : '') + '">' + (p.bildLabel ? '<span class="blabel label">' + esc(p.bildLabel) + '</span>' : '') +
+      '<img src="' + esc(p.bild) + '" alt="' + esc(p.bildAlt) + '"' + dims(p.bild) + ' decoding="async" fetchpriority="high"' + (p.fokus ? ' style="object-position:' + esc(p.fokus) + '"' : '') + '></figure>';
+
+    var lam = p.interaktiv === 'lamellen' ?
+      '<div class="stage-dark lamellen" id="lmp01-lamellen" role="img" aria-label="Simulation von LMP 01: Lamellen leuchten auf, wenn sich Maus oder Finger nähern"><canvas></canvas><p class="hint">Fahr mit Maus oder Finger über die Lamellen.</p></div>' : '';
+
+    var steps = (p.schritte || []).length ? '<ol class="steps">' + p.schritte.map(function (s, k) {
+      return '<li class="rv" style="--d:' + (k * 120) + 'ms"><img src="' + esc(s[0]) + '" alt="' + esc(s[1]) + '"' + dims(s[0]) + ' loading="lazy" decoding="async"><h3><span>' + (k + 1) + '</span>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></li>';
+    }).join('') + '</ol>' : '';
+
+    var gal = (p.galerie || []).length ? '<div class="gal">' + p.galerie.map(function (g) {
+      var d = D[g[0]], wide = d && d[0] > d[1] * 1.6;
+      var media = /\.mp4$/.test(g[0]) ?
+        '<video src="' + esc(g[0]) + '" poster="' + esc(g[2] || '') + '" muted loop playsinline controls preload="metadata" aria-label="' + esc(g[1]) + '"></video>' :
+        '<button type="button" class="zoom" aria-label="' + esc(g[1]) + ', groß ansehen"><img src="' + esc(g[0]) + '" alt="' + esc(g[1]) + '"' + dims(g[0]) + ' loading="lazy" decoding="async"></button>';
+      return '<figure class="rv' + (wide ? ' wide' : '') + '">' + media + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
+    }).join('') + '</div>' : '';
+
+    var facts = [['Art', p.art], ['Stand', p.stand]].concat(p.fakten || []).map(function (f) { return '<div><dt class="label">' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
+
+    $('projekt').innerHTML =
+      '<div class="wrap">' +
+        '<header class="pp-head">' +
+          '<div class="pp-tools"><a class="back" href="projekte.html">← Alle Projekte</a><button type="button" class="kat-open" id="kat-open">Katalogansicht</button></div>' +
+          '<h1 class="pp-title"><span>' + esc(p.titel) + '</span></h1>' +
+          '<p class="pp-kurz">' + esc(p.kurz) + '</p>' +
+        '</header>' +
+        heroImg +
+        '<div class="pp-body rv"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
+          (p.hinweis ? '<p class="hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div></div>' +
+        lam + steps + gal +
+        '<a class="next rv" href="' + url(nx) + '"><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
+      '</div>';
+
+    reveal(document.querySelectorAll('#projekt .rv'));
+
+    setupCatalog();
 
     /* Großansicht für Galeriebilder */
     var lb = $('lb');
@@ -373,11 +379,7 @@
       if (lenis) lenis.scrollTo(t.id === 'start' ? 0 : t, { offset: off }); else window.scrollTo({ top: t.id === 'start' ? 0 : t.getBoundingClientRect().top + scrollY + off, behavior: reduce ? 'auto' : 'smooth' });
       return;
     }
-    /* Seitenwechsel: kurz ausblenden, dann laden */
-    if (/^(mailto|tel|https?):/.test(h) || reduce) return;
-    e.preventDefault();
-    document.documentElement.classList.add('leaving');
-    setTimeout(function () { location.href = a.href; }, 380);
+    /* Normale Links wechseln die Seite direkt – ohne Ausblenden, das hängen bleiben konnte. */
   });
 
   /* Kopfleiste zeigt, in welchem Abschnitt man gerade ist */
