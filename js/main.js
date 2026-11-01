@@ -195,48 +195,84 @@
       }).join('') + '</ol>';
       kspreads = spreads;
 
-      var page = function (pg, side) {
+      var page = function (sp, pg, side) {
         var full = /kp-bleed|kp-cover|kp-blank/.test(pg.cls);
-        var proj = this && this.proj;
         return '<div class="kp ' + pg.cls + ' ' + side + '">' +
-          (full ? '' : (proj ? '<div class="kp-head"><span>' + esc(proj.titel) + '</span><span>' + esc(proj.art) + '</span></div>' : '')) +
+          (full ? '' : (sp.proj ? '<div class="kp-head"><span>' + esc(sp.proj.titel) + '</span><span>' + esc(sp.proj.art) + '</span></div>' : '')) +
           '<div class="kp-in">' + pg.html + '</div></div>';
       };
       kat = document.createElement('div');
+      kat.page = page;
       kat.className = 'kat'; kat.setAttribute('role', 'dialog'); kat.setAttribute('aria-label', 'Katalog');
       kat.innerHTML = '<div class="kat-top"><span class="kat-count label" aria-live="polite"></span><button type="button" class="kat-x">Schließen</button></div>' +
-        '<div class="kat-scroll">' + spreads.map(function (sp, i) {
-          return '<section class="kat-spread" data-i="' + i + '"' + (sp.proj ? ' data-p="' + esc(sp.proj.titel) + '"' : '') + '>' + page.call(sp, sp.l, 'l') + page.call(sp, sp.r, 'r') + '</section>';
-        }).join('') + '</div>';
+        '<div class="kat-stage">' +
+          '<button type="button" class="kat-nav kat-prev" aria-label="Zurückblättern">←</button>' +
+          '<div class="kat-book"><div class="kat-spread"></div><div class="kat-leaf" aria-hidden="true"></div></div>' +
+          '<button type="button" class="kat-nav kat-next" aria-label="Weiterblättern">→</button>' +
+        '</div>';
       document.body.appendChild(kat);
-      var scroll = kat.querySelector('.kat-scroll'), count = kat.querySelector('.kat-count');
       kat.querySelector('.kat-x').addEventListener('click', katClose);
-      kat.addEventListener('click', function (e) { var g = e.target.closest && e.target.closest('[data-go]'); if (g) katGo(+g.dataset.go); });
-      var io = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (e.isIntersecting) e.target.classList.add('in');
-          if (e.intersectionRatio > 0.55) { var sp = kspreads[+e.target.dataset.i]; count.textContent = (sp.proj ? sp.proj.titel + ' · ' : 'Kilian Einig · ') + (+e.target.dataset.i + 1) + ' / ' + kspreads.length; }
-        });
-      }, { root: scroll, threshold: [0, 0.55] });
-      [].forEach.call(kat.querySelectorAll('.kat-spread'), function (el) { io.observe(el); });
-      addEventListener('keydown', function (e) { if (kat.classList.contains('on') && e.key === 'Escape') katClose(); });
+      kat.querySelector('.kat-prev').addEventListener('click', function () { katFlip(-1); });
+      kat.querySelector('.kat-next').addEventListener('click', function () { katFlip(1); });
+      kat.querySelector('.kat-spread').addEventListener('click', function (e) {
+        var g = e.target.closest && e.target.closest('[data-go]'); if (g) { katRender(+g.dataset.go); return; }
+        if (e.target.closest('a, button')) return;
+        katFlip(e.target.closest('.kp.l') ? -1 : 1);
+      });
+      addEventListener('keydown', function (e) {
+        if (!kat.classList.contains('on')) return;
+        if (e.key === 'Escape') katClose();
+        if (e.key === 'ArrowRight') { e.preventDefault(); katFlip(1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); katFlip(-1); }
+      });
     }
-    function katGo(i) {
-      var el = kat.querySelector('.kat-spread[data-i="' + i + '"]');
-      if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    var kcur = 0, kturning = false;
+    function kfitText(root) {
+      [].forEach.call((root || kat).querySelectorAll('.ko-txt'), function (t) {
+        t.style.fontSize = '';
+        for (var z = 1; z > .72 && t.scrollHeight > t.clientHeight + 1; z -= .035) t.style.fontSize = 'calc(var(--f) * ' + (1.02 * z).toFixed(3) + ')';
+      });
+    }
+    function katRender(i) {
+      kcur = Math.max(0, Math.min(i, kspreads.length - 1));
+      var sp = kspreads[kcur], spread = kat.querySelector('.kat-spread');
+      spread.innerHTML = kat.page(sp, sp.l, 'l') + kat.page(sp, sp.r, 'r');
+      kfitText(spread);
+      kat.querySelector('.kat-count').textContent = (sp.proj ? sp.proj.titel + ' · ' : 'Kilian Einig · ') + (kcur + 1) + ' / ' + kspreads.length;
+      kat.querySelector('.kat-prev').disabled = kcur === 0;
+      kat.querySelector('.kat-next').disabled = kcur === kspreads.length - 1;
+    }
+    function katFlip(dir) {
+      var next = kcur + dir;
+      if (kturning || next < 0 || next >= kspreads.length) return;
+      var from = kspreads[kcur], to = kspreads[next], leaf = kat.querySelector('.kat-leaf');
+      if (reduce) { katRender(next); return; }
+      kturning = true;
+      var front = dir > 0 ? kat.page(from, from.r, 'r') : kat.page(from, from.l, 'l');
+      var back = dir > 0 ? kat.page(to, to.l, 'l') : kat.page(to, to.r, 'r');
+      leaf.className = 'kat-leaf ' + (dir > 0 ? 'fwd' : 'bwd');
+      leaf.innerHTML = '<div class="lf-face lf-front">' + front + '</div><div class="lf-face lf-back">' + back + '</div>';
+      katRender(next);                 // Zielseite liegt schon darunter
+      kfitText(leaf);
+      leaf.style.transition = 'none';
+      leaf.style.transform = 'rotateY(0deg)';
+      leaf.offsetWidth;                // Reflow
+      leaf.style.transition = 'transform 620ms cubic-bezier(.4,.05,.2,1)';
+      leaf.style.transform = 'rotateY(' + (dir > 0 ? -180 : 180) + 'deg)';
+      var done = function () {
+        leaf.removeEventListener('transitionend', done);
+        leaf.className = 'kat-leaf'; leaf.innerHTML = ''; leaf.style.transition = 'none'; leaf.style.transform = '';
+        kturning = false;
+      };
+      leaf.addEventListener('transitionend', done);
+      setTimeout(done, 760);           // Sicherheitsnetz
     }
     function katOpen() {
       if (!kat) katBuild();
       if (lenis) lenis.stop();
       document.documentElement.classList.add('kat-lock');
       kat.classList.add('on');
-      /* Langen Eröffnungstext einmal auf die zwei Spalten einpassen */
-      [].forEach.call(kat.querySelectorAll('.ko-txt'), function (t) {
-        if (t.dataset.fit) return; t.dataset.fit = 1;
-        for (var z = 1; z > .72 && t.scrollHeight > t.clientHeight + 1; z -= .035) t.style.fontSize = 'calc(var(--f) * ' + (1.02 * z).toFixed(3) + ')';
-      });
-      kat.querySelector('.kat-scroll').scrollTop = 0;
-      katGo(kindex[p.id]);
+      katRender(kindex[p.id]);
     }
     function katClose() {
       kat.classList.remove('on');
