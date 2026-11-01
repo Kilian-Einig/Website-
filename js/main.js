@@ -252,33 +252,48 @@
       var next = kcur + dir;
       if (kturning || next < 0 || next >= kspreads.length) return;
       var from = kspreads[kcur], to = kspreads[next], leaf = kat.querySelector('.kat-leaf');
+      var spread = kat.querySelector('.kat-spread');
       if (reduce) { katRender(next); return; }
       kturning = true;
-      var front = dir > 0 ? kat.page(from, from.r, 'r') : kat.page(from, from.l, 'l');
-      var back = dir > 0 ? kat.page(to, to.l, 'l') : kat.page(to, to.r, 'r');
+      /* Wie im echten Heft: die umschlagende Seite trägt vorne die alte, hinten die neue
+         Seite. Darunter bleibt die gegenüberliegende Seite stehen und nur die Hälfte, die
+         freigeblättert wird, zeigt schon die neue — so taucht kein Bild doppelt auf. */
+      var front, back;
+      if (dir > 0) {
+        front = kat.page(from, from.r, 'r');
+        back = kat.page(to, to.l, 'l');
+        spread.innerHTML = kat.page(from, from.l, 'l') + kat.page(to, to.r, 'r');
+      } else {
+        front = kat.page(from, from.l, 'l');
+        back = kat.page(to, to.r, 'r');
+        spread.innerHTML = kat.page(to, to.l, 'l') + kat.page(from, from.r, 'r');
+      }
       leaf.className = 'kat-leaf ' + (dir > 0 ? 'fwd' : 'bwd');
       leaf.innerHTML = '<div class="lf-face lf-front">' + front + '</div><div class="lf-face lf-back">' + back + '</div>';
-      katRender(next);                 // Zielseite liegt schon darunter
-      kfitText(leaf);
+      kfitText(spread); kfitText(leaf);
+      kat.querySelector('.kat-count').textContent = (to.proj ? to.proj.titel + ' · ' : 'Kilian Einig · ') + (next + 1) + ' / ' + kspreads.length;
       leaf.style.transition = 'none';
       leaf.style.transform = 'rotateY(0deg)';
       leaf.offsetWidth;                // Reflow
-      leaf.style.transition = 'transform 620ms cubic-bezier(.4,.05,.2,1)';
+      leaf.style.transition = 'transform 560ms cubic-bezier(.33,0,.2,1)';
       leaf.style.transform = 'rotateY(' + (dir > 0 ? -180 : 180) + 'deg)';
+      var ended = false;
       var done = function () {
+        if (ended) return; ended = true;
         leaf.removeEventListener('transitionend', done);
         leaf.className = 'kat-leaf'; leaf.innerHTML = ''; leaf.style.transition = 'none'; leaf.style.transform = '';
         kturning = false;
+        katRender(next);               // jetzt die ganze, saubere Doppelseite
       };
       leaf.addEventListener('transitionend', done);
-      setTimeout(done, 760);           // Sicherheitsnetz
+      setTimeout(done, 720);           // Sicherheitsnetz, falls transitionend ausbleibt
     }
     function katOpen() {
       if (!kat) katBuild();
       if (lenis) lenis.stop();
       document.documentElement.classList.add('kat-lock');
       kat.classList.add('on');
-      katRender(kindex[p.id]);
+      katRender(0);
     }
     function katClose() {
       kat.classList.remove('on');
@@ -329,7 +344,22 @@
   }
   jumpToHash(); requestAnimationFrame(jumpToHash);
   window.addEventListener('load', jumpToHash);
-  window.addEventListener('pageshow', function (e) { document.documentElement.classList.remove('leaving'); if (e.persisted) jumpToHash(); });
+  /* Beim Verlassen und beim Zurückkommen alles zurücksetzen, damit der Zurück-Button
+     die Seite nicht mit gesperrtem Scrollen (Katalog offen) oder ausgeblendet einfriert. */
+  function katReset() {
+    var k = document.querySelector('.kat');
+    if (k) k.classList.remove('on');
+    document.documentElement.classList.remove('kat-lock');
+  }
+  window.addEventListener('pagehide', function () {
+    document.documentElement.classList.remove('leaving'); katReset();
+    if (lenis) lenis.start();
+  });
+  window.addEventListener('pageshow', function (e) {
+    document.documentElement.classList.remove('leaving'); katReset();
+    if (lenis) lenis.start();
+    if (e.persisted) jumpToHash();
+  });
 
   /* Anker auf derselben Seite: weich hinscrollen, Kopfleiste mitdenken */
   document.addEventListener('click', function (e) {

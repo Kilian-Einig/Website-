@@ -238,7 +238,7 @@ html.kat-lock{overflow:hidden}
 .kat-leaf{position:absolute;top:0;bottom:0;width:50%;transform-style:preserve-3d;z-index:4;pointer-events:none}
 .kat-leaf.fwd{left:50%;transform-origin:left center}
 .kat-leaf.bwd{left:0;transform-origin:right center}
-.kat-leaf .lf-face{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;background:var(--paper);box-shadow:0 16px 54px rgba(30,28,24,.22)}
+.kat-leaf .lf-face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden;background:var(--paper);box-shadow:0 16px 54px rgba(30,28,24,.22)}
 .kat-leaf .lf-back{transform:rotateY(180deg)}
 .kat-leaf .kp{position:absolute;inset:0}
 
