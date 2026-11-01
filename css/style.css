@@ -75,10 +75,12 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .hero-pause{position:absolute;z-index:2;right:max(var(--gutter),env(safe-area-inset-right,0px));bottom:16px;min-height:44px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);cursor:pointer}
 .hero-pause:hover{background:var(--ink);color:var(--paper)}
 @keyframes settle{from{transform:scale(1.06)}}
-.hero-body{display:flex;align-items:stretch;justify-content:space-between;gap:24px;padding-top:clamp(16px,2vw,24px);padding-bottom:clamp(28px,4vw,56px);width:100%}
-.hero-copy{min-width:0;display:flex;flex-direction:column}
+.hero-body{display:flex;align-items:center;justify-content:center;text-align:center;gap:24px;padding-top:clamp(16px,2vw,24px);padding-bottom:clamp(28px,4vw,56px);width:100%}
+.hero-copy{min-width:0;width:100%;display:block;text-align:center}
 .hero .label{margin:0}
-.hero h1{margin:14px 0 0 -.04em;font-size:clamp(56px,7.4vw,128px);font-weight:700;letter-spacing:-.045em;line-height:.9}
+.hero h1{margin:14px 0 0;font-size:clamp(56px,7.4vw,128px);font-weight:700;letter-spacing:-.045em;line-height:.9}
+.hero h1 .ln:last-child{margin-right:0}
+.hero-sub{margin:clamp(16px,2.2vw,28px) 0 0;font-weight:400;font-size:clamp(15px,1.5vw,21px);letter-spacing:.01em;color:var(--stone)}
 .hero h1 .ln{display:inline-block;margin-right:.22em}
 .hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin-top:clamp(20px,2.4vw,32px)}
 @media (max-width:760px){
