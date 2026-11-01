@@ -36,26 +36,47 @@
 
   [].forEach.call(document.querySelectorAll('[data-insta]'), function (a) { a.href = S.instagram.url; if (a.dataset.insta === 'name') a.textContent = S.instagram.name; });
 
-  /* Hauptlogo: die Maus deckt beim Darüberfahren eine Chrom-Fläche auf, als läge
-     sie unter dem Schwarz. Ein weicher runder Verlauf folgt dem Cursor, beim
-     Verlassen schließt er sich wieder. */
+  /* Hauptlogo: die Maus wischt eine Chrom-Fläche unter dem Schwarz frei – flüssig,
+     wie eine Hand durch Wasser. Der Verlauf läuft dem Cursor träge nach, zieht sich in
+     Bewegungsrichtung lang und die Ränder kräuseln sich (SVG-Rippelfilter). */
   (function () {
     var mark = document.querySelector('.hero-mark');
     if (!mark || !mark.querySelector('#reveal')) return;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var g = mark.querySelector('#reveal');
-    var cx = -200, cy = -200, tx = -200, ty = -200, r = 0, tr = 0, raf = 0;
-    var tick = function () {
-      cx += (tx - cx) * 0.25; cy += (ty - cy) * 0.25; r += (tr - r) * 0.15;
-      g.setAttribute('cx', cx.toFixed(1)); g.setAttribute('cy', cy.toFixed(1)); g.setAttribute('r', Math.max(0.01, r).toFixed(2));
-      if (Math.abs(tx - cx) > 0.2 || Math.abs(ty - cy) > 0.2 || Math.abs(tr - r) > 0.2) raf = requestAnimationFrame(tick);
-      else { raf = 0; cx = tx; cy = ty; r = tr; g.setAttribute('cx', cx); g.setAttribute('cy', cy); g.setAttribute('r', Math.max(0.01, r)); }
+    var cx = -200, cy = -200, tx = -200, ty = -200;  // Ist- und Ziel-Mittelpunkt
+    var vx = 0, vy = 0;                               // geglättete Geschwindigkeit (für die Streckung)
+    var r = 0, tr = 0;                                // Ist- und Ziel-Radius
+    var clock = 0, last = 0, raf = 0;
+    var frame = function (now) {
+      var dt = Math.min(0.05, (now - last) / 1000) || 0.016; last = now; clock += dt;
+      var follow = 1 - Math.pow(0.0009, dt);          // je kleiner die Basis, desto träger
+      var dx = tx - cx, dy = ty - cy;
+      cx += dx * follow; cy += dy * follow;
+      // geglättete Geschwindigkeit -> Streckung in Laufrichtung
+      var sv = 1 - Math.pow(0.02, dt);
+      vx += (dx - vx) * sv; vy += (dy - vy) * sv;
+      r += (tr - r) * (1 - Math.pow(0.05, dt));
+      if (tr === 0 && r < 6) { r = 0; cx = cy = -300; }   // sauber schließen, kein Rest
+      var rr = Math.max(0.01, r) * (1 + (reduce ? 0 : 0.06 * Math.sin(clock * 1.6)));  // leichtes Atmen
+      g.setAttribute('cx', cx.toFixed(1));
+      g.setAttribute('cy', cy.toFixed(1));
+      g.setAttribute('r', rr.toFixed(2));
+      var speed = Math.hypot(vx, vy);
+      var stretch = Math.min(2.3, 1 + speed * 0.09);
+      var ang = speed > 0.01 ? Math.atan2(vy, vx) * 180 / Math.PI : 0;
+      g.setAttribute('gradientTransform',
+        'translate(' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ') rotate(' + ang.toFixed(1) + ') scale(' + stretch.toFixed(2) + ' 1) translate(' + (-cx).toFixed(1) + ' ' + (-cy).toFixed(1) + ')');
+      var busy = Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1 || Math.abs(tr - r) > 0.1 || (tr > 0 && !reduce);
+      raf = busy ? requestAnimationFrame(frame) : 0;
     };
-    var kick = function () { if (!raf) raf = requestAnimationFrame(tick); };
+    var kick = function () { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
     var at = function (e) {
       var b = mark.getBoundingClientRect();
       tx = 10 + ((e.clientX - b.left) / b.width) * 90;
       ty = 10 + ((e.clientY - b.top) / b.height) * 100;
-      tr = 30; kick();
+      if (tr === 0) { cx = tx; cy = ty; }             // beim Eintreten dort beginnen
+      tr = 32; kick();
     };
     mark.addEventListener('pointermove', at);
     mark.addEventListener('pointerenter', at);
