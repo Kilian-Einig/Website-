@@ -35,6 +35,33 @@
   }
 
   [].forEach.call(document.querySelectorAll('[data-insta]'), function (a) { a.href = S.instagram.url; if (a.dataset.insta === 'name') a.textContent = S.instagram.name; });
+
+  /* Hauptlogo: die Maus deckt beim Darüberfahren eine Chrom-Fläche auf, als läge
+     sie unter dem Schwarz. Ein weicher runder Verlauf folgt dem Cursor, beim
+     Verlassen schließt er sich wieder. */
+  (function () {
+    var mark = document.querySelector('.hero-mark');
+    if (!mark || !mark.querySelector('#reveal')) return;
+    var g = mark.querySelector('#reveal');
+    var cx = -200, cy = -200, tx = -200, ty = -200, r = 0, tr = 0, raf = 0;
+    var tick = function () {
+      cx += (tx - cx) * 0.25; cy += (ty - cy) * 0.25; r += (tr - r) * 0.15;
+      g.setAttribute('cx', cx.toFixed(1)); g.setAttribute('cy', cy.toFixed(1)); g.setAttribute('r', Math.max(0.01, r).toFixed(2));
+      if (Math.abs(tx - cx) > 0.2 || Math.abs(ty - cy) > 0.2 || Math.abs(tr - r) > 0.2) raf = requestAnimationFrame(tick);
+      else { raf = 0; cx = tx; cy = ty; r = tr; g.setAttribute('cx', cx); g.setAttribute('cy', cy); g.setAttribute('r', Math.max(0.01, r)); }
+    };
+    var kick = function () { if (!raf) raf = requestAnimationFrame(tick); };
+    var at = function (e) {
+      var b = mark.getBoundingClientRect();
+      tx = 10 + ((e.clientX - b.left) / b.width) * 90;
+      ty = 10 + ((e.clientY - b.top) / b.height) * 100;
+      tr = 30; kick();
+    };
+    mark.addEventListener('pointermove', at);
+    mark.addEventListener('pointerenter', at);
+    mark.addEventListener('pointerleave', function () { tr = 0; kick(); });
+  })();
+
   if ($('foot')) $('foot').textContent = '© ' + new Date().getFullYear() + ' ' + S.name + ' · ' + S.ort;
 
   /* Kopfzeile: durchsichtig über dem Auftakt, weiß beim Scrollen */

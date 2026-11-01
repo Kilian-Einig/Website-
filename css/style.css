@@ -54,8 +54,7 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .brand{display:inline-flex;align-items:center;gap:12px;margin-right:auto;text-decoration:none;font-weight:700;text-transform:uppercase;letter-spacing:.2em;font-size:14px;min-height:44px}
 .brand svg{height:24px;width:auto;fill:currentColor;flex:none}
 /* Chrom beim Darüberfahren: das Logo wird zur Spiegelfolie, ein Lichtstreifen wandert hindurch */
-.brand svg path{transition:fill .35s ease}
-.brand:hover svg path,.brand:focus-visible svg path{fill:url(#chrome)}
+
 .links ul{display:flex;gap:clamp(16px,2.4vw,36px);list-style:none;margin:0;padding:0}
 .links a{position:relative;display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.15em}
 .links a::after{content:"";position:absolute;left:0;right:.15em;bottom:12px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 300ms var(--ease)}
@@ -70,8 +69,7 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 /* Auftakt: groß nur das Logo, das sich von der Mitte aus öffnet. Der Name steht schon in der Kopfzeile. */
 .hero-img{display:grid;place-items:center}
 .hero-mark{display:block;height:clamp(150px,46svh,440px);width:auto;fill:var(--ink)}
-.hero-mark path{transition:fill .4s ease}
-.hero-mark:hover path{fill:url(#chrome)}
+.hm-cover{fill:var(--ink)}
 /* Zwei Blenden in Papierfarbe geben das Logo von der Mitte aus frei (nur transform, läuft flüssig) */
 .mark-wrap{position:relative;display:block}
 .mark-wrap::before,.mark-wrap::after{content:"";position:absolute;z-index:1;left:-8%;right:-8%;height:calc(58% + 2px);background:var(--paper);transform:scaleY(0);will-change:transform}
