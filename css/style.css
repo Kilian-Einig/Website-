@@ -247,30 +247,21 @@ html.kat-lock{overflow:hidden}
 .kf-img img{width:100%;height:100%;object-fit:cover;display:block}
 .kf.draw .kf-img{background:#fff}
 .kf.draw img{object-fit:contain}
-.kf figcaption{margin-top:calc(var(--f) * .8);font-size:calc(var(--f) * .8);line-height:1.35;color:var(--stone)}
+.kf figcaption{margin-top:calc(var(--f) * .7);font-size:calc(var(--f) * .78);line-height:1.3;color:var(--stone)}
 
-/* Freies Bildraster: mehr Bilder pro Seite, wechselnde Vorlagen */
-.kp-mos .kp-in{display:grid;gap:calc(var(--f) * 1.6)}
-.kp-mos .kf{height:100%}
-.t-duo .kp-in{grid-template-rows:1fr 1fr}
-.t-bigtwo .kp-in{grid-template-columns:1fr 1fr;grid-template-rows:1.5fr 1fr}
-.t-bigtwo .kf:nth-child(1){grid-column:1 / 3}
-.t-twobig .kp-in{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1.5fr}
-.t-twobig .kf:nth-child(3){grid-column:1 / 3}
-.t-quad .kp-in{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
-.t-lrow .kp-in{grid-template-columns:1.25fr 1fr;grid-template-rows:1fr 1fr}
-.t-lrow .kf:nth-child(1){grid-row:1 / 3}
+/* Bildseiten mit Weißrand: ein großes Foto, oder dichtes Raster aus 2-4 kleineren mit Unterschrift */
+.kp-photo .kf,.kp-solo .kf{height:100%}
 .kp-solo .kp-in{justify-content:center}
-.kp-solo .kf{height:80%}
+.kp-solo .kf{height:82%}
+.kp-grid2 .kp-in,.kp-grid3 .kp-in,.kp-grid4 .kp-in{display:grid;gap:calc(var(--f) * 1.5) calc(var(--f) * 1.8)}
+.kp-grid2 .kp-in{grid-template-rows:1fr 1fr}
+.kp-grid4 .kp-in{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.kp-grid3 .kp-in{grid-template-columns:1fr 1fr;grid-template-rows:1.35fr 1fr}
+.kp-grid3 .kf:nth-child(1){grid-column:1 / 3}
+.kp-grid2 .kf,.kp-grid3 .kf,.kp-grid4 .kf{min-height:0}
 .kp-plan .kp-in{justify-content:center}
 .kp-plan .kf{height:100%}
 .kp-plan .kf.draw img{padding:calc(var(--f) * 1.5)}
-
-/* Randabfallend */
-.kp-bleed .kp-in{inset:0}
-.kp-bleed .kf{height:100%}
-.kp-bleed .kf figcaption{position:absolute;left:calc(var(--f) * 3);bottom:calc(var(--f) * 3);margin:0;padding:calc(var(--f) * .55) calc(var(--f) * .9);background:var(--paper);color:var(--ink)}
-.kp-bleed .kf.draw img{padding:12%}
 
 /* Umschlag, Inhalt, Kontakt, Überleitung */
 .kp-cover.dark{background:var(--ink);color:var(--paper)}

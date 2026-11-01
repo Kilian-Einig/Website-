@@ -137,24 +137,26 @@
     function katBuild() {
       var two = function (n) { return (n < 10 ? '0' : '') + n; };
       var fig = function (src, alt, cap) {
-        return '<figure class="kf' + (DRAW.test(src) ? ' draw' : '') + '"><div class="kf-img"><img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' loading="lazy" decoding="async"></div>' +
+        return '<figure class="kf' + (DRAW.test(src) ? ' draw' : '') + '"><div class="kf-img"><img src="' + esc(src) + '" alt="' + esc(alt) + '"' + dims(src) + ' decoding="async"></div>' +
           (cap && alt ? '<figcaption>' + esc(alt) + '</figcaption>' : '') + '</figure>';
       };
       /* Galeriebilder frei auf Seiten verteilen: wechselnde Vorlagen, mehr Bilder pro Seite */
+      /* Galerie dichter: drei bis vier kleinere Bilder mit ihren Bildunterschriften pro Seite,
+         Zeichnungen und Pläne jeweils allein mit Weißrand, nie beschnitten. */
       function mosaik(imgs) {
         var out = [], r = 0;
         while (imgs.length) {
-          if (DRAW.test(imgs[0][0])) { out.push({ cls: 'kp-plan', html: fig(imgs.shift()[0], '', false), cap: imgs.length ? '' : '' }); r++; continue; }
-          var n = imgs.length, c = r % 6, t, k;
-          if (n === 1) { t = 'kp-solo'; k = 1; }
-          else if (c === 0) { t = 'kp-bleed'; k = 1; }
-          else if (c === 1 && n >= 3) { t = 'kp-mos t-bigtwo'; k = 3; }
-          else if (c === 2 && n >= 4) { t = 'kp-mos t-quad'; k = 4; }
-          else if (c === 3 && n >= 3) { t = 'kp-mos t-lrow'; k = 3; }
-          else if (c === 4 && n >= 3) { t = 'kp-mos t-twobig'; k = 3; }
-          else { t = 'kp-mos t-duo'; k = 2; }
-          var part = imgs.splice(0, k), dense = part.length > 1;
-          out.push({ cls: t, html: part.map(function (g) { return fig(g[0], g[1], !dense); }).join('') });
+          var g0 = imgs[0];
+          if (DRAW.test(g0[0])) { out.push({ cls: 'kp-plan', html: fig(imgs.shift()[0], g0[1], true) }); r++; continue; }
+          var run = 0; while (run < imgs.length && !DRAW.test(imgs[run][0])) run++;
+          var c = r % 5, want;
+          if (run >= 4 && (c === 0 || c === 3)) want = 4;
+          else if (run >= 3 && (c === 1 || c === 2 || c === 4)) want = 3;
+          else want = Math.min(2, run);
+          var k = Math.min(want, run) || 1;
+          var cls = k >= 4 ? 'kp-grid4' : k === 3 ? 'kp-grid3' : k === 2 ? 'kp-grid2' : 'kp-solo';
+          var part = imgs.splice(0, k);
+          out.push({ cls: cls, html: part.map(function (g) { return fig(g[0], g[1], true); }).join('') });
           r++;
         }
         return out;
@@ -168,7 +170,7 @@
         used[q.bild] = 1;
         var hasStand = (q.fakten || []).some(function (x) { return x[0] === 'Stand'; });
         var f = [['Art', q.art]].concat(hasStand ? [] : [['Stand', q.stand]], q.fakten || []);
-        pages.push({ cls: 'kp-bleed', html: fig(q.bild, q.bildAlt, false) });
+        pages.push({ cls: 'kp-photo', html: fig(q.bild, q.bildAlt, true) });
         pages.push({ cls: 'kp-open', html:
           '<div class="ko-top"><span class="ko-n">' + two(n + 1) + '</span><h2>' + esc(q.titel) + '</h2><p class="ko-kurz">' + esc(q.kurz) + '</p></div>' +
           '<div class="ko-txt">' + [].concat(q.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + (q.hinweis ? '<p class="ko-hint">' + esc(q.hinweis) + '</p>' : '') + '</div>' +
@@ -196,7 +198,7 @@
       kspreads = spreads;
 
       var page = function (sp, pg, side) {
-        var full = /kp-bleed|kp-cover|kp-blank/.test(pg.cls);
+        var full = /kp-cover|kp-blank/.test(pg.cls);
         return '<div class="kp ' + pg.cls + ' ' + side + '">' +
           (full ? '' : (sp.proj ? '<div class="kp-head"><span>' + esc(sp.proj.titel) + '</span><span>' + esc(sp.proj.art) + '</span></div>' : '')) +
           '<div class="kp-in">' + pg.html + '</div></div>';
