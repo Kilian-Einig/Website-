@@ -390,8 +390,6 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   img.ld{opacity:0}
   .pp-hero img{transition:opacity 1100ms ease,scale 2000ms cubic-bezier(.22,1,.36,1)}
   .pp-hero img.ld{opacity:0;scale:1.06}
-  body{animation:fadeIn 700ms ease backwards}
-  html.leaving body{opacity:0;transition:opacity 380ms ease}
 
   .anim .rv{opacity:0;transition:opacity 700ms ease;transition-delay:var(--d,0ms)}
   .anim .work.rv{transform:scale(.92);transition:opacity 450ms ease,transform 650ms var(--ease);transition-delay:var(--d,0ms)}

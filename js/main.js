@@ -163,14 +163,28 @@
         for (var z = 1; z > .72 && t.scrollHeight > t.clientHeight + 1; z -= .035) t.style.fontSize = 'calc(var(--f) * ' + (1.02 * z).toFixed(3) + ')';
       });
     }
-    function katRender(i) {
+    var kpre = {};
+    function katPreload(i) {
+      var sp = kspreads[i]; if (!sp) return;
+      (sp.l.html + sp.r.html).replace(/src="([^"]+)"/g, function (_, u) {
+        if (!kpre[u]) { kpre[u] = new Image(); kpre[u].src = u; }
+        return _;
+      });
+    }
+    function katState(i) {
       kcur = Math.max(0, Math.min(i, kspreads.length - 1));
-      var sp = kspreads[kcur], spread = kat.querySelector('.kat-spread');
-      spread.innerHTML = kat.page(sp, sp.l, 'l') + kat.page(sp, sp.r, 'r');
-      kfitText(spread);
+      var sp = kspreads[kcur];
       kat.querySelector('.kat-count').textContent = (sp.proj ? sp.proj.titel + ' · ' : 'Kilian Einig · ') + (kcur + 1) + ' / ' + kspreads.length;
       kat.querySelector('.kat-prev').disabled = kcur === 0;
       kat.querySelector('.kat-next').disabled = kcur === kspreads.length - 1;
+      katPreload(kcur + 1); katPreload(kcur - 1);
+    }
+    function katRender(i) {
+      i = Math.max(0, Math.min(i, kspreads.length - 1));
+      var sp = kspreads[i], spread = kat.querySelector('.kat-spread');
+      spread.innerHTML = kat.page(sp, sp.l, 'l') + kat.page(sp, sp.r, 'r');
+      kfitText(spread);
+      katState(i);
     }
     function katFlip(dir) {
       var next = kcur + dir;
@@ -179,23 +193,23 @@
       var spread = kat.querySelector('.kat-spread');
       if (reduce) { katRender(next); return; }
       kturning = true;
-      /* Wie im echten Heft: die umschlagende Seite trägt vorne die alte, hinten die neue
-         Seite. Darunter bleibt die gegenüberliegende Seite stehen und nur die Hälfte, die
-         freigeblättert wird, zeigt schon die neue — so taucht kein Bild doppelt auf. */
+      /* Nur die Hälfte tauschen, die sich wirklich ändert – so wird kein Bild neu
+         aufgebaut und es flackert nichts. Das umschlagende Blatt trägt vorne die alte,
+         hinten die neue Seite; darunter liegt schon die freigeblätterte Hälfte. */
       var front, back;
       if (dir > 0) {
         front = kat.page(from, from.r, 'r');
         back = kat.page(to, to.l, 'l');
-        spread.innerHTML = kat.page(from, from.l, 'l') + kat.page(to, to.r, 'r');
+        spread.children[1].outerHTML = kat.page(to, to.r, 'r');   // rechte Seite deckt die neue auf
       } else {
         front = kat.page(from, from.l, 'l');
         back = kat.page(to, to.r, 'r');
-        spread.innerHTML = kat.page(to, to.l, 'l') + kat.page(from, from.r, 'r');
+        spread.children[0].outerHTML = kat.page(to, to.l, 'l');   // linke Seite deckt die neue auf
       }
       leaf.className = 'kat-leaf ' + (dir > 0 ? 'fwd' : 'bwd');
       leaf.innerHTML = '<div class="lf-face lf-front">' + front + '</div><div class="lf-face lf-back">' + back + '</div>';
       kfitText(spread); kfitText(leaf);
-      kat.querySelector('.kat-count').textContent = (to.proj ? to.proj.titel + ' · ' : 'Kilian Einig · ') + (next + 1) + ' / ' + kspreads.length;
+      katState(next);
       leaf.style.transition = 'none';
       leaf.style.transform = 'rotateY(0deg)';
       leaf.offsetWidth;                // Reflow
@@ -205,9 +219,12 @@
       var done = function () {
         if (ended) return; ended = true;
         leaf.removeEventListener('transitionend', done);
-        leaf.className = 'kat-leaf'; leaf.innerHTML = ''; leaf.style.transition = 'none'; leaf.style.transform = '';
+        /* stehende Hälfte auf die Zielseite setzen, solange das Blatt sie noch verdeckt … */
+        if (dir > 0) spread.children[0].outerHTML = kat.page(to, to.l, 'l');
+        else spread.children[1].outerHTML = kat.page(to, to.r, 'r');
+        kfitText(spread);
+        leaf.className = 'kat-leaf'; leaf.innerHTML = ''; leaf.style.transition = 'none'; leaf.style.transform = '';  // … dann das Blatt wegnehmen
         kturning = false;
-        katRender(next);               // jetzt die ganze, saubere Doppelseite
       };
       leaf.addEventListener('transitionend', done);
       setTimeout(done, 720);           // Sicherheitsnetz, falls transitionend ausbleibt
