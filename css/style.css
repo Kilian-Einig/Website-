@@ -113,6 +113,11 @@ a.count{font-weight:400}
 .big-cap h3{margin:0;font-size:var(--fs-h2);font-weight:700;letter-spacing:-.04em;line-height:1}
 .big-kurz{margin:0;font-weight:300;font-size:var(--fs-lead);color:var(--graphite)}
 .big:hover h3{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+/* Button unter den vier Projekten zur vollständigen Übersicht */
+.big-more{display:flex;align-items:baseline;justify-content:space-between;gap:24px;width:min(100%,calc(78svh * 1.5));margin-top:8px;padding:28px 0;border-top:1px solid var(--ink);text-decoration:none;color:var(--ink)}
+.big-more span:first-child{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.04em;line-height:1}
+.big-more span:last-child{font-size:var(--fs-h2);transition:transform 250ms var(--ease)}
+.big-more:hover span:last-child{transform:translateX(.18em)}
 
 /* ---------- Was ich mache: Titel und ein starker Satz ---------- */
 .felder{list-style:none;margin:0;padding:0}

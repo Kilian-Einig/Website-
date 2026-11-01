@@ -57,11 +57,15 @@
   /* ================= Startseite ================= */
   if (PAGE === 'home') {
     /* Projekte: groß untereinander, eins nach dem anderen zum Durchscrollen. Die Übersicht hat ihr eigenes Raster. */
-    $('works').innerHTML = S.projekte.map(function (p, i) {
+    /* Auf der Startseite nur die ersten vier Projekte groß; der Rest steht in der Übersicht. */
+    var HOME = 4;
+    $('works').innerHTML = S.projekte.slice(0, HOME).map(function (p, i) {
       return '<a class="big rv" href="' + url(p) + '">' +
         '<div class="big-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i === 0) + '</div>' +
         '<div class="big-cap"><h3>' + esc(p.titel) + '</h3><p class="big-kurz">' + esc(p.kurz) + '</p></div></a>';
-    }).join('');
+    }).join('') + (S.projekte.length > HOME
+      ? '<a class="big-more rv" href="projekte.html"><span>Weitere Projekte entdecken</span><span aria-hidden="true">→</span></a>'
+      : '');
     $('felder').innerHTML = S.felder.map(function (f) {
       return '<li class="rv feld"><h3>' + esc(f.titel) + '</h3><p class="feld-text">' + esc(f.text) + '</p></li>';
     }).join('');
