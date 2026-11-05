@@ -396,8 +396,10 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   .anim .work.rv.in{transform:none}
   .anim .rv.in{opacity:1}
   .anim .felder .rv,.anim .pp-body.rv,.anim .next.rv{transform:translateY(20px);transition:opacity 700ms ease,transform 800ms var(--ease);transition-delay:var(--d,0ms)}
-  .anim .tile.rv,.anim .gal .rv{transform:translateY(40px);transition:opacity 1100ms ease,transform 1500ms cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0ms)}
-  .anim .tile.rv img,.anim .gal .rv img{scale:1.08;transition:opacity 900ms ease,scale 2000ms cubic-bezier(.22,1,.36,1),transform 900ms var(--ease);transition-delay:var(--d,0ms)}
+  .anim .gal .rv{transform:translateY(40px);transition:opacity 1100ms ease,transform 1500ms cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0ms)}
+  .anim .tile.rv{transform:translateY(64px) scale(.96);transition:opacity 1400ms ease,transform 1800ms cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0ms)}
+  .anim .tile.rv.in{transform:none}
+  .anim .tile.rv img,.anim .gal .rv img{scale:1.1;transition:opacity 900ms ease,scale 2200ms cubic-bezier(.16,1,.3,1),transform 900ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .tile.rv.in img,.anim .gal .rv.in img{scale:1}
   /* Startseitenbilder: mittig mit runden Ecken auftauchen, dann flüssig nach links an
      ihren Platz und von runden zu eckigen Ecken */

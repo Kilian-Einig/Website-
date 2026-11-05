@@ -12,7 +12,7 @@
   /* Ein Bild im einheitlichen Rahmen: Ausschnitt (pos) oder ganz eingepasst (fit: contain) */
   /* Projektkachel: gleicher 3:2-Ausschnitt, Name, Art, Kurzsatz. Für Startseite und Übersicht. */
   var tile = function (p, i) {
-    return '<a class="tile rv" style="--d:' + (i % 3 * 90) + 'ms" href="' + url(p) + '">' +
+    return '<a class="tile rv" style="--d:' + (i % 3 * 130) + 'ms" href="' + url(p) + '">' +
       '<div class="tile-ph"' + (p.rahmen.bg ? ' style="background:' + p.rahmen.bg + '"' : '') + '>' + frameImg(p.rahmen, p.bildAlt, i < 3) + '</div>' +
       '<div class="tile-cap"><h3>' + esc(p.titel) + '</h3></div>' +
       '<p class="tile-kurz">' + esc(p.kurz) + '</p></a>';
