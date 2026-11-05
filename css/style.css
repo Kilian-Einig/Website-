@@ -12,6 +12,7 @@
   color-scheme:light;
   --paper:#FAFAFA;      /* Grund */
   --ink:#141414;        /* Schrift, Flächen, Logo */
+  --chrome:linear-gradient(135deg,#9aa3ac 0%,#f6f9fc 15%,#7e8891 33%,#eef2f6 49%,#aab3bb 63%,#ffffff 82%,#8d97a0 100%);  /* Chrom-Akzent */
   --surface:#F0F0F0;    /* Bildgrund vor dem Laden */
   --graphite:#4A4A4A;   /* Fließtext zweite Ebene */
   --stone:#6B6B6B;      /* gedämpfte Labels, 5:1 auf Grund */
@@ -91,9 +92,7 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 }
 
 .btn{display:inline-flex;align-items:center;min-height:52px;padding:0 24px;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:500;font-size:15px;letter-spacing:.01em;transition:background var(--t-ui),color var(--t-ui)}
-.btn:hover{background:#333}
 .btn-light{background:var(--paper);color:var(--ink)}
-.btn-light:hover{background:#dcdcdc}
 .tlink{display:inline-flex;align-items:center;min-height:44px;font-size:15px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
 .tlink:hover{text-decoration-thickness:2px}
 
@@ -166,7 +165,6 @@ a.count{font-weight:400}
 .contact-sub{margin:28px 0 36px;font-weight:300;font-size:var(--fs-lead);color:var(--on-stage-dim)}
 .contact-links{display:flex;flex-wrap:wrap;gap:12px}
 .btn-ghost{background:transparent;color:var(--paper);border:1px solid var(--paper);min-height:64px;padding:0 28px;font-size:clamp(18px,2vw,26px)}
-.btn-ghost:hover{background:var(--paper);color:var(--ink)}
 .contact .mail{min-height:64px;padding:0 28px;font-size:clamp(18px,2vw,26px);overflow-wrap:anywhere}
 .contact :focus-visible{outline-color:var(--paper)}
 
@@ -218,7 +216,6 @@ a.count{font-weight:400}
 /* Katalog: durchgehendes Heft, Doppelseite unter Doppelseite zum Scrollen (nur Rechner). */
 .pp-tools{display:flex;justify-content:space-between;align-items:center;gap:16px}
 .kat-open{min-height:44px;padding:0 18px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:inherit;font-size:var(--fs-small);cursor:pointer;transition:background var(--t-ui),color var(--t-ui)}
-.kat-open:hover{background:var(--ink);color:var(--paper)}
 @media (max-width:900px){.kat-open{display:none}}
 html.kat-lock{overflow:hidden}
 .kat{position:fixed;inset:0;z-index:60;background:#E7E6E2;display:none}
@@ -367,6 +364,14 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
 .legal-body{max-width:68ch}
 .legal-body h2{font-size:20px;font-weight:500;letter-spacing:-.01em;margin:2em 0 .4em}
 
+
+
+/* Chrom-Akzent: die großen Pfeile sind dauerhaft metallisch, Knöpfe werden beim Überfahren Chrom */
+.big-more span:last-child,.next strong span{background:var(--chrome);background-size:220% 220%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.big-more:hover span,.next:hover strong{background:var(--chrome);background-size:220% 220%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:chromeShift 2.4s linear infinite}
+.btn:hover,.btn-light:hover,.btn-ghost:hover,.kat-open:hover{background:var(--chrome);background-size:220% 220%;color:#15181c;border-color:transparent;animation:chromeShift 2.4s linear infinite}
+@keyframes chromeShift{from{background-position:0% 50%}to{background-position:220% 50%}}
+@media (prefers-reduced-motion:reduce){.big-more:hover span,.next:hover strong,.btn:hover,.btn-light:hover,.btn-ghost:hover,.kat-open:hover{animation:none}}
 
 /* ---------- Bewegung ----------
    Auftakt: Bild steht sofort, Text steigt Zeile für Zeile auf, die Kerbe schneidet sich ein.
