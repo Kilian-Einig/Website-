@@ -45,7 +45,7 @@
   /* Auftauchen beim Scrollen. Was beim Laden schon im Bild ist, bleibt sofort sichtbar. */
   var revealIO = (!reduce && 'IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); } });
-  }, { rootMargin: '0px 0px -10% 0px' }) : null;
+  }, { rootMargin: '0px 0px -18% 0px' }) : null;
   function reveal(list) {
     if (!revealIO) return;
     document.documentElement.classList.add('anim');
