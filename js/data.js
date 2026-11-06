@@ -22,8 +22,9 @@ window.SITE = {
       stand: "Realisiert",
       kurz: "Stuhl aus alten Messebauplanen und Stahl.",
       text: [
-        "Die grafische, dreidimensionale Sitzfläche entsteht durch Weben, Nähen und Spannen. Gepolsterte Textilstreifen werden in ein reduziertes, selbst geschweißtes Stahlgestell gespannt – austauschbar und nachspannbar.",
-        "Die Verbindung aus Designentscheidung und konstruktiver Logik ist hier keine Ergänzung, sondern der Kern."
+        "Woven ist ein Loungemöbel aus recycelten Messebauplanen. Passend zum Projektthema „Graphics Go 3D“ entsteht aus alten Plänen eine dreidimensionale, grafische Sitzfläche: Die Textilstreifen sind im Sitzbereich verwebt und werden abwechselnd nach oben und unten verlaufend in das selbst geschweißte Stahlgestell gespannt.",
+        "Über Klettverschlüsse lässt sich die Sitzfläche austauschen und nachspannen, mit Watte befüllt wird sie bequemer. Die optische Wirkung der gespannten, verwebten Streifen trägt das dezente Metallgestell.",
+        "Die Auseinandersetzung mit Entwurf, Material, Konstruktion und Umsetzung, mit allen Iterationen und Rückschlägen, hat mir gezeigt, wie essenziell der Dialog zwischen Gestaltung und angewandter Technik ist. Die Verbindung aus Designentscheidung und konstruktiver Logik ist hier keine Ergänzung, sondern der Kern des Projekts."
       ],
       fakten: [["Material", "Messebauplanen, Stahl, Klett, Watte"], ["Thema", "Graphics Go 3D"]],
       bild: "img/woven-hero.webp", fokus: "50% 70%",
@@ -48,7 +49,12 @@ window.SITE = {
       stand: "Realisiert",
       interaktiv: "lamellen",
       kurz: "Lichtinstallation mit eigener Steuerung.",
-      text: "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer präzisen Serie. Die Leuchte reagiert auf Klang, lässt sich per App steuern und in verschiedenen Modi betreiben, die LEDs schalten nacheinander ein oder aus. Die Lichtquelle bleibt unsichtbar – sichtbar wird das Licht erst im Material. Die Arbeit dekoriert nicht, sie macht Klang zum Teil der Komposition.",
+      text: [
+        "LMP 01 begreift Licht als konstruktives, räumbildendes Element. Ich verstehe Licht nicht als dekoratives Ausstattungselement, sondern als Mittel, das Raum formt und strukturiert. Deshalb ist die Arbeit keine klassische Leuchte, sondern eine Installation, die eigenständig wirkt und Bereiche ordnet.",
+        "Ein linearer Träger fasst vertikale Acryl-Lamellen zu einer klar gegliederten Reihe zusammen. Sie funktionieren wie Lamellen, ohne den Raum zu schließen, sondern staffeln ihn, erzeugen Überlagerungen und eröffnen je nach Blickwinkel unterschiedliche Durchsichten. Mit der Bewegung der Betrachtenden verändern sich Konturen und Transparenzen.",
+        "Die Lichtquelle bleibt unsichtbar. Sichtbar wird das Licht erst im Material selbst, das es aufnimmt, streut und räumlich erfahrbar macht, so entsteht keine punktuelle Beleuchtung, sondern eine ruhige, gleichmäßige Präsenz im Raum.",
+        "Die Leuchte reagiert auf Klang, lässt sich per App steuern und in verschiedenen Modi betreiben, die LEDs schalten nacheinander ein oder aus. Die Technik arbeitet im Hintergrund und tritt gestalterisch nicht in den Vordergrund. Die Arbeit dekoriert nicht, sie macht Klang zum Teil der Komposition."
+      ],
       fakten: [["Material", "Acryl, Stahl, LED"], ["Steuerung", "Klang, App, verschiedene Modi"]],
       bild: "img/lmp-hero.webp",
       bildAlt: "LMP 01 leuchtet warm im dunklen Raum, dahinter eine Person in Bewegung",
@@ -144,9 +150,9 @@ window.SITE = {
       stand: "Geplant",
       kurz: "Repair Café als Stadtzentrum.",
       text: [
-        "Ein Repair Café im dichten Stadtraum von Mainz, gedacht als architektonische Zurückhaltung. Ein schlankes Volumen schafft Freiraum und überlässt dem Platz die Hauptrolle.",
+        "Im Rahmen eines konstruktiven Projekts an der HS Mainz entstand re:gal, ein kompakter Baukörper für ein Repair Café im Stadtraum von Mainz, gedacht als architektonische Zurückhaltung. Ein schlankes Volumen schafft Freiraum und überlässt dem Platz die Hauptrolle.",
         "Zentrales Element ist das Regal: innen Lagerfläche für die Werkstatt, außen offenes Bücherregal für alle. Es wird zur Schnittstelle zwischen Architektur, Nutzung und öffentlichem Raum.",
-        "Vertikale Lamellen strukturieren die Fassade, geben Sonnenschutz und übersetzen das Regal nach außen. Ihre Dichte nimmt entlang des Gebäudes zu und folgt der Raumfolge innen, vom offenen Café bis zum abgeschirmten Arbeitsraum. So entsteht ein Ort, der Sichtbarkeit und Rückzug gleichermaßen erlaubt."
+        "Die vertikale Lamellenfassade übersetzt dieses Motiv konstruktiv und atmosphärisch: Sie steuert Transparenz, Sonnenschutz und Raumabfolge. Ihre Dichte nimmt entlang des Gebäudes zu und folgt der Raumfolge innen, vom offenen Café bis zum abgeschirmten Arbeitsraum. So entsteht ein Ort, der Sichtbarkeit und Rückzug gleichermaßen erlaubt, architektonische Zurückhaltung und soziale Aktivierung zugleich."
       ],
       fakten: [["Team", "Teamprojekt, zwei Personen"], ["Kontext", "HS Mainz, BA 2, SoSe 25, Konstruktives Projekt"], ["Fläche", "83 m² Repair Café, 31 m² Terrasse mit Bücherecke"], ["Pläne", "1:50, Details 1:5"]],
       bild: "img/regal-model.webp", fokus: "50% 70%",
