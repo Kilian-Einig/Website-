@@ -69,9 +69,6 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .hero-mark{display:block;height:clamp(150px,46svh,440px);width:auto;fill:var(--ink)}
 /* Zwei Blenden in Papierfarbe geben das Logo von der Mitte aus frei (nur transform, läuft flüssig) */
 .mark-wrap{position:relative;display:block}
-.mark-wrap::before,.mark-wrap::after{content:"";position:absolute;z-index:1;left:-8%;right:-8%;height:calc(58% + 2px);background:var(--paper);transform:scaleY(0);will-change:transform}
-.mark-wrap::before{top:-8%;transform-origin:50% 0}
-.mark-wrap::after{bottom:-8%;transform-origin:50% 100%}
 .hero-pause{position:absolute;z-index:2;right:max(var(--gutter),env(safe-area-inset-right,0px));bottom:16px;min-height:44px;padding:0 14px;border:1px solid var(--ink);background:var(--paper);cursor:pointer}
 .hero-pause:hover{background:var(--ink);color:var(--paper)}
 @keyframes settle{from{transform:scale(1.06)}}
@@ -380,14 +377,13 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
    Seitenwechsel blendet über. Nichts davon bei reduzierter Bewegung. */
 @media (prefers-reduced-motion:no-preference){
   /* Auftakt startet erst, wenn Schrift und Seite bereit sind (html.ready), damit kein Bild ruckelt */
-  .mark-wrap::before,.mark-wrap::after{animation:blendOpen 1700ms 150ms cubic-bezier(.65,0,.35,1) both;animation-play-state:paused}
-  .hero-mark{animation:markSettle 2200ms 150ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
+  .hero-mark{transform-origin:50% 50%;animation:markIn 1500ms 150ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
   .hero .ln{animation:riseIn 1100ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
   .hero .ln:nth-child(2){animation-delay:1150ms}
   .hero .ln:nth-child(3){animation-delay:1240ms}
   .hero .ln:nth-child(4){animation-delay:1330ms}
   .hero-sub{animation:riseIn 900ms 1450ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
-  .ready .mark-wrap::before,.ready .mark-wrap::after,.ready .hero-mark,.ready .hero .ln,.ready .hero-sub{animation-play-state:running}
+  .ready .hero-mark,.ready .hero .ln,.ready .hero-sub{animation-play-state:running}
   .pp-title>span{animation:lineUp 900ms 150ms var(--ease) both}
   .pp-kurz,.pp-head .back{animation:riseIn 700ms 400ms var(--ease) both}
   .konfig{animation:clipUp 1100ms 300ms var(--ease) both}
@@ -417,8 +413,7 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
   .anim .contact h2 .w{clip-path:inset(0 100% 0 0);transition:clip-path 600ms var(--ease);transition-delay:var(--d,0ms)}
   .anim .contact h2.in .w{clip-path:inset(0 0 0 0)}
 }
-@keyframes blendOpen{from{transform:scaleY(1)}to{transform:scaleY(0)}}
-@keyframes markSettle{from{transform:scale(1.05)}}
+@keyframes markIn{from{opacity:0;transform:scale(.72)}60%{opacity:1}to{opacity:1;transform:scale(1)}}
 @keyframes riseIn{from{opacity:0;transform:translateY(24px)}}
 @keyframes lineUp{from{transform:translateY(105%)}}
 @keyframes fadeIn{from{opacity:0}}
