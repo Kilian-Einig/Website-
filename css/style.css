@@ -75,16 +75,12 @@ body:not([data-page="home"]) .nav{position:sticky;background:rgba(250,250,250,.9
 .hero-body{display:flex;align-items:center;justify-content:center;text-align:center;gap:24px;padding-top:clamp(16px,2vw,24px);padding-bottom:clamp(28px,4vw,56px);width:100%}
 .hero-copy{min-width:0;width:100%;display:block;text-align:center}
 .hero .label{margin:0}
-.hero h1{margin:14px 0 0;font-size:clamp(56px,7.4vw,128px);font-weight:700;letter-spacing:-.045em;line-height:.9}
-.hero h1 .ln:last-child{margin-right:0}
-.hero-sub{margin:clamp(16px,2.2vw,28px) 0 0;font-weight:400;font-size:clamp(15px,1.5vw,21px);letter-spacing:.01em;color:var(--stone)}
-.hero h1 .ln{display:inline-block;margin-right:.22em}
+.hero h1{margin:clamp(20px,2.6vw,34px) 0 0;font-size:clamp(20px,2.4vw,34px);font-weight:400;letter-spacing:.01em;line-height:1.3;color:var(--stone)}
 .hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin-top:clamp(20px,2.4vw,32px)}
 @media (max-width:760px){
   .hero{min-height:0}
   .hero-img{flex:none;height:46svh;max-height:none}
   .hero-mark{height:min(30svh,64vw)}
-  .hero h1 .ln{display:block}
 }
 
 .btn{display:inline-flex;align-items:center;min-height:52px;padding:0 24px;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:500;font-size:15px;letter-spacing:.01em;transition:background var(--t-ui),color var(--t-ui)}
@@ -378,12 +374,8 @@ dialog.lb .x:focus-visible{outline-color:var(--on-stage)}
 @media (prefers-reduced-motion:no-preference){
   /* Auftakt startet erst, wenn Schrift und Seite bereit sind (html.ready), damit kein Bild ruckelt */
   .hero-mark{transform-origin:50% 50%;animation:markIn 1500ms 150ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
-  .hero .ln{animation:riseIn 1100ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
-  .hero .ln:nth-child(2){animation-delay:1150ms}
-  .hero .ln:nth-child(3){animation-delay:1240ms}
-  .hero .ln:nth-child(4){animation-delay:1330ms}
-  .hero-sub{animation:riseIn 900ms 1450ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
-  .ready .hero-mark,.ready .hero .ln,.ready .hero-sub{animation-play-state:running}
+  .hero h1{animation:riseIn 1000ms 1150ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused}
+  .ready .hero-mark,.ready .hero h1{animation-play-state:running}
   .pp-title>span{animation:lineUp 900ms 150ms var(--ease) both}
   .pp-kurz,.pp-head .back{animation:riseIn 700ms 400ms var(--ease) both}
   .konfig{animation:clipUp 1100ms 300ms var(--ease) both}
