@@ -298,13 +298,22 @@
       return '<li class="rv" style="--d:' + (k * 120) + 'ms"><img src="' + esc(s[0]) + '" alt="' + esc(s[1]) + '"' + dims(s[0]) + ' loading="lazy" decoding="async"><h3><span>' + (k + 1) + '</span>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></li>';
     }).join('') + '</ol>' : '';
 
-    var gal = (p.galerie || []).length ? '<div class="gal">' + p.galerie.map(function (g) {
+    var figHtml = function (g) {
       var d = D[g[0]], wide = d && d[0] > d[1] * 1.6;
       var media = /\.mp4$/.test(g[0]) ?
         '<video src="' + esc(g[0]) + '" poster="' + esc(g[2] || '') + '" muted loop playsinline controls preload="metadata" aria-label="' + esc(g[1]) + '"></video>' :
         '<button type="button" class="zoom" aria-label="' + esc(g[1]) + ', groß ansehen"><img src="' + esc(g[0]) + '" alt="' + esc(g[1]) + '"' + dims(g[0]) + ' loading="lazy" decoding="async"></button>';
       return '<figure class="rv' + (wide ? ' wide' : '') + '">' + media + '<figcaption>' + esc(g[1]) + '</figcaption></figure>';
-    }).join('') + '</div>' : '';
+    };
+    var gal = (p.galerie || []).length ? '<div class="gal">' + p.galerie.map(figHtml).join('') + '</div>' : '';
+    /* Projekte mit Phasen (z. B. Hochstapler: Entwurf 3. Semester, Ausführung 4. Semester) */
+    var phasen = (p.phasen || []).map(function (ph) {
+      return '<section class="pp-phase">' +
+        '<div class="pp-phase-head rv"><span class="label">' + esc(ph.label) + '</span>' +
+        '<div class="txt">' + [].concat(ph.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div></div>' +
+        (ph.bilder && ph.bilder.length ? '<div class="gal">' + ph.bilder.map(figHtml).join('') + '</div>' : '') +
+        '</section>';
+    }).join('');
 
     var facts = [['Art', p.art], ['Stand', p.stand]].concat(p.fakten || []).map(function (f) { return '<div><dt class="label">' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
 
@@ -318,7 +327,7 @@
         heroImg +
         '<div class="pp-body rv"><dl>' + facts + '</dl><div class="txt">' + [].concat(p.text).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') +
           (p.hinweis ? '<p class="hinweis">' + esc(p.hinweis) + '</p>' : '') + '</div></div>' +
-        lam + steps + gal +
+        lam + steps + gal + phasen +
         '<a class="next rv" href="' + url(nx) + '"><strong>' + esc(nx.titel) + ' <span aria-hidden="true">→</span></strong></a>' +
       '</div>';
 

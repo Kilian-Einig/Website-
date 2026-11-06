@@ -69,28 +69,44 @@ window.SITE = {
       stand: "Geplant",
       kurz: "Neues Wohnkonzept mit Fokus auf Gemeinschaft.",
       text: [
-        "Drei Zeilenhäuser von Ernst May im Neuen Frankfurt werden zu einem zusammenhängenden Wohnkomplex. Zwei Wohnhäuser umschließen ein Gemeinschaftshaus, das alle Bewohner*innen flexibel nutzen. Der Einzug ist eine bewusste Entscheidung für ein soziales, ökologisches und gemeinschaftliches Wohnen.",
-        "In den beiden Wohnhäusern liegen je 28 gleich aufgebaute Schlafkammern, privat gemietete Kapseln mit ein bis zwei Schlafplätzen. Im Gemeinschaftshaus lösen Höhenversätze die trennenden Etagen auf: unten ankommen und sich aufhalten, eine halbe Ebene höher gemeinsam kochen und essen, immer mit Blick in den Wohnraum.",
-        "Im 4. Semester haben wir den Entwurf bis in die Werkplanung durchgearbeitet. Um den Bestand zu schonen, erschließt ein eigenes System die Kammern: Die Kammerwand steht als eigenständiges Volumen im Raum, rundum von einem Schacht umgeben, über Einzeltreppen betritt man jede Kapsel. Roher Beton und Stahlgitter markieren Bewegung und Begegnung, Holz steht für Wärme und Rückzug, Rot, Gelb, Lila und Grün setzen Akzente."
+        "HOCHSTAPLER ist ein Sanierungsentwurf für gemeinschaftliches Wohnen im Neuen Frankfurt. Drei Zeilenhäuser von Ernst May werden über ein zentrales Gemeinschaftshaus räumlich und sozial verbunden, die Isolation der einzelnen Häuser wird aufgehoben.",
+        "Gestapelte, verschachtelte Schlafkapseln organisieren die Privatsphäre neu, Höhenversätze, offene Ebenen und gezielte Sichtachsen fördern die Gemeinschaft. Entstanden ist das Projekt im Team (Büro ED[i]T) über zwei Semester, von der Entwurfsphase bis in die Werkplanung."
       ],
       fakten: [["Team", "Teamprojekt, drei Personen"], ["Kontext", "HS Mainz, 3. und 4. Semester, 2025/26"], ["Ort", "Neues Frankfurt, Zeilenhäuser von Ernst May"], ["Umfang", "Entwurf, Werkplanung, Details, technischer Ausbau"]],
       bild: "img/hs-kammern.webp",
       uebersicht: "img/hs-kammern.webp",
       bildAlt: "Rendering: die Kammerwand von unten, gestapelte Betonkammern unter der Holzdecke",
       zweitbild: "img/hs-kammern.webp",
-      schritte: [
-        ["img/k-hs-prinzip.webp", "Die Kammer", "Jede Schlafkammer ist ein L-förmiges Volumen, eine privat gemietete Kapsel mit ein bis zwei Schlafplätzen. Die L-Formen greifen ineinander."],
-        ["img/hs-kammergang.webp", "Gestapelt", "Übereinander und nebeneinander gestapelt bilden die Kammern eine Wand: 28 gleich aufgebaute Kammern in jedem Wohnhaus."],
-        ["img/hs-schacht.webp", "Erschlossen", "Die Kammerwand steht als eigenes Volumen im Raum, rundum von einem Schacht umgeben. Über Einzeltreppen betritt man jede Kapsel."]
-      ],
-      galerie: [
-        ["img/hs-ebenen.webp", "Gemeinschaftshaus: Höhenversätze statt trennender Etagen"],
-        ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
-        ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
-        ["img/hs-kammerleben.webp", "Collage: Leben in den gestapelten Kammern"],
-        ["img/hs-p13.webp", "Gemeinschaftshaus"],
-        ["img/hs-p22.webp", "Schnitt A-A durch die gestapelten Kammern"],
-        ["img/hs-model.webp", "Arbeitsmodell aus Holz"]
+      phasen: [
+        {
+          label: "3. Semester · Entwurfsphase",
+          text: [
+            "In der Entwurfsphase steht das Prinzip. Jede Schlafkammer ist ein L-förmiges Volumen, eine privat gemietete Kapsel mit ein bis zwei Schlafplätzen. Übereinander und nebeneinander gestapelt bilden die Kammern eine Wand: 28 gleich aufgebaute Kapseln je Wohnhaus.",
+            "Rot markiert in den Entwurfsbildern das Kammersystem und seine Erschließung. Höhenversätze und Lichthöfe lösen die trennenden Etagen auf und schaffen Sichtbezüge zwischen den Ebenen."
+          ],
+          bilder: [
+            ["img/k-hs-prinzip.webp", "Prinzip: die L-förmigen Kammern greifen ineinander"],
+            ["img/hs-kammergang.webp", "Kammergang: links und rechts die gestapelten Schlafkammern"],
+            ["img/hs-ebenen.webp", "Gemeinschaftshaus: Höhenversätze statt trennender Etagen"],
+            ["img/hs-kammerleben.webp", "Collage: Leben in den gestapelten Kammern"],
+            ["img/hs-model.webp", "Arbeitsmodell aus Holz"]
+          ]
+        },
+        {
+          label: "4. Semester · Ausführungsphase",
+          text: [
+            "Im 4. Semester haben wir den Entwurf bis in die Werkplanung durchgearbeitet. Um den Bestand zu schonen, erschließt ein eigenes System die Kammern: Die Kammerwand steht als eigenständiges Volumen im Raum, rundum von einem Schacht umgeben, über Einzeltreppen betritt man jede Kapsel.",
+            "Roher Beton und Stahlgitter markieren Bewegung und Begegnung, Holz steht für Wärme und Rückzug, Rot, Gelb, Lila und Grün setzen Akzente. Im Gemeinschaftshaus kommt man unten an und hält sich auf, eine halbe Ebene höher wird gemeinsam gekocht und gegessen, immer mit Blick in den Wohnraum."
+          ],
+          bilder: [
+            ["img/hs-kammern.webp", "Die Kammerwand von unten, gestapelte Betonkammern unter der Holzdecke"],
+            ["img/k-hs-lounge.webp", "Gemeinschaftshaus: Aufenthaltsbereich mit Blick in den Wohnraum"],
+            ["img/k-hs-kueche.webp", "Gemeinschaftshaus: Küche eine halbe Ebene höher"],
+            ["img/hs-schacht.webp", "Schacht und Einzeltreppen entlang der Kammerwand"],
+            ["img/hs-p13.webp", "Gemeinschaftshaus"],
+            ["img/hs-p22.webp", "Schnitt A-A durch die gestapelten Kammern"]
+          ]
+        }
       ]
     },
     {

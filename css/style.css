@@ -207,6 +207,12 @@ a.count{font-weight:400}
 .steps p{margin:0;font-size:var(--fs-small);color:var(--graphite);max-width:36ch}
 @media (max-width:760px){.steps{grid-template-columns:1fr;gap:var(--space-m)}}
 
+/* Projektphasen (Entwurf / Ausführung): Überschrift, Text, dann die Galerie der Phase */
+.pp-phase{border-top:1px solid var(--ink);padding-top:clamp(28px,4vw,52px);margin-top:clamp(20px,4vw,48px)}
+.pp-phase-head{max-width:72ch;margin-bottom:clamp(28px,4vw,52px)}
+.pp-phase-head .label{display:block;margin-bottom:clamp(14px,1.6vw,22px);letter-spacing:.14em}
+.pp-phase-head .txt p{margin:0 0 .8em;max-width:62ch;font-weight:300;font-size:var(--fs-lead);line-height:1.4;color:var(--graphite)}
+.pp-phase-head .txt p:first-child{color:var(--ink)}
 .gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;padding-bottom:var(--space-l)}
 .gal figure{margin:0;min-width:0}
 .gal figure.wide{grid-column:1 / -1}
